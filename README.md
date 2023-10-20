@@ -76,5 +76,6 @@ The source code is licensed under the GPL v2. Most of the content, like artwork,
 
 ## Team authors
 
+Rodrigo Suzana, 63069, suzana2314
 Tiago Sousa, 63324, tiago-cos
 
