@@ -1,0 +1,5 @@
+- As a player, I want to be able to move the scenario camera around the map more dynamically, so that I can see the map in more details.
+
+- As a player, I want to be able to change the default background, so that I can have a more immersive experience.
+
+- As a player, I want to surrender and then go back to the main menu, so that I can start a new game.
