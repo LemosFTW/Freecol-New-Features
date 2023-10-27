@@ -1,7 +1,0 @@
-    -> As a beginner player, I want to have tutorial pop-ups in the game,
-       to help me learn how to get started and understand the basic mechanics.
-
-    -> As an international gamer, I would like a convenient shortcut to switch the game's language, 
-       enabling me to comprehend and enjoy the game in my preferred language.
-
-    -> As a gamer, I would appreciate smoother and more fluid camera movement in the game to enhance my overall gaming experience. 
