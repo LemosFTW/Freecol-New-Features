@@ -20,7 +20,8 @@ Polymorphism factor
 09,01%
 
 As a good project should be, the coupling factor is low, this indicates that there is not a high dependency between the classes,
-also the inheritance factor is high(both method and attribute), this indicates that the classes are well designed and the inheritance is used in a good way.
+also the method inheritance factor is high, this indicates that the classes are well designed and the inheritance is used in a good way, but
+the Attribute inheritance factor is high too, this can be a bad thing to the project, because it indicates that most of the attributes are not private.
 The polymorphism factor is low, this indicates that the classes are not using polymorphism, this is not a bad thing to have in a big project.
-The method hiding factor is low, this indicates that the methods are not hidden, this is bad, allowing other classes to see methods that could be encapsulated.
+The method hiding factor is on average(8% to 25%), a low MHF indicates insufficiently abstracted implementation, and a high MHF indicates very little funcionality.
 The attribute hiding factor is high, this indicates that the attributes are hidden, this is good, allowing other classes to see only the attributes that are needed.
