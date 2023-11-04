@@ -1,5 +1,5 @@
-- as a player, I want to be capable of changing the portion of the map that is displayed with my keyboard, as a way to easily examine the whole map
-
 - as an experienced player, I want to have a feature that allows me to select and move multiple units at once, in order to save time moving large numbers of units to the same place
 
 - as a player, I want to be capable of disabling the feature that automatically selects a free unit after ordering a unit, as a way to avoid having the camera jump around the map
+
+- as a history enthusiast, I want there to be gunpowder in the game, used in firearms as a way to make the combat feel more authentic
