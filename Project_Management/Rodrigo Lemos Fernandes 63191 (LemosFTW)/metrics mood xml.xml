@@ -1,0 +1,20 @@
+<METRICS profile="MOOD metrics" timestamp="sábado, 4 nov. 2023 12:11:58 WET">
+	<METRIC category="Project" name="Attribute hiding factor" abbreviation="AHF">
+		<VALUE measured="project" value="0.7308507389051284"/>
+	</METRIC>
+	<METRIC category="Project" name="Attribute inheritance factor" abbreviation="AIF">
+		<VALUE measured="project" value="0.8115262901655307"/>
+	</METRIC>
+	<METRIC category="Project" name="Coupling factor" abbreviation="CF">
+		<VALUE measured="project" value="0.03062052421773027"/>
+	</METRIC>
+	<METRIC category="Project" name="Method hiding factor" abbreviation="MHF">
+		<VALUE measured="project" value="0.2532550837179322"/>
+	</METRIC>
+	<METRIC category="Project" name="Method inheritance factor" abbreviation="MIF">
+		<VALUE measured="project" value="0.728340902076628"/>
+	</METRIC>
+	<METRIC category="Project" name="Polymorphism factor" abbreviation="PF">
+		<VALUE measured="project" value="0.09014076381677628"/>
+	</METRIC>
+</METRICS>
