@@ -1,0 +1,5 @@
+- As an experienced player, I want to have a land unit that allows me to transport multiple other land units so that I can move them more easily.
+
+- As a war enthusiast, I want to have different types of weapons in-game, so that the combat mechanics are more interesting.
+
+- As a beginner player, I want to be able to order my units to auto-explore the map, so that I don't have to constantly order them to move to the border of the discovered map in order to reveal more land.
