@@ -1,1 +1,3 @@
-
+Reviewer: Tiago Sousa 63324 (tco-sousa)
+Metric definitions and protential trouble spots are good, just a few typos to correct.
+The relation with the code smells should relate your metrics to your chosen code smells, the current text is too generic.
