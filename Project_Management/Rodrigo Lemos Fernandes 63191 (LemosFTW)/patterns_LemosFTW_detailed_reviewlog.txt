@@ -1,4 +1,4 @@
-Reviewer: Tiago Sousa 63324 (tco-sousa)
+Reviewer: Tiago Sousa 63324 (tco-cos)
 -> Pattern: Adapter pattern
    This pattern is not an adapter pattern, by the description it sounds like a proxy pattern, but 
    it needs rechecking. There are also no code snippets for any of the patterns.
