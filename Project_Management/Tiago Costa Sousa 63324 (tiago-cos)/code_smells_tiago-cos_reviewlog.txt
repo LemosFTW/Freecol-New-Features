@@ -6,3 +6,7 @@ Reviewer: Rodrigo Suzana 63069 (suzana2314)
 Reviewer: Rodrigo Fernandes 63191 (LemosFTW)
    -> Smell: Data Class
    Good job, this Data Class is uncommon because it has two boolean methods, but they still just evaluate the variable (Data) from the class, so you`re right. Congrats.
+
+Reviewer: André Branco 62482 (Aser28860d)
+-> Smell: Switch Statement
+   Great explanation on why the code qualifies as a Switch Statement Code Smell and good suggestion of a possible solution, it would fit the problem. Good job!
