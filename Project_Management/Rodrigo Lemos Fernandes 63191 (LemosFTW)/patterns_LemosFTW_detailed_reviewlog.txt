@@ -7,3 +7,7 @@ Reviewer: Rodrigo Suzana 63069 (suzana2314)
 -> Pattern: Singleton pattern
    Pattern looks like the described but description is too vague? Maybe because 
    of the lack of code snippets.
+
+Reviewer: Beatriz Machado 62551 (BeatrizCaiola)
+-> Pattern: Template pattern
+   Correctly identified code smell and accurate description. There is nothing to change, good work.  
