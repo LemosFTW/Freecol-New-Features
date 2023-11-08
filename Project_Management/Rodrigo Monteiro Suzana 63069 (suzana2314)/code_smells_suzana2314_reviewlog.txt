@@ -1,0 +1,11 @@
+Reviewer: Rodrigo Fernandes 63191 (LemosFTW)
+-> Smell: Data Class
+    Looks good for me.
+
+Reviewer: João Silveira 62654 (Joao-Pedro-Silveira)
+-> Smell: Divergent Class
+   Doesn´t seem that there is a code smell of Divergent Class here, since the class appears to do what it says it is puosed to do, but it might be a case of Seculative generality as it is not used anywhere in the code.
+
+Reviewer: Beatriz Machado 62551 (BeatrizCaiola)
+-> Smell: Long method
+    Correctly identified code smell and accurate description. There is nothing to change, good work.

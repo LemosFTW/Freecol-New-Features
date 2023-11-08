@@ -120,7 +120,7 @@ public final class MapEditorController extends FreeColClientHolder {
     
     /**
      * Require all native nation players to be present in a game.
-     *
+     * TODO: Analyze this
      * @param game The {@code Game} to add native nations to.
      */
     private void requireNativeNations(Game game) {
