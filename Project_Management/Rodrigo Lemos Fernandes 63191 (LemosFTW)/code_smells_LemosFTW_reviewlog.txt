@@ -1,3 +1,7 @@
 Reviewer: Rodrigo Suzana 63069 (suzana2314)
 -> Smell: Speculative Generality
    Some english typos but nothing too serious, great find, looks fine.
+
+Reviewer: João Silveira 62654 (Joao-Pedro-Silveira)
+-> Smell: Data Class
+   The identification of the code smell is correct and the solution is good, but there could be on example of a functionality to add.
