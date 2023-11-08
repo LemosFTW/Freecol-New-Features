@@ -2,3 +2,7 @@
 Reviewer: Rodrigo Suzana 63069 (suzana2314)
 -> Smell: Data Clumps 
    Description looks great, but code snippet is too long, maybe short it out a bit.
+
+Reviewer: Tiago Sousa 63324 (tco-sousa)
+-> Smell: Message Chains 
+   Very clear code smell. The solution to the smell can be better, as both the suggestions don't really solve the issue at hand. 
