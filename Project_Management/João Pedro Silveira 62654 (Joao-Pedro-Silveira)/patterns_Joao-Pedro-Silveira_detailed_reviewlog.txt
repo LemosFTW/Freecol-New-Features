@@ -1,0 +1,4 @@
+Reviewer: Rodrigo Suzana 63069 (suzana2314)
+-> Pattern: Composite pattern 
+   Clear case of the composite pattern, great find. 
+   You talk about the doMission method but it's nowhere to be seen in the report, might be for simplicity?
