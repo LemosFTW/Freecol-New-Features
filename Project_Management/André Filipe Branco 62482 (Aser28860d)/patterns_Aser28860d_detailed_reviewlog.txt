@@ -1,3 +1,4 @@
 Reviewer: Rodrigo Fernandes 63191 (LemosFTW)
 -> Pattern: Proxy
     Looks good to me, but you could explain more proxy pattern in general, other than that, it's good.
+    Teste
