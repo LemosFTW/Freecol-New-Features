@@ -1,0 +1,3 @@
+Reviewer: Rodrigo Fernandes 63191 (LemosFTW)
+-> Smell: Data Class
+    Looks good for me.
