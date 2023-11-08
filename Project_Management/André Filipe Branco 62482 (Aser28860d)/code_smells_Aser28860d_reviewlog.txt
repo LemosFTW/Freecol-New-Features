@@ -1,3 +1,7 @@
 Reviewer: Tiago Sousa 63324 (tiago-cos)
 -> Smell: Duplicate Code
    Perfect case of duplicate code, it could easily be avoided with polymorphism. Great catch!
+
+Reviewer: Beatriz Machado 62551 (BeatrizCaiola)
+-> Smell: Speculative Generality
+   This is a good example of speculative generality and the explanation is clear and concise. Nice work.
