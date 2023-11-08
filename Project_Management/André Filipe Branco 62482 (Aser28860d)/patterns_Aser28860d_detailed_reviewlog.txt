@@ -1,0 +1,3 @@
+Reviewer: Tiago Sousa 63324 (tiago-cos)
+-> Pattern: Singleton
+   This pattern is a bit different that what we're used to, but it is in fact restricting the creation of an instance of this class to a single occurence. Nice catch!

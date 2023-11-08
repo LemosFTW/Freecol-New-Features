@@ -1,1 +1,4 @@
+Reviewer: Tiago Sousa 63324 (tiago-cos)
+This use case is accurate and seems to take into account all possible actions regarding trading and the economy. However, seeing as the player can directly trade with other colonies, Europe, and natives, there should be a connection between the actor and the aformentioned actions. Other than this, it looks great!
+
 
