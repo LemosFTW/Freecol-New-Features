@@ -5,3 +5,7 @@ Reviewer: Rodrigo Suzana 63069 (suzana2314)
 Reviewer: João Silveira 62654 (Joao-Pedro-Silveira)
 -> Smell: Data Class
    The identification of the code smell is correct and the solution is good, but there could be on example of a functionality to add.
+
+Reviewer: Beatriz Machado 62551 (BeatrizCaiola)
+-> Smell: Long method
+   The pattern is clearly correct, however the explanation is a little confusing.
