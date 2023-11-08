@@ -1,1 +1,4 @@
+Reviewer: Rodrigo Fernandes 63191 (LemosFTW)
+-> Pattern: Memento
+    Looks good to me, nice job!
 
