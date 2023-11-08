@@ -1,0 +1,3 @@
+Reviewer: Tiago Sousa 63324 (tiago-cos)
+-> Smell: Duplicate Code
+   Perfect case of duplicate code, it could easily be avoided with polymorphism. Great catch!
