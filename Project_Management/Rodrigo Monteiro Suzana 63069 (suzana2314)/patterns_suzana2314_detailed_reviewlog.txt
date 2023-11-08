@@ -1,4 +1,3 @@
-
-Reviewer: Tiago Sousa 63324 (tco-sousa)
+Reviewer: Tiago Sousa 63324 (tiago-cos)
 -> Pattern: Factory pattern 
    Clear and concise explanation. The diagram is a bit cluttered, since there are a lot of sub-classes. Is there a need to show all of them?
