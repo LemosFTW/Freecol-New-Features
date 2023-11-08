@@ -1,7 +1,11 @@
 Reviewer: Rodrigo Fernandes 63191 (LemosFTW)
--> Pattern: Memento
+-> Pattern: Memento 
     Looks good to me, nice job!
 
 Reviewer: João Silveira 62654 (Joao-Pedro-Silveira)
--> Pattern: Composit Pattern
+-> Pattern: Composite Pattern
     The pattern looks correct, but you forgot to represent the agregation in the diagram. Everything else is correct.
+
+Reviewer: André Branco 62482 (Aser28860d)
+-> Pattern: Template Pattern
+    A good example of a Template Pattern. Short and simple explanation too, good job! 
