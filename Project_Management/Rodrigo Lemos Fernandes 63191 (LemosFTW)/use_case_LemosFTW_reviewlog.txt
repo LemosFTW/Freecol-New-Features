@@ -1,2 +1,5 @@
 Reviewer: Beatriz Machado 62551 (BeatrizCaiola)
-The use case diagram is a little confusing. I think the Refuse Taxes and Accept Taxes actions shouldn't be extensions of Raise Taxes, since that implies that you're also raising taxes when you refuse them. I suggest leaving the Raise Taxes, Refuse Taxes and Accept Taxes as separate actions and connecting the Player actor to the latter two. Also, I don't think the Declared Independence action should be connected to the Monarch actor, nor should this action be a generalization of Suppressing Independence or Resisting Independence. 
+The use case diagram is a little confusing. I think the Refuse Taxes and Accept Taxes actions shouldn't be extensions of Raise Taxes,
+since that implies that you're also raising taxes when you refuse them. I suggest leaving the Raise Taxes, Refuse Taxes and Accept
+Taxes as separate actions and connecting the Player actor to the latter two. Also, I don't think the Declared Independence action
+should be connected to the Monarch actor, nor should this action be a generalization of Suppressing Independence or Resisting Independence.
