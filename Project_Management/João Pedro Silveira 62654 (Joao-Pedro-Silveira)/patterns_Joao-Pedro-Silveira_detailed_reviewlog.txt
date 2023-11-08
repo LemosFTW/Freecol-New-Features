@@ -6,3 +6,8 @@ Reviewer: Rodrigo Suzana 63069 (suzana2314)
 Reviewer: Beatriz Machado 62551 (BeatrizCaiola)
 -> Pattern: Template Pattern
    Clear template pattern. The explanation behind the reasoning could a little clearer.
+
+Reviewer: André Branco 62482 (Aser28860d)
+-> Pattern: Strategy design Pattern
+   Great example of a Strategy design Pattern. 
+   Not the best wording on the explanation but correct and understandable nonetheless !
