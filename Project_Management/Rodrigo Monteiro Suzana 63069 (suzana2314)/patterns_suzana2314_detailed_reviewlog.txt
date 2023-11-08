@@ -1,3 +1,7 @@
 Reviewer: Tiago Sousa 63324 (tiago-cos)
 -> Pattern: Factory pattern 
    Clear and concise explanation. The diagram is a bit cluttered, since there are a lot of sub-classes. Is there a need to show all of them?
+
+Reviewer: Beatriz Machado 62551 (BeatrizCaiola)
+-> Pattern: Observer Pattern
+   This is a perfect example of an observer pattern, everything makes sense and seems correct. Nice work. 
