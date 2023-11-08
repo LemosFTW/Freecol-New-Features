@@ -1,1 +1,2 @@
-
+Reviewer: Tiago Sousa 63324 (tiago-cos)
+Great Use Case diagram, it's super detailed and complete. The only detail to point out is that EngageOnAttack isn't connected to any actor nor does it have a description. Otherwise, nice work!
