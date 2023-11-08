@@ -1,4 +1,7 @@
 Reviewer: Rodrigo Fernandes 63191 (LemosFTW)
 -> Pattern: Proxy
     Looks good to me, but you could explain more proxy pattern in general, other than that, it's good.
-    Teste
+
+Reviewer: Tiago Sousa 63324 (tiago-cos)
+-> Pattern: Singleton
+   This pattern is a bit different that what we're used to, but it is in fact restricting the creation of an instance of this class to a single occurence. Nice catch!
