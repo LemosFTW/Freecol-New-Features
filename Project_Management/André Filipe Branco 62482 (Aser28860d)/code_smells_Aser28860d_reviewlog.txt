@@ -5,3 +5,7 @@ Reviewer: Tiago Sousa 63324 (tiago-cos)
 Reviewer: Beatriz Machado 62551 (BeatrizCaiola)
 -> Smell: Speculative Generality
    This is a good example of speculative generality and the explanation is clear and concise. Nice work.
+
+Reviewer: Rodrigo Suzana 63069 (suzana2314)
+-> Smell: Long Method
+   Clear case of a long method, well done. Great description and great solution, keep up the good work.
