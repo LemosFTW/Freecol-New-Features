@@ -1,1 +1,3 @@
-
+Reviewer: Rodrigo Suzana 63069 (suzana2314)
+-> Pattern: Singleton 
+   Looks good to me!
