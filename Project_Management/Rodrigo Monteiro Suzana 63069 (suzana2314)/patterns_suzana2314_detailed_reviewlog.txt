@@ -5,3 +5,7 @@ Reviewer: Tiago Sousa 63324 (tiago-cos)
 Reviewer: Beatriz Machado 62551 (BeatrizCaiola)
 -> Pattern: Observer Pattern
    This is a perfect example of an observer pattern, everything makes sense and seems correct. Nice work. 
+
+Reviewer: André Branco 62482 (Aser28860d)
+-> Pattern: Template Pattern
+   Simple, clear and correct. A nice and short example of a Template Pattern, great job!
