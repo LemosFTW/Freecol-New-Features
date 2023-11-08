@@ -2,3 +2,7 @@
 Reviewer: Rodrigo Suzana 63069 (suzana2314)
 -> Smell: Long Method 
    Great description. But code snippet is too long, maybe cut it out a bit.
+
+Reviewer: Rodrigo Fernandes 63191 (LemosFTW)
+   -> Smell: Data Class
+   Good job, this Data Class is uncommon because it has two boolean methods, but they still just evaluate the variable (Data) from the class, so you`re right. Congrats.
