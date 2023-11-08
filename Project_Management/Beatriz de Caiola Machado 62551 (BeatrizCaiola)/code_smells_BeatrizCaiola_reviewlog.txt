@@ -1,1 +1,4 @@
+Reviewer: Tiago Sousa 63324 (tco-sousa)
+-> Smell: Message Chains 
+   The code smell is accurate and precise, however the snippet is too long and it's hard to identify exactly where the message chains are.
 
