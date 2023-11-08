@@ -1,0 +1,4 @@
+Reviewer: Rodrigo Suzana 63069 (suzana2314)
+Great description, but in the equip military item you refer that equiping a gun allows the military unit to attack, 
+but without it, the military unit is only able to defend. Shouldn't this restriction be present in the diagram? 
+Other than that everything looks great!
