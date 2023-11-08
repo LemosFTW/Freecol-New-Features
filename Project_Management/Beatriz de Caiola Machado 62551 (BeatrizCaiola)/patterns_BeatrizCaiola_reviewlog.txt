@@ -2,3 +2,6 @@ Reviewer: Rodrigo Fernandes 63191 (LemosFTW)
 -> Pattern: Memento
     Looks good to me, nice job!
 
+Reviewer: João Silveira 62654 (Joao-Pedro-Silveira)
+-> Pattern: Composit Pattern
+    The pattern looks correct, but you forgot to represent the agregation in the diagram. Everything else is correct.

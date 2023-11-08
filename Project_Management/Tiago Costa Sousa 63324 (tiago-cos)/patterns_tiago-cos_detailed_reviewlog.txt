@@ -5,3 +5,7 @@ Reviewer: Rodrigo Suzana 63069 (suzana2314)
 Reviewer: Rodrigo Fernandes 63191 (LemosFTW)
 -> Pattern: State
     Nice find, you could explain where the state is being changed, but other than that, good job.
+
+Reviewr: João Silveira 62654 (Joao-Pedro-Silveira)
+-> Pattern: Template
+    The pattern seems correct, the explanation is good and organized and the diagram is also good. Nicely done!

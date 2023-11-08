@@ -6,4 +6,6 @@ Reviewer: Tiago Sousa 63324 (tiago-cos)
 -> Pattern: Singleton
    This pattern is a bit different that what we're used to, but it is in fact restricting the creation of an instance of this class to a single occurence.
 
-Reviewer:
+Reviewer: João Silveira 62654 (Joao-Pedro-Silveira)
+-> Pattern: Template
+   The pattern seem correct, the explanation is good and well organized. Good Job!

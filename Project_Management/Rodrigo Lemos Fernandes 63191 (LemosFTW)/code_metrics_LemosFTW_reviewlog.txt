@@ -1,0 +1,2 @@
+Reviewer: João Silveira 62654 (Joao-Pedro-Silveira)
+The Metrics are well analysed. There is a problem with the generation of the metric, which you have already mentioned, as weel as said you would analyse another metric in the next deliverable. For now it is good. Keep up the good work!
