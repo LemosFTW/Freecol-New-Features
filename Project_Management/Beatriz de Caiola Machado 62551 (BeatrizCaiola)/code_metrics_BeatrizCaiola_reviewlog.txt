@@ -1,1 +1,4 @@
-
+Reviewer: André Branco 62482 (Aser28860d)
+-> Metrics: Chidamber and Kemerer Metrics
+  Very detailed explanation of every metric. The examples and code smells given make sense, and fit the description what the effects of high metric values would mean.
+Great report !
