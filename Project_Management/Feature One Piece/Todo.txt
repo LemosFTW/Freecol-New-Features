@@ -7,3 +7,14 @@ can grow my colony even faster. (Rodrigo Lemos) (Rodrigo Suzana)
 
 1- find the class who leeds to the boat conflict
 2- create a method that will ask the player if he wants the boat, after winning the conflict
+
+
+
+
+
+Classses que eu acho que estao relacionadas com nossa userStory:
+- ServerApi.java : tem o metodo attack que pode ser interessante para alterarmos
+- Unit.java
+- UnitType.java
+- ServerUnit.java
+- AttackMessage.java??????

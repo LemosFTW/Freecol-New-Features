@@ -265,6 +265,8 @@ public abstract class ServerAPI {
      * @param direction The direction in which to attack.
      * @return True if the server interaction succeeded.
      */
+
+    //TODO: alterar aqui? unit instanceof .... acho que nao mas eh uma ideia
     public boolean attack(Unit unit, Direction direction) {
         return ask(new AttackMessage(unit, direction));
     }
