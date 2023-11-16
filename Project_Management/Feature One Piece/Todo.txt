@@ -1,0 +1,9 @@
+As an experienced player, I want to be able to claim enemy ships, so that I
+can grow my colony even faster. (Rodrigo Lemos) (Rodrigo Suzana)
+
+
+
+- When we are in conflict with another boat, we want to win the conflict and conquer the boat, so that we can get the boat's resources and gain another boat.
+
+1- find the class who leeds to the boat conflict
+2- create a method that will ask the player if he wants the boat, after winning the conflict
