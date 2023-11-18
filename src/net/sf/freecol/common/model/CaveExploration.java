@@ -41,33 +41,25 @@ import static net.sf.freecol.common.util.StringUtils.*;
 
 
 /**
- * Represents a lost city rumour.
+ * Represents a cave to be explored.
  */
 public class CaveExploration extends TileItem {
 
-    private static final Logger logger = Logger.getLogger(LostCityRumour.class.getName());
+    private static final Logger logger = Logger.getLogger(CaveExploration.class.getName());
 
     public static final String TAG = "CaveExplorationExploration";
 
     // The bogus end of the world year.
     private static final int MAYAN_PROPHESY_YEAR = 2012;
 
-    // How many `nothing' rumours are there.
-    private static int rumourNothing = -1;
-
     /** Constants describing types of Lost City Rumours. */
-    public static enum RumourType {
-        NO_SUCH_RUMOUR,
-        BURIAL_GROUND,
-        EXPEDITION_VANISHES,
+    public static enum FindType {
+        NOTHING_MORE_TO_EXPLORE,
+        TRAP,
         NOTHING,
         LEARN,
-        TRIBAL_CHIEF,
         COLONIST,
-        MOUNDS,
-        RUINS,
-        CIBOLA,
-        FOUNTAIN_OF_YOUTH;
+        TREASURE;
 
         /**
          * Get the stem key for this LCR type.
@@ -75,24 +67,20 @@ public class CaveExploration extends TileItem {
          * @return The stem key.
          */
         private String getKey() {
-            return "lostCityRumour." + getEnumKey(this);
+            return "caveExploration." + getEnumKey(this);
         }
 
         public String getDescriptionKey() {
             return Messages.descriptionKey("model." + getKey());
         }
-
-        public String getAlternateDescriptionKey(String variant) {
-            return Messages.descriptionKey("model." + getKey() + "." + variant);
-        }
     }
 
 
     /**
-     * The type of the rumour.  A RumourType, or null if the type has
+     * The type of the rumour.  A FindType, or null if the type has
      * not yet been determined.
      */
-    private RumourType type = null;
+    private FindType type = null;
 
     /**
      * The name of this rumour, or null, if it has none.  Rumours such
@@ -120,7 +108,7 @@ public class CaveExploration extends TileItem {
      * @param type The type of rumour.
      * @param name The name of the rumour.
      */
-    public CaveExploration(Game game, Tile tile, RumourType type, String name) {
+    public CaveExploration(Game game, Tile tile, FindType type, String name) {
         super(game, tile);
 
         this.type = type;
@@ -141,9 +129,9 @@ public class CaveExploration extends TileItem {
     /**
      * Get the type of rumour.
      *
-     * @return The {@code RumourType}.
+     * @return The {@code FindType}.
      */
-    public final RumourType getType() {
+    public final FindType getType() {
         return type;
     }
 
@@ -152,7 +140,7 @@ public class CaveExploration extends TileItem {
      *
      * @param newType The new rumour type.
      */
-    public final void setType(final RumourType newType) {
+    public final void setType(final FindType newType) {
         this.type = newType;
     }
 
@@ -172,14 +160,14 @@ public class CaveExploration extends TileItem {
      * The scouting outcome is based on three factors: good/bad percent
      * rumour difficulty option, expert scout or not, DeSoto or not.
      *
-     * FIXME: Make RumourType a FreeColSpecObjectType and move all the
+     * FIXME: Make FindType a FreeColSpecObjectType and move all the
      * magic numbers in here to the specification.
      *
      * @param unit The {@code Unit} exploring (optional).
      * @param random A random number source.
      * @return The type of rumour.
      */
-    public RumourType chooseType(Unit unit, Random random) {
+    public FindType chooseType(Unit unit, Random random) {
         final Specification spec = getSpecification();
         final Tile tile = getTile();
 
@@ -222,42 +210,42 @@ public class CaveExploration extends TileItem {
         int percentNeutral = Math.max(0, 100 - percentBad - percentGood);
 
         // Add all possible events to a RandomChoice List
-        List<RandomChoice<RumourType>> c = new ArrayList<>();
+        List<RandomChoice<FindType>> c = new ArrayList<>();
 
         if (percentGood > 0) { // The GOOD
             if (allowFoY) { // Tolerating potential 2% weight error
-                c.add(new RandomChoice<>(RumourType.FOUNTAIN_OF_YOUTH,
+                c.add(new RandomChoice<>(FindType.FOUNTAIN_OF_YOUTH,
                         2 * percentGood));
             }
             if (allowLearn) {
-                c.add(new RandomChoice<>(RumourType.LEARN,
+                c.add(new RandomChoice<>(FindType.LEARN,
                         30 * percentGood));
-                c.add(new RandomChoice<>(RumourType.TRIBAL_CHIEF,
+                c.add(new RandomChoice<>(FindType.TRIBAL_CHIEF,
                         30 * percentGood));
-                c.add(new RandomChoice<>(RumourType.COLONIST,
+                c.add(new RandomChoice<>(FindType.COLONIST,
                         20 * percentGood));
             } else {
-                c.add(new RandomChoice<>(RumourType.TRIBAL_CHIEF,
+                c.add(new RandomChoice<>(FindType.TRIBAL_CHIEF,
                         50 * percentGood));
-                c.add(new RandomChoice<>(RumourType.COLONIST,
+                c.add(new RandomChoice<>(FindType.COLONIST,
                         30 * percentGood));
             }
-            c.add(new RandomChoice<>(RumourType.MOUNDS,
+            c.add(new RandomChoice<>(FindType.MOUNDS,
                     8 * percentGood));
-            c.add(new RandomChoice<>(RumourType.RUINS,
+            c.add(new RandomChoice<>(FindType.RUINS,
                     6 * percentGood));
-            c.add(new RandomChoice<>(RumourType.CIBOLA,
+            c.add(new RandomChoice<>(FindType.CIBOLA,
                     4 * percentGood));
         }
 
         if (percentBad > 0) { // The BAD
-            List<RandomChoice<RumourType>> cbad = new ArrayList<>();
+            List<RandomChoice<FindType>> cbad = new ArrayList<>();
             if (allowBurial) {
-                cbad.add(new RandomChoice<>(RumourType.BURIAL_GROUND,
+                cbad.add(new RandomChoice<>(FindType.BURIAL_GROUND,
                         25 * percentBad));
             }
             if (allowVanish) {
-                cbad.add(new RandomChoice<>(RumourType.EXPEDITION_VANISHES,
+                cbad.add(new RandomChoice<>(FindType.TRAP,
                         75 * percentBad));
             }
             RandomChoice.normalize(cbad, 100);
@@ -265,7 +253,7 @@ public class CaveExploration extends TileItem {
         }
 
         if (percentNeutral > 0) { // The NEUTRAL
-            c.add(new RandomChoice<>(RumourType.NOTHING,
+            c.add(new RandomChoice<>(FindType.NOTHING,
                     100 * percentNeutral));
         }
 
@@ -286,12 +274,12 @@ public class CaveExploration extends TileItem {
         final Game game = getGame();
         return (mounds)
                 ? new ModelMessage(ModelMessage.MessageType.LOST_CITY_RUMOUR,
-                RumourType.NOTHING.getAlternateDescriptionKey("mounds"),
+                FindType.NOTHING.getAlternateDescriptionKey("mounds"),
                 player)
                 : (game.getTurn().getYear() % 100 == 12
                 && randomInt(logger, "Mayans?", random, 4) == 0)
                 ? new ModelMessage(ModelMessage.MessageType.LOST_CITY_RUMOUR,
-                RumourType.NOTHING.getAlternateDescriptionKey("mayans"),
+                FindType.NOTHING.getAlternateDescriptionKey("mayans"),
                 player)
                 .addAmount("%years%",
                         MAYAN_PROPHESY_YEAR - game.getTurn().getYear())
@@ -391,7 +379,7 @@ public class CaveExploration extends TileItem {
     @Override
     public IntegrityType checkIntegrity(boolean fix, LogBuilder lb) {
         IntegrityType result = super.checkIntegrity(fix, lb);
-        if (type == RumourType.NO_SUCH_RUMOUR) {
+        if (type == FindType.NOTHING_MORE_TO_EXPLORE) {
             lb.add("\n  Rumour with null type: ", getId());
             result = result.fail();
         }
@@ -449,7 +437,7 @@ public class CaveExploration extends TileItem {
         tile = xr.findFreeColGameObject(getGame(), TILE_TAG,
                 Tile.class, (Tile)null, true);
 
-        type = xr.getAttribute(TYPE_TAG, RumourType.class, (RumourType)null);
+        type = xr.getAttribute(TYPE_TAG, FindType.class, (FindType)null);
 
         name = xr.getAttribute(NAME_TAG, (String)null);
     }
