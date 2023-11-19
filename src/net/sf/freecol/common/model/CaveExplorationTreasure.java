@@ -11,10 +11,6 @@ public class CaveExplorationTreasure extends AbstractCaveExploration{
         super(game, tile, type, name);
     }
 
-    public CaveExplorationTreasure(Game game, String id) {
-        super(game, id);
-    }
-
     @Override
     public String getDescriptionKey() {
         return null;

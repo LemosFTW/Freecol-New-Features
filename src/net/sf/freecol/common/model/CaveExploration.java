@@ -8,8 +8,6 @@ public interface CaveExploration {
 
     public AbstractCaveExploration.FindType getType();
 
-    public void setType(final AbstractCaveExploration.FindType newType);
-
     public String getName();
 
     public ModelMessage getNothingMessage(Player player, boolean mounds, Random random);

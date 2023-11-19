@@ -97,7 +97,7 @@ public class Map extends FreeColGameObject implements Location {
      * natural tile improvements that are not resources.
      */
     public static enum Layer {
-        NONE, LAND, TERRAIN, REGIONS, RIVERS, RESOURCES, RUMOURS, NATIVES, ALL;
+        NONE, LAND, TERRAIN, REGIONS, RIVERS, RESOURCES, RUMOURS, NATIVES, CAVES, ALL;
     };
 
     /** A position on the Map. */

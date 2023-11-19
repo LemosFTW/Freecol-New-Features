@@ -11,10 +11,6 @@ public class CaveExplorationColonist extends AbstractCaveExploration{
         super(game, tile, type, name);
     }
 
-    public CaveExplorationColonist(Game game, String id) {
-        super(game, id);
-    }
-
     @Override
     public String getDescriptionKey() {
         return null;

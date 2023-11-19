@@ -114,32 +114,12 @@ public abstract class AbstractCaveExploration extends TileItem implements  CaveE
     }
 
     /**
-     * Creates a new {@code LostCityRumour} instance.
-     *
-     * @param game The enclosing {@code Game}.
-     * @param id The object identifier.
-     */
-    public AbstractCaveExploration(Game game, String id) {
-        super(game, id);
-    }
-
-
-    /**
      * Get the type of rumour.
      *
      * @return The {@code FindType}.
      */
     public final FindType getType() {
         return type;
-    }
-
-    /**
-     * Set the type of rumour.
-     *
-     * @param newType The new rumour type.
-     */
-    public final void setType(final FindType newType) {
-        this.type = newType;
     }
 
     /**
@@ -229,7 +209,7 @@ public abstract class AbstractCaveExploration extends TileItem implements  CaveE
      */
     @Override
     public Layer getLayer() {
-        return Layer.RUMOURS;
+        return Layer.CAVES;
     }
 
 

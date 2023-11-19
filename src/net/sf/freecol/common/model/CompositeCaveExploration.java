@@ -22,10 +22,6 @@ public class CompositeCaveExploration extends AbstractCaveExploration{
         super(game, tile, type, name);
     }
 
-    public CompositeCaveExploration(Game game, String id) {
-        super(game, id);
-    }
-
     @Override
     public String getDescriptionKey() {
         return null;
