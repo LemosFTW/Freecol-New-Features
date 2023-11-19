@@ -190,6 +190,10 @@
     <goods-type id="model.goods.hammers" is-farmed="false"
                 made-from="model.goods.lumber"
                 ignore-limit="true" storable="false" price="20"/>
+    <goods-type id="model.goods.gunpowder" is-farmed="false"
+                production-weight="2.5">
+      <market initial-amount="3000" initial-price="1" price-difference="5" />
+    </goods-type>
   </goods-types>
 
   <resource-types>
@@ -265,6 +269,10 @@
                 type="additive" value="3">
         <scope type="model.unit.expertFisherman" matches-null="false"/>
       </modifier>
+    </resource-type>
+    <resource-type id="model.resource.gunpowder">
+      <modifier id="model.goods.gunpowder" index="10"
+                type="additive" value="3"/>
     </resource-type>
   </resource-types>
 
