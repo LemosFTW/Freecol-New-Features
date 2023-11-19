@@ -17,4 +17,34 @@ Classses que eu acho que estao relacionadas com nossa userStory:
 - Unit.java
 - UnitType.java
 - ServerUnit.java
-- AttackMessage.java??????
+- AttackMessage.java?????? -> Penso que nao tenha que ver com isto
+
+
+
+
+
+###############################################################################################
+
+Da wiki: Naval units and Artillery can not be promoted. A beaten artillery unit becomes a Damaged Artillery, which can not be repaired and will be destroyed if it loses another battle. "Ships are either sunk or damaged when they lose a battle". In either case all units and cargo aboard the ship are lost, and the ship automatically returns to the nearest repair location. This may be one of your colonies with a Drydock or the Home Port. 
+
+"Ships are either sunk or damaged when they lose a battle" este metodo pode ser encontrado na classe SimpleCombatModel.java chama-se resolveAttack(Unit winner, Unit loser ...)
+Tem esta parte do codigo:
+
+
+if (loser.isNaval()) {
+            // Naval victors get to loot the defenders hold.  Sink the
+            // loser on great win/loss, lack of repair location, or
+            // beached.
+            if (winner.isNaval() && winner.canCaptureGoods()
+                && !loser.getGoodsList().isEmpty()) {
+                crs.add(CombatEffectType.LOOT_SHIP);
+            }
+            if (great || loserMustDie
+                || loser.getRepairLocation() == null
+                || loser.isBeached()) {
+                crs.add(CombatEffectType.SINK_SHIP_ATTACK);
+            } else {
+                crs.add(CombatEffectType.DAMAGE_SHIP_ATTACK);
+            }
+
+Talves em great win/loss acrescentar metodo que adiciona a ship do inimigo a frota? 
