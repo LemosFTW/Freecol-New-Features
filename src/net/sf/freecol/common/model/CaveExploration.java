@@ -12,8 +12,6 @@ public interface CaveExploration {
 
     public String getName();
 
-    public AbstractCaveExploration.FindType chooseType(Unit unit, Random random);
-
     public ModelMessage getNothingMessage(Player player, boolean mounds, Random random);
 
     public String getXMLTagName();
