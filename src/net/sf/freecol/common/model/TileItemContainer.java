@@ -300,6 +300,16 @@ public class TileItemContainer extends FreeColGameObject {
     }
 
     /**
+     * Gets a cave in this container.
+     *
+     * @return A {@code CaveExploration} item if any, or null if
+     *     not found.
+     */
+    public final CaveExploration getCaveExploration() {
+        return (CaveExploration) findTileItem(ti -> ti instanceof CaveExploration);
+    }
+
+    /**
      * Gets any resource item.
      *
      * @return A {@code Resource} item, or null is none found.

@@ -764,6 +764,17 @@ public final class Tile extends UnitLocation implements Named, Ownable {
     }
 
     /**
+     * Gets a cave on this tile.
+     *
+     * @return The {@code CaveExploration} on this
+     *     {@code Tile}, or null if none found.
+     */
+    public CaveExploration getCaveExploration() {
+        return (tileItemContainer == null) ? null
+                : tileItemContainer.getCaveExploration();
+    }
+
+    /**
      * Does this tile have a resource?
      *
      * @return True if this is a resource {@code Tile}.
