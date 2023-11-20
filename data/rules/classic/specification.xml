@@ -194,6 +194,10 @@
                 production-weight="2.5">
       <market initial-amount="3000" initial-price="1" price-difference="5" />
     </goods-type>
+    <goods-type id="model.goods.ammunition" is-farmed="false"
+                production-weight="2.5">
+      <market initial-amount="3000" initial-price="5" price-difference="10" />
+    </goods-type>
   </goods-types>
 
   <resource-types>
@@ -1006,6 +1010,8 @@
                         value="false"/>
       <required-goods id="model.goods.muskets"
                       value="50"/>
+      <required-goods id="model.goods.ammunition"
+                      value="5"/>
 
       <ability id="model.ability.armed"
                value="true"/>
@@ -1033,6 +1039,8 @@
                       value="50"/>
       <required-goods id="model.goods.horses"
                       value="50"/>
+      <required-goods id="model.goods.ammunition"
+                      value="5"/>
 
       <ability id="model.ability.armed"
                value="true"/>

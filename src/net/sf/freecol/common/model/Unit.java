@@ -316,6 +316,8 @@ public class Unit extends GoodsLocation
      */
     protected int visibleGoodsCount;
 
+    /** The amount of ammunition carried by this unit. */
+    protected int ammunitionCount;
 
     /**
      * Constructor for ServerUnit.
@@ -4094,6 +4096,24 @@ public class Unit extends GoodsLocation
         return ret;
     }
 
+    /**
+     * Check if unit role is soldier.
+     * @return whether unit role is soldier.
+     */
+    public boolean isSoldier() {
+        return this.role.getRoleSuffix().contains("soldier");
+    }
+
+    /**
+     * Decreases ammunition count by one.
+     */
+    public void reduceAmmunition() {
+        if (ammunitionCount > 0)
+            ammunitionCount--;
+        else {
+            //Role role = getGame().getSpecification().getRole("");
+        }
+    }
 
     // Interface Consumer
 
