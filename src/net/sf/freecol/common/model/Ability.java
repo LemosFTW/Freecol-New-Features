@@ -368,6 +368,10 @@ public final class Ability extends Feature {
     public static final String RUMOURS_ALWAYS_POSITIVE
         = "model.ability.rumoursAlwaysPositive";
 
+    /** Cave exploration always yields positive results. */
+    public static final String CAVE_ALWAYS_POSITIVE
+            = "model.ability.caveAlwaysPositive";
+
     /** The ability to see all colonies (Coronado). */
     public static final String SEE_ALL_COLONIES
         = "model.ability.seeAllColonies";
