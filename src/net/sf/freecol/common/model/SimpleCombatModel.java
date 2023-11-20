@@ -36,6 +36,11 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import net.sf.freecol.FreeCol;
+import net.sf.freecol.client.gui.GUI;
+import net.sf.freecol.client.gui.SwingGUI;
+import net.sf.freecol.client.gui.panel.FreeColPanel;
+import net.sf.freecol.client.gui.panel.NewPanel;
 import net.sf.freecol.common.model.Modifier.ModifierType;
 import net.sf.freecol.common.util.LogBuilder;
 
@@ -719,6 +724,15 @@ public class SimpleCombatModel extends CombatModel {
             if (winner.isNaval() && winner.canCaptureGoods()
                 && !loser.getGoodsList().isEmpty()) {
                 crs.add(CombatEffectType.LOOT_SHIP);
+                //and add a menu choosing if he wants the ship or not
+                //freeColClient.getGUI().showInformationPanel
+                //TODO:isso aqui pode nao dar certo, pq eu nem testei, mas pq precisamos de um objeto game pra instanciar uma unit?
+                //TODO:criar um panel de escolha se quer o navio ou nao.
+
+
+                Unit newUnit = new Unit(loserPlayer.getGame());
+                winnerPlayer.addUnit(newUnit);
+
             }
             if (great || loserMustDie
                 || loser.getRepairLocation() == null
