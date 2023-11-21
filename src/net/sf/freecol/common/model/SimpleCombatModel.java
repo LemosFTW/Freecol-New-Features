@@ -43,6 +43,7 @@ import net.sf.freecol.client.gui.panel.FreeColPanel;
 import net.sf.freecol.client.gui.panel.NewPanel;
 import net.sf.freecol.common.model.Modifier.ModifierType;
 import net.sf.freecol.common.util.LogBuilder;
+import net.sf.freecol.server.model.ServerUnit;
 
 import javax.swing.*;
 
@@ -718,7 +719,6 @@ public class SimpleCombatModel extends CombatModel {
         boolean attackerWon = crs.get(0) == CombatEffectType.WIN;
         boolean loserMustDie = loser.hasAbility(Ability.DISPOSE_ON_COMBAT_LOSS);
         UnitTypeChange uc;
-        //FreeColGameObjectListener freeColGameObjectListener = loserPlayer.getGame().freeColGameObjectListener;
 
         //JPanel panel = new JPanel();
         //panel.add(new JLabel("Do you want to capture the enemy unit?"));
@@ -728,6 +728,8 @@ public class SimpleCombatModel extends CombatModel {
             // Naval victors get to loot the defenders hold.  Sink the
             // loser on great win/loss, lack of repair location, or
             // beached.
+            ServerUnit ship = new ServerUnit(loser.getGame(), loser.getLocation(), winnerPlayer, loser.getType(), loser.getRole());
+            winnerPlayer.addUnit(ship);
             if (winner.isNaval() && winner.canCaptureGoods()
                 && !loser.getGoodsList().isEmpty()) {
                 crs.add(CombatEffectType.LOOT_SHIP);
@@ -735,12 +737,6 @@ public class SimpleCombatModel extends CombatModel {
                 //freeColClient.getGUI().showInformationPanel
                 //TODO:isso aqui pode nao dar certo, pq eu nem testei, mas pq precisamos de um objeto game pra instanciar uma unit?
                 //TODO:criar um panel de escolha se quer o navio ou nao.
-
-
-
-                //Unit newUnit = new Unit(loserPlayer.getGame());
-                //winnerPlayer.addUnit(newUnit);
-
 
             }
             if (great || loserMustDie

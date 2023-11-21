@@ -1,20 +1,20 @@
 /**
- *  Copyright (C) 2002-2022   The FreeCol Team
- *
- *  This file is part of FreeCol.
- *
- *  FreeCol is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  FreeCol is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with FreeCol.  If not, see <http://www.gnu.org/licenses/>.
+ * Copyright (C) 2002-2022   The FreeCol Team
+ * <p>
+ * This file is part of FreeCol.
+ * <p>
+ * FreeCol is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * FreeCol is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with FreeCol.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package net.sf.freecol.server.model;
@@ -122,7 +122,7 @@ public class ServerGame extends Game implements TurnTaker {
      * @exception XMLStreamException if an error occurred during parsing.
      */
     public ServerGame(Specification specification, FreeColXMLReader xr)
-        throws XMLStreamException {
+            throws XMLStreamException {
         this(specification);
 
         readFromXML(xr);
@@ -151,7 +151,7 @@ public class ServerGame extends Game implements TurnTaker {
      */
     public List<Player> getConnectedPlayers(Player... players) {
         final Predicate<Player> connPred = p ->
-            p.isConnected() && none(players, matchKey(p));
+                p.isConnected() && none(players, matchKey(p));
         synchronized (this.players) {
             return transform(this.players, connPred);
         }
@@ -165,7 +165,7 @@ public class ServerGame extends Game implements TurnTaker {
     public void sendToAll(ChangeSet cs) {
         sendToList(getConnectedPlayers(), cs);
     }
-    
+
     /**
      * Send a change set to all players, optionally excluding one.
      *
@@ -202,7 +202,7 @@ public class ServerGame extends Game implements TurnTaker {
             // entire output side of serialization is potentially
             // exercised here, so it is a good place to find new fails.
             logger.log(Level.WARNING, "sendTo(" + player.getId()
-                + "," + cs + ") failed", e);
+                    + "," + cs + ") failed", e);
         }
         return false;
     }
@@ -221,13 +221,13 @@ public class ServerGame extends Game implements TurnTaker {
      * @exception NoSuchMethodException if the tag does not refer to a
      *      server type.
     private Object makeServerObject(String type, String id)
-        throws ClassNotFoundException, IllegalAccessException,
-               InstantiationException, InvocationTargetException,
-               NoSuchMethodException {
-        type = "net.sf.freecol.server.model." + capitalize(type);
-        Class<?> c = Class.forName(type);
-        return c.getConstructor(Game.class, String.class)
-            .newInstance(this, id);
+    throws ClassNotFoundException, IllegalAccessException,
+    InstantiationException, InvocationTargetException,
+    NoSuchMethodException {
+    type = "net.sf.freecol.server.model." + capitalize(type);
+    Class<?> c = Class.forName(type);
+    return c.getConstructor(Game.class, String.class)
+    .newInstance(this, id);
     }
      */
 
@@ -240,7 +240,7 @@ public class ServerGame extends Game implements TurnTaker {
         Player ret = getUnknownEnemy();
         if (ret != null) return ret;
         ServerPlayer enemy = new ServerPlayer(this, false,
-            getSpecification().getUnknownEnemyNation());
+                getSpecification().getUnknownEnemyNation());
         setUnknownEnemy(enemy);
         return enemy;
     }
@@ -285,18 +285,18 @@ public class ServerGame extends Game implements TurnTaker {
         final Specification spec = getSpecification();
         if (spec.getBoolean(GameOptions.VICTORY_DEFEAT_REF)) {
             Player winner = find(getLiveEuropeanPlayers(),
-                p -> p.getPlayerType() == Player.PlayerType.INDEPENDENT);
-            if (winner != null) return (ServerPlayer)winner;
+                    p -> p.getPlayerType() == Player.PlayerType.INDEPENDENT);
+            if (winner != null) return (ServerPlayer) winner;
         }
         if (spec.getBoolean(GameOptions.VICTORY_DEFEAT_EUROPEANS)) {
             List<Player> winners = transform(getLiveEuropeanPlayers(),
-                                             p -> !p.isREF());
-            if (winners.size() == 1) return (ServerPlayer)winners.get(0);
+                    p -> !p.isREF());
+            if (winners.size() == 1) return (ServerPlayer) winners.get(0);
         }
         if (spec.getBoolean(GameOptions.VICTORY_DEFEAT_HUMANS)) {
             List<Player> winners = transform(getLiveEuropeanPlayers(),
-                                             p -> !p.isAI());
-            if (winners.size() == 1) return (ServerPlayer)winners.get(0);
+                    p -> !p.isAI());
+            if (winners.size() == 1) return (ServerPlayer) winners.get(0);
         }
         return null;
     }
@@ -310,7 +310,7 @@ public class ServerGame extends Game implements TurnTaker {
     public boolean isNextPlayerInNewTurn() {
         Player nextPlayer = getNextPlayer();
         return players.indexOf(currentPlayer) > players.indexOf(nextPlayer)
-            || currentPlayer == nextPlayer;
+                || currentPlayer == nextPlayer;
     }
 
 
@@ -344,20 +344,20 @@ public class ServerGame extends Game implements TurnTaker {
     private boolean spanishSuccessionReady(Event event, List<Player> players,
                                            LogBuilder lb) {
         final Limit yearLimit
-            = event.getLimit("model.limit.spanishSuccession.year");
+                = event.getLimit("model.limit.spanishSuccession.year");
         if (!yearLimit.evaluate(this)) return false;
 
         final Limit weakLimit
-            = event.getLimit("model.limit.spanishSuccession.weakestPlayer");
+                = event.getLimit("model.limit.spanishSuccession.weakestPlayer");
         final Limit strongLimit
-            = event.getLimit("model.limit.spanishSuccession.strongestPlayer");
+                = event.getLimit("model.limit.spanishSuccession.strongestPlayer");
         Player weakAI = null, strongAI = null;
         int weakScore = Integer.MAX_VALUE, strongScore = Integer.MIN_VALUE;
         boolean ready = false;
         lb.add("Spanish succession scores[");
         final String sep = ", ";
         for (Player player : transform(getLiveEuropeanPlayers(),
-                                       p -> !p.isREF())) {
+                p -> !p.isREF())) {
             // Has anyone met the triggering limit?
             boolean ok = strongLimit.evaluate(player);
             ready |= ok;
@@ -366,7 +366,7 @@ public class ServerGame extends Game implements TurnTaker {
             // Human players can trigger the event, but we only
             // transfer assets between AI players.
             if (!player.isAI()) continue;
-            
+
             final int score = player.getSpanishSuccessionScore();
             lb.add("=", score, sep);
             if (strongAI == null || strongScore < score) {
@@ -374,7 +374,7 @@ public class ServerGame extends Game implements TurnTaker {
                 strongAI = player;
             }
             if (weakLimit.evaluate(player)
-                && (weakAI == null || weakScore > score)) {
+                    && (weakAI == null || weakScore > score)) {
                 weakScore = score;
                 weakAI = player;
             }
@@ -407,32 +407,32 @@ public class ServerGame extends Game implements TurnTaker {
         final Player strongAI = ail.get(0);
         final Player weakAI = ail.get(1);
         if (weakAI == null || strongAI == null
-            || weakAI == strongAI) return null;
+                || weakAI == strongAI) return null;
 
         lb.add(" => ", weakAI.getName(), " cedes ", strongAI.getName(), ":");
         List<Tile> tiles = new ArrayList<>();
         Set<Tile> updated = new HashSet<>();
-        ServerPlayer strongest = (ServerPlayer)strongAI;
-        ServerPlayer weakest = (ServerPlayer)weakAI;
+        ServerPlayer strongest = (ServerPlayer) strongAI;
+        ServerPlayer weakest = (ServerPlayer) weakAI;
         forEach(flatten(getLiveNativePlayers(),
                         p -> p.getIndianSettlementsWithMissionary(weakest)),
-            is -> {
-                lb.add(" ", is.getName(), "(mission)");
-                is.getTile().cacheUnseen(strongest);//+til
-                tiles.add(is.getTile());
-                is.setContacted(strongAI);//-til
-                ServerUnit missionary = (ServerUnit)is.getMissionary();
-                if (weakest.csChangeOwner(missionary, strongAI, null, null,
-                                          cs)) { //-vis(both),-til
-                    is.getTile().updateIndianSettlement(strongAI);
-                    cs.add(See.perhaps().always(strongAI), is);
-                }
-            });
+                is -> {
+                    lb.add(" ", is.getName(), "(mission)");
+                    is.getTile().cacheUnseen(strongest);//+til
+                    tiles.add(is.getTile());
+                    is.setContacted(strongAI);//-til
+                    ServerUnit missionary = (ServerUnit) is.getMissionary();
+                    if (weakest.csChangeOwner(missionary, strongAI, null, null,
+                            cs)) { //-vis(both),-til
+                        is.getTile().updateIndianSettlement(strongAI);
+                        cs.add(See.perhaps().always(strongAI), is);
+                    }
+                });
         List<Colony> cl = weakAI.getColonyList();
         Set<Unit> contacts = new HashSet<>(cl.size());
         for (Colony c : cl) {
             updated.addAll(c.getOwnedTiles());
-            ((ServerColony)c).csChangeOwner(strongAI, false, null, cs);//-vis(both),-til
+            ((ServerColony) c).csChangeOwner(strongAI, false, null, cs);//-vis(both),-til
             lb.add(" ", c.getName());
             contacts.add(c.getFirstUnit());
         }
@@ -441,7 +441,7 @@ public class ServerGame extends Game implements TurnTaker {
             if (unit.isOnCarrier()) {
                 ; // Allow carrier to handle
             } else if (!weakest.csChangeOwner(unit, strongAI, null, null,
-                                              cs)) { //-vis(both)
+                    cs)) { //-vis(both)
                 logger.warning("Owner change failed for " + unit);
             } else {
                 unit.setMovesLeft(0);
@@ -461,34 +461,34 @@ public class ServerGame extends Game implements TurnTaker {
         }
         for (Unit u : contacts) {
             if (u.hasTile()) {
-                ((ServerUnit)u).csNewContactCheck(u.getTile(), false, cs);
+                ((ServerUnit) u).csNewContactCheck(u.getTile(), false, cs);
             }
         }
-        
+
         StringTemplate loser = weakAI.getNationLabel();
         StringTemplate winner = strongAI.getNationLabel();
         setSpanishSuccession(true);
         cs.addPartial(See.all(), this,
-            "spanishSuccession", Boolean.TRUE.toString());
+                "spanishSuccession", Boolean.TRUE.toString());
         tiles.removeAll(updated);
         cs.add(See.perhaps(), tiles);
-        
+
         weakest.csWithdraw(cs, //+vis(weakest)
-            new ModelMessage(ModelMessage.MessageType.FOREIGN_DIPLOMACY,
-                             "model.game.spanishSuccession", strongAI)
-                .addStringTemplate("%loserNation%", loser)
-                .addStringTemplate("%nation%", winner),
-            new HistoryEvent(getTurn(), HistoryEvent.HistoryEventType.SPANISH_SUCCESSION, null)
-                .addStringTemplate("%loserNation%", loser)
-                .addStringTemplate("%nation%", winner));
+                new ModelMessage(ModelMessage.MessageType.FOREIGN_DIPLOMACY,
+                        "model.game.spanishSuccession", strongAI)
+                        .addStringTemplate("%loserNation%", loser)
+                        .addStringTemplate("%nation%", winner),
+                new HistoryEvent(getTurn(), HistoryEvent.HistoryEventType.SPANISH_SUCCESSION, null)
+                        .addStringTemplate("%loserNation%", loser)
+                        .addStringTemplate("%nation%", winner));
         strongAI.invalidateCanSeeTiles();//+vis(strongest)
 
         // Trace fail where not all units are transferred
         for (FreeColGameObject fcgo : getFreeColGameObjectList()) {
             if (fcgo instanceof Ownable
-                && ((Ownable)fcgo).getOwner() == weakAI) {
+                    && ((Ownable) fcgo).getOwner() == weakAI) {
                 throw new RuntimeException("Lurking " + weakAI.getId()
-                    + " fcgo: " + fcgo);
+                        + " fcgo: " + fcgo);
             }
         }
 
@@ -513,7 +513,7 @@ public class ServerGame extends Game implements TurnTaker {
         final Player srcPlayer = agreement.getSender();
         final Player dstPlayer = agreement.getRecipient();
         boolean visibilityChange = false;
-        
+
         // Check trade carefully before committing.
         boolean fail = false;
         for (TradeItem tradeItem : agreement.getItems()) {
@@ -526,13 +526,13 @@ public class ServerGame extends Game implements TurnTaker {
             }
             if (source != srcPlayer && source != dstPlayer) {
                 logger.warning("Trade with invalid source: "
-                               + ((source == null) ? "null" : source.getId()));
+                        + ((source == null) ? "null" : source.getId()));
                 fail = true;
                 continue;
             }
             if (dest != srcPlayer && dest != dstPlayer) {
                 logger.warning("Trade with invalid destination: "
-                               + ((dest == null) ? "null" : dest.getId()));
+                        + ((dest == null) ? "null" : dest.getId()));
                 fail = true;
                 continue;
             }
@@ -554,17 +554,17 @@ public class ServerGame extends Game implements TurnTaker {
             if (goods != null) {
                 Location loc = goods.getLocation();
                 if (loc instanceof Ownable
-                    && !source.owns((Ownable)loc)) {
+                        && !source.owns((Ownable) loc)) {
                     logger.warning("Trade with invalid source owner: " + loc);
                     fail = true;
                 } else if (!(loc instanceof GoodsLocation
                         && loc.contains(goods))) {
                     logger.warning("Trade of unavailable goods " + goods
-                        + " at " + loc);
+                            + " at " + loc);
                     fail = true;
                 } else if (dest.owns(unit) && !unit.couldCarry(goods)) {
                     logger.warning("Trade unit can not carry traded goods: "
-                        + goods);
+                            + goods);
                     fail = true;
                 }
             }
@@ -578,7 +578,7 @@ public class ServerGame extends Game implements TurnTaker {
                     continue;
                 } else if (dest.owns(unit) && !unit.couldCarry(u)) {
                     logger.warning("Trade unit can not carry traded unit: "
-                        + u);
+                            + u);
                     fail = true;
                 }
             }
@@ -594,14 +594,14 @@ public class ServerGame extends Game implements TurnTaker {
             // owner too.
             Stance stance = tradeItem.getStance();
             if (stance != null
-                && source.getStance(dest) != stance
-                && !((ServerPlayer)source).csChangeStance(stance, dest, true, cs)) {
+                    && source.getStance(dest) != stance
+                    && !((ServerPlayer) source).csChangeStance(stance, dest, true, cs)) {
                 logger.warning("Stance trade failure: " + stance);
             }
             Colony colony = tradeItem.getColony(getGame());
             if (colony != null) {
-                ((ServerColony)colony).csChangeOwner(dest, false, null,
-                                                     cs);//-vis(both),-til
+                ((ServerColony) colony).csChangeOwner(dest, false, null,
+                        cs);//-vis(both),-til
                 visibilityChange = true;
             }
             int gold = tradeItem.getGold();
@@ -609,11 +609,11 @@ public class ServerGame extends Game implements TurnTaker {
                 source.modifyGold(-gold);
                 dest.modifyGold(gold);
                 cs.addPartial(See.only(source), source,
-                    "gold", String.valueOf(source.getGold()),
-                    "score", String.valueOf(source.getScore()));
+                        "gold", String.valueOf(source.getGold()),
+                        "score", String.valueOf(source.getScore()));
                 cs.addPartial(See.only(dest), dest,
-                    "gold", String.valueOf(dest.getGold()),
-                    "score", String.valueOf(dest.getScore()));
+                        "gold", String.valueOf(dest.getGold()),
+                        "score", String.valueOf(dest.getScore()));
             }
             Goods goods = tradeItem.getGoods();
             if (goods != null && settlement != null) {
@@ -631,24 +631,24 @@ public class ServerGame extends Game implements TurnTaker {
             }
             Player victim = tradeItem.getVictim();
             if (victim != null) {
-                if (((ServerPlayer)source).csChangeStance(Stance.WAR, victim, true, cs)) {
+                if (((ServerPlayer) source).csChangeStance(Stance.WAR, victim, true, cs)) {
                     // Have to add in an explicit stance change and
                     // message because the player does not normally
                     // have visibility of stance changes between other nations.
                     cs.addStance(See.only(dest), source, Stance.WAR, victim);
                     cs.addMessage(dest,
-                        new ModelMessage(MessageType.FOREIGN_DIPLOMACY,
-                                         Stance.WAR.getOtherStanceChangeKey(),
-                                         source)
-                            .addStringTemplate("%attacker%",
-                                source.getNationLabel())
-                            .addStringTemplate("%defender%",
-                                victim.getNationLabel()));
+                            new ModelMessage(MessageType.FOREIGN_DIPLOMACY,
+                                    Stance.WAR.getOtherStanceChangeKey(),
+                                    source)
+                                    .addStringTemplate("%attacker%",
+                                            source.getNationLabel())
+                                    .addStringTemplate("%defender%",
+                                            victim.getNationLabel()));
                 } else {
                     logger.warning("Incite trade failure: " + victim);
                 }
-            }                
-            ServerUnit newUnit = (ServerUnit)tradeItem.getUnit();
+            }
+            ServerUnit newUnit = (ServerUnit) tradeItem.getUnit();
             if (newUnit != null && settlement != null) {
                 Player former = newUnit.getOwner();
                 Tile oldTile = newUnit.getTile();
@@ -657,7 +657,7 @@ public class ServerGame extends Game implements TurnTaker {
                     Unit carrier = unit.getCarrier();
                     if (!carrier.couldCarry(newUnit)) {
                         logger.warning("Can not add " + newUnit
-                            + " to " + carrier);
+                                + " to " + carrier);
                         continue;
                     }
                     newLoc = carrier;
@@ -666,8 +666,8 @@ public class ServerGame extends Game implements TurnTaker {
                 } else {
                     newLoc = settlement.getTile();
                 }
-                if (((ServerPlayer)source).csChangeOwner(newUnit, dest, null,
-                                                         newLoc, cs)) {//-vis(both)
+                if (((ServerPlayer) source).csChangeOwner(newUnit, dest, null,
+                        newLoc, cs)) {//-vis(both)
                     newUnit.setMovesLeft(0);
                     cs.add(See.perhaps().always(former), oldTile);
                 }
@@ -695,7 +695,7 @@ public class ServerGame extends Game implements TurnTaker {
     public void csNewTurn(Random random, LogBuilder lb, ChangeSet cs) {
         lb.add("GAME ", getId(), ", ");
         for (Player player : getLivePlayerList()) {
-            ((ServerPlayer)player).csNewTurn(random, lb, cs);
+            ((ServerPlayer) player).csNewTurn(random, lb, cs);
         }
 
         final Specification spec = getSpecification();
