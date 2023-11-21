@@ -44,6 +44,8 @@ import net.sf.freecol.client.gui.panel.NewPanel;
 import net.sf.freecol.common.model.Modifier.ModifierType;
 import net.sf.freecol.common.util.LogBuilder;
 
+import javax.swing.*;
+
 
 /**
  * This class implements the original Colonization combat model.
@@ -716,7 +718,11 @@ public class SimpleCombatModel extends CombatModel {
         boolean attackerWon = crs.get(0) == CombatEffectType.WIN;
         boolean loserMustDie = loser.hasAbility(Ability.DISPOSE_ON_COMBAT_LOSS);
         UnitTypeChange uc;
-        
+
+        //JPanel panel = new JPanel();
+        //panel.add(new JLabel("Do you want to capture the enemy unit?"));
+        //System.out.println("add");
+
         if (loser.isNaval()) {
             // Naval victors get to loot the defenders hold.  Sink the
             // loser on great win/loss, lack of repair location, or
@@ -728,6 +734,7 @@ public class SimpleCombatModel extends CombatModel {
                 //freeColClient.getGUI().showInformationPanel
                 //TODO:isso aqui pode nao dar certo, pq eu nem testei, mas pq precisamos de um objeto game pra instanciar uma unit?
                 //TODO:criar um panel de escolha se quer o navio ou nao.
+
 
 
                 Unit newUnit = new Unit(loserPlayer.getGame());
