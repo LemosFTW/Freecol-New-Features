@@ -22,8 +22,6 @@ public class CaptureShipMessage extends ObjectMessage{
     public CaptureShipMessage(Unit winner) {
         super(TAG);
 
-
-
     }
     /**
      * Create a new {@code LootCargoMessage}.
