@@ -78,7 +78,12 @@ public class NameCache {
 
     /** Extra rumour names. */
     private static final Object rumourNothingLock = new Object();
+
+    /** Extra cave names. */
+    private static final Object caveNothingLock = new Object();
     private static List<String> rumourNothingKeys = null;
+
+    private static List<String> caveNothingKeys = null;
     
     /** Season names. */
     private static List<String> seasonNames = null;
@@ -207,6 +212,20 @@ public class NameCache {
                 rumourNothingKeys = new ArrayList<>();
                 collectKeys("model.lostCityRumour.nothing.",
                             rumourNothingKeys, Messages.DESCRIPTION_SUFFIX);
+            }
+        }
+    }
+
+    /**
+     * Initialize the caveNothing collection.
+     */
+    private  static void requireCaveNothingKeys() {
+        synchronized (caveNothingLock) {
+            if (caveNothingKeys == null) {
+                caveNothingKeys = new ArrayList<>();
+                //TODO: Check this string...
+                collectKeys("model.caveExploration.nothing",
+                        caveNothingKeys, Messages.DESCRIPTION_SUFFIX);
             }
         }
     }
@@ -485,6 +504,20 @@ public class NameCache {
         synchronized (rumourNothingLock) {
             return getRandomMember(logger, "nothingKey", rumourNothingKeys,
                                    random);
+        }
+    }
+
+    /**
+     * Get a random "nothing" cave key.
+     *
+     * @param random A pseudo-random number source.
+     * @return A suitable message key.
+     */
+    public static String getCaveNothingKey(Random random){
+        requireCaveNothingKeys();
+        synchronized (caveNothingLock) {
+            return getRandomMember(logger, "nothingKey", caveNothingKeys,
+                                    random);
         }
     }
 

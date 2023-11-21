@@ -764,6 +764,17 @@ public final class Tile extends UnitLocation implements Named, Ownable {
     }
 
     /**
+     * Does this tile have a cave?
+     *
+     * @return True if this {@code Tile} has a
+     *     {@code CaveExploration} on it.
+     */
+    public boolean hasCaveExploration() {
+        return tileItemContainer != null
+                && tileItemContainer.getCaveExploration() != null;
+    }
+
+    /**
      * Gets a cave on this tile.
      *
      * @return The {@code CaveExploration} on this
@@ -885,6 +896,10 @@ public final class Tile extends UnitLocation implements Named, Ownable {
      */
     public LostCityRumour removeLostCityRumour() {
         return removeTileItem(getLostCityRumour());
+    }
+
+    public CaveExploration removeCaveExploration() {
+        return removeTileItem(getCaveExploration());
     }
 
     /**

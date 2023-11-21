@@ -28,6 +28,7 @@ import java.util.stream.Stream;
 import javax.xml.stream.XMLStreamException;
 
 import net.sf.freecol.common.i18n.Messages;
+import net.sf.freecol.common.i18n.NameCache;
 import net.sf.freecol.common.io.FreeColXMLReader;
 import net.sf.freecol.common.io.FreeColXMLWriter;
 import static net.sf.freecol.common.model.Constants.*;
@@ -43,9 +44,7 @@ import static net.sf.freecol.common.util.StringUtils.*;
  * Represents a cave to be explored.
  */
 public  class CaveExploration extends TileItem {
-
     private static final Logger logger = Logger.getLogger(CaveExploration.class.getName());
-
 
     public static final String TAG = "CaveExplorationExploration";
 
@@ -55,6 +54,7 @@ public  class CaveExploration extends TileItem {
     public static enum CaveType {
         NOTHING_MORE_TO_EXPLORE,
         TRAP,
+        LETHAL_TRAP,
         NOTHING,
         LEARN,
         COLONIST,
@@ -87,15 +87,20 @@ public  class CaveExploration extends TileItem {
      */
     private String name = null;
 
+    private int nFloors;
+
+    private int currentFloor;
 
     /**
      * Creates a new {@code LostCityRumour} instance.
-     *
+     * TODO: get random number of floors
      * @param game The enclosing {@code Game}.
      * @param tile The {@code Tile} where the LCR is.
      */
     public CaveExploration(Game game, Tile tile) {
         super(game, tile);
+        nFloors = 5;
+        currentFloor = 0;
     }
 
     /**
@@ -149,6 +154,7 @@ public  class CaveExploration extends TileItem {
      * rumour difficulty option, expert scout or not, DeSoto or not.
      *
      * FIXME: Make CaveType a FreeColSpecObjectType and move all the
+     * TODO: Fix probabilities
      * magic numbers in here to the specification.
      *
      * @param unit The {@code Unit} exploring (optional).
@@ -156,81 +162,92 @@ public  class CaveExploration extends TileItem {
      * @return The type of rumour.
      */
     public CaveType chooseType(Unit unit, Random random) {
-        final Specification spec = getSpecification();
-        final Tile tile = getTile();
-        // Booleans for various rumour types that are conditionally available.
-        //
-        // Only colonial players get FoYs as immigration ends at independence
-        final boolean allowFoY = unit != null
-                && unit.getOwner().getPlayerType() == Player.PlayerType.COLONIAL;
-        // Certain units can learn a skill at LCRs
-        //TODO: connect this
-        final boolean allowLearn = unit != null
-                && !spec.getUnitChanges(UnitChangeType.CAVE_EXPLORATION,
-                unit.getType()).isEmpty();
-        // Expert units never vanish
-        final boolean isExpert = unit != null
-                && unit.hasAbility(Ability.EXPERT_SCOUT);
+        if(currentFloor >= nFloors) {
+            return CaveType.NOTHING_MORE_TO_EXPLORE;
+        } else {
+            final Specification spec = getSpecification();
+            final Tile tile = getTile();
+            // Booleans for various rumour types that are conditionally available.
+            //
+            // Only colonial players get FoYs as immigration ends at independence
+            final boolean allowFoY = unit != null
+                    && unit.getOwner().getPlayerType() == Player.PlayerType.COLONIAL;
+            // Certain units can learn a skill at LCRs
+            //TODO: connect this
+            final boolean allowLearn = unit != null
+                    && !spec.getUnitChanges(UnitChangeType.CAVE_EXPLORATION,
+                    unit.getType()).isEmpty();
+            // Expert units never vanish
+            final boolean isExpert = unit != null
+                    && unit.hasAbility(Ability.EXPERT_SCOUT);
 
-        // Work out the bad and good chances.  The base values are
-        // difficulty options.  Neutral results take up any remainder.
-        //TODO: CONNECT THIS
-        int percentBad = spec.getInteger(GameOptions.BAD_CAVE);
-        int percentGood = spec.getInteger(GameOptions.GOOD_CAVE);
-        if (unit != null) {
-            if (unit.getOwner().hasAbility(Ability.CAVE_ALWAYS_POSITIVE)) {
-                // DeSoto forces all good results.
-                percentBad = 0;
-                percentGood = 100;
-            } else {
-                // Otherwise apply any unit exploration bonus
-                float mod = unit.apply(1.0f, getGame().getTurn(),
-                        Modifier.EXPLORE_CAVE);
-                percentBad = Math.round(percentBad / mod);
-                percentGood = Math.round(percentGood * mod);
+            // Work out the bad and good chances.  The base values are
+            // difficulty options.  Neutral results take up any remainder.
+            //TODO: CONNECT THIS
+            int percentBad = spec.getInteger(GameOptions.BAD_CAVE);
+            int percentGood = spec.getInteger(GameOptions.GOOD_CAVE);
+            if (unit != null) {
+                if (unit.getOwner().hasAbility(Ability.CAVE_ALWAYS_POSITIVE)) {
+                    // DeSoto forces all good results.
+                    percentBad = 0;
+                    percentGood = 100;
+                } else {
+                    // Otherwise apply any unit exploration bonus
+                    float mod = unit.apply(1.0f, getGame().getTurn(),
+                            Modifier.EXPLORE_CAVE);
+                    percentBad = Math.round(percentBad / mod);
+                    percentGood = Math.round(percentGood * mod);
+                }
             }
-        }
-        int percentNeutral = Math.max(0, 100 - percentBad - percentGood);
+            int percentNeutral = Math.max(0, 100 - percentBad - percentGood);
 
-        // Add all possible events to a RandomChoice List
-        List<RandomChoice<CaveType>> c = new ArrayList<>();
+            // Add all possible events to a RandomChoice List
+            List<RandomChoice<CaveType>> c = new ArrayList<>();
 
-        if (percentGood > 0) { // The GOOD
-            if (allowLearn) {
-                c.add(new RandomChoice<>(CaveType.LEARN,
-                        30 * percentGood));
-                c.add(new RandomChoice<>(CaveType.COLONIST,
+            if (percentGood > 0) { // The GOOD
+                if (allowLearn) {
+                    c.add(new RandomChoice<>(CaveType.LEARN,
+                            30 * percentGood));
+                    c.add(new RandomChoice<>(CaveType.COLONIST,
+                            20 * percentGood));
+                } else {
+                    c.add(new RandomChoice<>(CaveType.COLONIST,
+                            30 * percentGood));
+                }
+                c.add(new RandomChoice<>(CaveType.TREASURE,
                         20 * percentGood));
-            } else {
-                c.add(new RandomChoice<>(CaveType.COLONIST,
-                        30 * percentGood));
             }
-            c.add(new RandomChoice<>(CaveType.TREASURE,
-                    20 * percentGood));
+
+            if (percentBad > 0) { // The BAD
+                List<RandomChoice<CaveType>> cbad = new ArrayList<>();
+                if (isExpert) {
+                    cbad.add(new RandomChoice<>(CaveType.TRAP,
+                            25 * percentBad));
+                    cbad.add(new RandomChoice<>(CaveType.LETHAL_TRAP,
+                            5 * percentBad));
+                } else {
+                    cbad.add(new RandomChoice<>(CaveType.TRAP,
+                            50 * percentBad));
+                    cbad.add(new RandomChoice<>(CaveType.LETHAL_TRAP,
+                            20 * percentBad));
+                }
+                RandomChoice.normalize(cbad, 100);
+                c.addAll(cbad);
+            }
+
+            if (percentNeutral > 0) { // The NEUTRAL
+                c.add(new RandomChoice<>(CaveType.NOTHING,
+                        100 * percentNeutral));
+            }
+            currentFloor++;
+            return RandomChoice.getWeightedRandom(logger, "Choose cave", c, random);
         }
-
-        if (percentBad > 0) { // The BAD
-            List<RandomChoice<CaveType>> cbad = new ArrayList<>();
-            if (isExpert) {
-                cbad.add(new RandomChoice<>(CaveType.TRAP,
-                        25 * percentBad));
-            } else cbad.add(new RandomChoice<>(CaveType.TRAP,
-                    75 * percentBad));
-
-            RandomChoice.normalize(cbad, 100);
-            c.addAll(cbad);
-        }
-
-        if (percentNeutral > 0) { // The NEUTRAL
-            c.add(new RandomChoice<>(CaveType.NOTHING,
-                    100 * percentNeutral));
-        }
-
-        return RandomChoice.getWeightedRandom(logger, "Choose cave", c, random);
     }
 
-    public ModelMessage getNothingMessage(Player player, boolean mounds, Random random) {
-        return null;
+    public ModelMessage getNothingMessage(Player player, Random random) {
+        return new ModelMessage(ModelMessage.MessageType.CAVE_EXPLORATION,
+                NameCache.getCaveNothingKey(random),
+                player);
     }
 
 

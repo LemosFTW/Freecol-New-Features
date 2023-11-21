@@ -30,6 +30,7 @@ import net.sf.freecol.common.i18n.Messages;
 import net.sf.freecol.common.i18n.NameCache;
 import net.sf.freecol.common.model.*;
 import net.sf.freecol.common.model.LostCityRumour.RumourType;
+import net.sf.freecol.common.model.CaveExploration.CaveType;
 import net.sf.freecol.common.networking.ChangeSet;
 import net.sf.freecol.common.networking.ChangeSet.See;
 import net.sf.freecol.common.networking.FountainOfYouthMessage;
@@ -608,9 +609,8 @@ public class ServerUnit extends Unit implements TurnTaker {
         return result;
     }
 
-
+    /** TODO: */
     private boolean csExploreCave(Random random, ChangeSet cs){
-
         final Player owner = getOwner();
         Tile tile = getTile();
         CaveExploration caveExplore = tile.getCaveExploration();
@@ -618,10 +618,67 @@ public class ServerUnit extends Unit implements TurnTaker {
 
         Game game = getGame();
         Specification spec = game.getSpecification();
+        UnitType unitType;
+        Unit newUnit = null;
+        List<UnitType> treasureUnitTypes = spec.getUnitTypesWithAbility(Ability.CARRY_TREASURE);
+        List<UnitType> goodsUnitTypes = spec.getUnitTypesWithAbility(Ability.CARRY_GOODS);
+
+        CaveType cave = caveExplore.chooseType(this, random);
+
+        logger.info("Unit " + getId() + " is exploring rumour " + cave);
+        boolean result = true;
+        String key = cave.getDescriptionKey();
+        switch (cave) {
+            case NOTHING_MORE_TO_EXPLORE:
+                break;
+            case TRAP:
+                Role downgrade = role.getDowngrade();
+                if (downgrade != null) {
+                    this.changeRole(downgrade, 1);
+                    this.setMovesLeft(Math.min(this.getMovesLeft(),
+                            this.getInitialMovesLeft()));
+                    //TODO: add message
+                } else {
+                    cs.addMessage(owner,
+                            new ModelMessage(ModelMessage.MessageType.CAVE_EXPLORATION,
+                                    key, owner));
+                    result = false;
+                }
+                break;
+            case LETHAL_TRAP:
+                cs.addMessage(owner,
+                        new ModelMessage(ModelMessage.MessageType.CAVE_EXPLORATION,
+                                key, owner));
+                result = false;
+                break;
+            case NOTHING:
+                cs.addMessage(owner, caveExplore.getNothingMessage(owner, random));
+                break;
+            case LEARN:
+                StringTemplate oldName = getLabel();
+                UnitTypeChange uc = getRandomMember(logger, "Choose learn",
+                        spec.getUnitChanges(UnitChangeType.CAVE_EXPLORATION, getType()),
+                        random);
+                changeType(uc.to);//-vis(serverPlayer)
+                owner.invalidateCanSeeTiles();//+vis(serverPlayer)
+                cs.addMessage(owner,
+                        new ModelMessage(ModelMessage.MessageType.CAVE_EXPLORATION,
+                                key, owner, this)
+                                .addStringTemplate("%unit%", oldName)
+                                .addNamed("%type%", getType()));
+                break;
+            case COLONIST:
+                break;
+            case TREASURE:
+                break;
+        }
+
 
         //equivalente a muito do csExploreLostCityRumour...
 
-        return true;
+        tile.cacheUnseen();//+til
+        tile.removeCaveExploration();//-til
+        return result;
     }
 
     /**
@@ -773,7 +830,7 @@ public class ServerUnit extends Unit implements TurnTaker {
         }
         owner.invalidateCanSeeTiles();//+vis(serverPlayer)
 
-        //Aqui.Fazer o check pela cave
+        //TODO:Aqui.Fazer o check pela cave
         /*
         if(newTile.hasCave() && !
          */
