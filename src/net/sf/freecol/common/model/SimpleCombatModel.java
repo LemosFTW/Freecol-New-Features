@@ -728,8 +728,7 @@ public class SimpleCombatModel extends CombatModel {
             // Naval victors get to loot the defenders hold.  Sink the
             // loser on great win/loss, lack of repair location, or
             // beached.
-            ServerUnit ship = new ServerUnit(loser.getGame(), loser.getLocation(), winnerPlayer, loser.getType(), loser.getRole());
-            winnerPlayer.addUnit(ship);
+
             if (winner.isNaval() && winner.canCaptureGoods()
                 && !loser.getGoodsList().isEmpty()) {
                 crs.add(CombatEffectType.LOOT_SHIP);

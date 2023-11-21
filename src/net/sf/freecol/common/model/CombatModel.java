@@ -53,6 +53,7 @@ public abstract class CombatModel {
         EVADE_ATTACK,         // Defending ship evades normal attack
         EVADE_BOMBARD,        // Defending ship evades bombardment
         LOOT_SHIP,            // Losing ship is looted
+        CAPTURE_SHIP,         //Losing ship is captured
         LOSE_AUTOEQUIP,       // Losing unit auto-arms and loses the arms
         LOSE_EQUIP,           // Losing unit loses some equipment
         PILLAGE_COLONY,       // Winning natives pillage an undefended colony
