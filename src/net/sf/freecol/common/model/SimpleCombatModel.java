@@ -718,6 +718,7 @@ public class SimpleCombatModel extends CombatModel {
         boolean attackerWon = crs.get(0) == CombatEffectType.WIN;
         boolean loserMustDie = loser.hasAbility(Ability.DISPOSE_ON_COMBAT_LOSS);
         UnitTypeChange uc;
+        //FreeColGameObjectListener freeColGameObjectListener = loserPlayer.getGame().freeColGameObjectListener;
 
         //JPanel panel = new JPanel();
         //panel.add(new JLabel("Do you want to capture the enemy unit?"));
@@ -737,8 +738,9 @@ public class SimpleCombatModel extends CombatModel {
 
 
 
-                Unit newUnit = new Unit(loserPlayer.getGame());
-                winnerPlayer.addUnit(newUnit);
+                //Unit newUnit = new Unit(loserPlayer.getGame());
+                //winnerPlayer.addUnit(newUnit);
+
 
             }
             if (great || loserMustDie
