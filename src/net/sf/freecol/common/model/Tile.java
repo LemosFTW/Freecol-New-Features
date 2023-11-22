@@ -887,6 +887,17 @@ public final class Tile extends UnitLocation implements Named, Ownable {
     }
 
     /**
+     * Adds a lost cave to this tile.
+     *
+     * -til: Changes appearance.
+     *
+     * @param cave The {@code CaveExploration} to add.
+     */
+    public void  addCaveExploration(CaveExploration cave){
+        addTileItem(cave);
+    }
+
+    /**
      * Removes the lost city rumour from this {@code Tile} if there
      * is one.
      *
@@ -898,6 +909,14 @@ public final class Tile extends UnitLocation implements Named, Ownable {
         return removeTileItem(getLostCityRumour());
     }
 
+    /**
+     * Removes the cave from this {@code Tile} if there
+     * is one
+     *
+     * -til changes appearence.
+     *
+     * @return The removed {@code CaveExploration}.
+     */
     public CaveExploration removeCaveExploration() {
         return removeTileItem(getCaveExploration());
     }

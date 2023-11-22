@@ -47,22 +47,7 @@ import net.sf.freecol.client.control.MapTransform;
 import net.sf.freecol.client.gui.ChoiceItem;
 import net.sf.freecol.client.gui.ImageLibrary;
 import net.sf.freecol.common.i18n.Messages;
-import net.sf.freecol.common.model.Direction;
-import net.sf.freecol.common.model.IndianNationType;
-import net.sf.freecol.common.model.LostCityRumour;
-import net.sf.freecol.common.model.ModelMessage;
-import net.sf.freecol.common.model.Nation;
-import net.sf.freecol.common.model.Player;
-import net.sf.freecol.common.model.Resource;
-import net.sf.freecol.common.model.ResourceType;
-import net.sf.freecol.common.model.SettlementType;
-import net.sf.freecol.common.model.Specification;
-import net.sf.freecol.common.model.StringTemplate;
-import net.sf.freecol.common.model.Tile;
-import net.sf.freecol.common.model.TileImprovement;
-import net.sf.freecol.common.model.TileImprovementType;
-import net.sf.freecol.common.model.TileType;
-import net.sf.freecol.common.model.UnitType;
+import net.sf.freecol.common.model.*;
 import net.sf.freecol.server.model.ServerIndianSettlement;
 
 
@@ -211,6 +196,24 @@ public final class MapEditorTransformPanel extends FreeColPanel {
         }
     }
 
+    private static class CaveExplorationTransform extends MapTransform {
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void transform(Tile t) {
+            if(t.isLand()) {
+                CaveExploration cave = t.getCaveExploration();
+                if(cave == null) {
+                    t.addCaveExploration( new CaveExploration(t.getGame(), t));
+                } else {
+                    t.removeCaveExploration();
+                }
+            }
+        }
+    }
+
     private class SettlementTransform extends MapTransform {
 
         /**
@@ -253,6 +256,7 @@ public final class MapEditorTransformPanel extends FreeColPanel {
         public void transform(Tile t) {
             t.changeType(tileType);
             t.removeLostCityRumour();
+            t.removeCaveExploration();
         }
     }
 
