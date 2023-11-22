@@ -3556,7 +3556,7 @@ public class ServerPlayer extends Player implements TurnTaker {
         final Player winnerPlayer = winner.getOwner();
         ServerUnit ship = new ServerUnit(loser.getGame(), loser.getLocation(), winnerPlayer, loser.getType(), loser.getRole());
         winnerPlayer.addUnit(ship);
-//        cs.add(See.only(winnerPlayer), new CaptureShipMessage(winner));
+        cs.add(See.only(winnerPlayer), new CaptureShipMessage(winner));
     }
 
     /**

@@ -19,6 +19,8 @@ public class CaptureShipMessage extends ObjectMessage{
     public static final String TAG = "getShip";
     private static final String LOSER_TAG = "loser";
     private static final String WINNER_TAG = "winner";
+
+    //we can pass the arguments here in the constructor
     public CaptureShipMessage(Unit winner) {
         super(TAG);
 
