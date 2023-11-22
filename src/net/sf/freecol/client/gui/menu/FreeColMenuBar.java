@@ -166,8 +166,11 @@ public abstract class FreeColMenuBar extends JMenuBar {
      * @return The menu item.
      */
     protected JCheckBoxMenuItem getCheckBoxMenuItem(String actionId) {
+        if(actionId.equals("autoGetShipAction"))
+        System.out.println("entrou");
 
         JCheckBoxMenuItem rtn = null;
+        //TODO: ACTION TA A NULL
         FreeColAction action = am.getFreeColAction(actionId);
 
         if (action != null) {

@@ -32,7 +32,7 @@ import net.sf.freecol.client.FreeColClient;
  */
 public class AutoGetShip extends SelectableAction {
 
-    public static final String id = "mapControlsAction";
+    public static final String id = "autoGetShipAction";
 
 
     /**
@@ -41,7 +41,7 @@ public class AutoGetShip extends SelectableAction {
      * @param freeColClient The {@code FreeColClient} for the game.
      */
     public AutoGetShip(FreeColClient freeColClient) {
-        super(freeColClient, id, ClientOptions.DISPLAY_MAP_CONTROLS);
+        super(freeColClient, id, ClientOptions.AUTO_GET_SHIP);
 
         setSelected(shouldBeSelected());
     }

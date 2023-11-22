@@ -106,8 +106,10 @@ public class InGameMenuBar extends FreeColMenuBar {
         //menu.setMnemonic(KeyEvent.VK_P);
 
         menu.add(getMenuItem(ShowGameOptionsAction.id));
+        System.out.println("AutoGetShip.id: " + AutoGetShip.id);
+
         menu.add(getCheckBoxMenuItem(AutoGetShip.id));
-        //menu.add(getCheckBoxMenuItem(MapControlsAction.id));
+        menu.add(getCheckBoxMenuItem(MapControlsAction.id));
 
         add(menu);
 
