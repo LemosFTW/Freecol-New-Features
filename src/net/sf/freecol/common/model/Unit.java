@@ -36,11 +36,7 @@ import static net.sf.freecol.common.util.CollectionUtils.transform;
 import static net.sf.freecol.common.util.StringUtils.getEnumKey;
 import static net.sf.freecol.common.util.StringUtils.lastPart;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
@@ -956,6 +952,16 @@ public class Unit extends GoodsLocation
         }
         setRole(role);
         setRoleCount((role.isDefaultRole()) ? 0 : roleCount);
+
+        ListIterator<AbstractGoods> it = role.getRequiredGoodsList().listIterator();
+        AbstractGoods good;
+        while (it.hasNext()) {
+            good = it.next();
+            if (good.getNameKey().contains("ammunition")) {
+                setAmmunitionCount(good.getAmount());
+                break;
+            }
+        }
     }
 
     /**
@@ -1040,9 +1046,22 @@ public class Unit extends GoodsLocation
      * @return A list of {@code AbstractGoods} defining the change
      *     in goods required.
      */
-    public List<AbstractGoods> getGoodsDifference(Role role, int roleCount) {
-        return Role.getGoodsDifference(getRole(), getRoleCount(),
-                                       role, roleCount);
+    public List<AbstractGoods> getGoodsDifference(Role role, int roleCount) { //TODO test this better
+        List<AbstractGoods> difference = Role.getGoodsDifference(getRole(), getRoleCount(), role, roleCount);
+
+        // if unit is a soldier, update the ammunition difference so that it takes into account spent ammunition
+        if (isSoldier()) {
+            ListIterator<AbstractGoods> it = difference.listIterator();
+            AbstractGoods good;
+            while (it.hasNext()) { //TODO check error situations maybe?
+                good = it.next();
+                if (good.getNameKey().contains("ammunition")) {
+                    good.setAmount(getAmmunitionCount() * -1); //TODO this is possibly changing the actual amount value of the general good and screwing things up
+                    break;
+                }
+            }
+        }
+        return difference;
     }
 
     /**
@@ -4113,6 +4132,14 @@ public class Unit extends GoodsLocation
         else {
             //Role role = getGame().getSpecification().getRole("");
         }
+    }
+
+    public void setAmmunitionCount(int count) {
+        this.ammunitionCount = count;
+    }
+
+    public int getAmmunitionCount() {
+        return this.ammunitionCount;
     }
 
     // Interface Consumer

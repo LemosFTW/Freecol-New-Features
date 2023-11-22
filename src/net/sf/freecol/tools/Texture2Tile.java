@@ -74,7 +74,9 @@ public class Texture2Tile {
 
     private static void createRotatedResult(BufferedImage inputImage) throws IOException {
         final File resultImagefile = new File("generated-rotated.png");
-        final BufferedImage tileMaskImage = ImageIO.read(new File("data/base/resources/images/masks/mask-center.size9.png"));
+        final BufferedImage tileMaskImage = ImageIO.read(new File("data/base/resources/images/masks/mask-center." +
+                "" +
+                "size9.png"));
         
         BufferedImage tempImage = tileThreeByThreeAndRescaledTo(inputImage, RESULT_WIDTH, RESULT_HEIGHT * 2);
         tempImage = createRotatedImage(tempImage, 45);

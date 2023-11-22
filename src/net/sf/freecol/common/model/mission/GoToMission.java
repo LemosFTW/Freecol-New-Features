@@ -36,7 +36,7 @@ public class GoToMission extends AbstractMission {
     public static final String TAG = "goToMission";
 
     /**
-     * The number of turns this mission has been blocked.
+     * The number of turns this G has been blocked.
      */
     private int blockedCount;
 
