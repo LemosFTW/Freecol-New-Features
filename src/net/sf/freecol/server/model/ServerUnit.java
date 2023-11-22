@@ -668,6 +668,12 @@ public class ServerUnit extends Unit implements TurnTaker {
                                 .addNamed("%type%", getType()));
                 break;
             case COLONIST:
+                List<UnitType> foundTypes = spec.getUnitTypesWithAbility(Ability.FOUND_IN_CAVE);
+                unitType = getRandomMember(logger, "Choose found", foundTypes, random);
+                newUnit = new ServerUnit(game, tile, owner, unitType);//-vis: safe, scout on tile
+                cs.addMessage(owner,
+                        new ModelMessage(ModelMessage.MessageType.CAVE_EXPLORATION,
+                                key, owner, newUnit));
                 break;
             case TREASURE:
                 break;

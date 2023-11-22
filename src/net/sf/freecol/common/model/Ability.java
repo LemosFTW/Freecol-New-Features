@@ -263,6 +263,10 @@ public final class Ability extends Feature {
     public static final String FOUND_IN_LOST_CITY
         = "model.ability.foundInLostCity";
 
+    /** The ability of a unit to be found in a cave. */
+    public static final String FOUND_IN_CAVE
+            = "model.ability.foundInCave";
+
     /** The ability of a player to found colonies. */
     public static final String FOUNDS_COLONIES
         = "model.ability.foundsColonies";

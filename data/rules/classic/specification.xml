@@ -1614,6 +1614,17 @@
                         from="model.unit.freeColonist"
                         to="model.unit.seasonedScout" probability="100"/>
     </unit-change-type>
+    <unit-change-type id="model.unitChange.caveExploration">
+      <unit-type-change id="model.unitChange.caveExploration.pettyCriminal"
+                        from="model.unit.pettyCriminal"
+                        to="model.unit.seasonedScout" probability="100"/>
+      <unit-type-change id="model.unitChange.caveExploration.indenturedServant"
+                        from="model.unit.indenturedServant"
+                        to="model.unit.seasonedScout" probability="100"/>
+      <unit-type-change id="model.unitChange.caveExploration.freeColonist"
+                        from="model.unit.freeColonist"
+                        to="model.unit.seasonedScout" probability="100"/>
+    </unit-change-type>
     <unit-change-type id="model.unitChange.natives">
       <unit-type-change id="model.unitChange.natives.indenturedServant-expertFarmer"
                         from="model.unit.indenturedServant"
@@ -1818,6 +1829,8 @@
                value="true"/>
       <ability id="model.ability.foundInLostCity"
                value="true"/>
+      <ability id="model.ability.foundInCave"
+               value="true"/>
       <required-goods id="model.goods.food"
                       value="200"/>
     </unit-type>
@@ -1842,6 +1855,8 @@
     <unit-type id="model.unit.expertSilverMiner" extends="colonist"
                price="900" skill="1" expert-production="model.goods.silver"
                recruit-probability="1" score-value="4">
+      <ability id="model.ability.foundInCave"
+               value="true"/>
       <modifier id="model.goods.silver" index="30"
                 type="multiplicative" value="2"/>
     </unit-type>
@@ -1854,6 +1869,8 @@
     <unit-type id="model.unit.expertOreMiner" extends="colonist"
                price="600" skill="1" expert-production="model.goods.ore"
                recruit-probability="1" score-value="4">
+      <ability id="model.ability.foundInCave"
+               value="true"/>
       <modifier id="model.goods.ore" index="30"
                 type="multiplicative" value="2"/>
     </unit-type>

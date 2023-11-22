@@ -274,6 +274,17 @@
                         from="model.unit.freeColonist"
                         to="model.unit.seasonedScout" probability="100"/>
     </unit-change-type>
+    <unit-change-type id="model.unitChange.caveExploration">
+      <unit-type-change id="model.unitChange.caveExploration.pettyCriminal"
+                        from="model.unit.pettyCriminal"
+                        to="model.unit.seasonedScout" probability="100"/>
+      <unit-type-change id="model.unitChange.caveExploration.indenturedServant"
+                        from="model.unit.indenturedServant"
+                        to="model.unit.seasonedScout" probability="100"/>
+      <unit-type-change id="model.unitChange.caveExploration.freeColonist"
+                        from="model.unit.freeColonist"
+                        to="model.unit.seasonedScout" probability="100"/>
+    </unit-change-type>
     <unit-change-type id="model.unitChange.natives">
       <unit-type-change id="model.unitChange.natives.indenturedServant-expertFarmer"
                         from="model.unit.indenturedServant"
