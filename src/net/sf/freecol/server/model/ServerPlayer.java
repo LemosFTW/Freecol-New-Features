@@ -2639,7 +2639,7 @@ outer:  for (Effect effect : effects) {
                 case DEFENDER_NO_AMMO:
                     ok = isAttack && result != CombatEffectType.NO_RESULT;
                     if (ok) {
-                        csNoAmmo(attackerUnit);
+                        csNoAmmo(defenderUnit);
                         defenderTileDirty = true;
                     }
                     break;
@@ -4012,7 +4012,8 @@ outer:  for (Effect effect : effects) {
      * @param unit The {@code Unit} that is out of ammo
      */
     private void csNoAmmo(Unit unit) {
-        unit.changeRole(getGame().getSpecification().getDefaultRole(), 0);
+        Role role = getGame().getSpecification().getRole("model.role.soldierNoAmmo");
+        unit.changeRole(role, 1);
     }
 
     /**

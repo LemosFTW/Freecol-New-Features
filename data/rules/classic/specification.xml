@@ -1011,7 +1011,7 @@
       <required-goods id="model.goods.muskets"
                       value="50"/>
       <required-goods id="model.goods.ammunition"
-                      value="5"/>
+                      value="1"/>
 
       <ability id="model.ability.armed"
                value="true"/>
@@ -1027,6 +1027,29 @@
                 type="additive" value="2"/>
     </role>
 
+    <role id="model.role.soldierNoAmmo"
+          expert-unit="model.unit.veteranSoldier">
+      <required-ability id="model.ability.canBeEquipped"
+                        value="true"/>
+      <required-ability id="model.ability.native"
+                        value="false"/>
+      <required-ability id="model.ability.refUnit"
+                        value="false"/>
+      <required-goods id="model.goods.muskets"
+                      value="50"/>
+
+      <ability id="model.ability.armed"
+               value="true"/>
+      <ability id="model.ability.canBeCaptured"
+               value="false"/>
+      <ability id="model.ability.captureUnits"
+               value="true"/>
+      <ability id="model.ability.demandTribute"
+               value="true"/>
+      <modifier id="model.modifier.defence" index="30"
+                type="additive" value="1"/>
+    </role>
+
     <role id="model.role.dragoon" downgrade="model.role.soldier"
           expert-unit="model.unit.veteranSoldier">
       <required-ability id="model.ability.canBeEquipped"
@@ -1040,7 +1063,7 @@
       <required-goods id="model.goods.horses"
                       value="50"/>
       <required-goods id="model.goods.ammunition"
-                      value="5"/>
+                      value="1"/>
 
       <ability id="model.ability.armed"
                value="true"/>
