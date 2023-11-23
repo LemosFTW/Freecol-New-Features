@@ -4142,7 +4142,6 @@ public class Unit extends GoodsLocation
         return this.ammunitionCount;
     }
 
-
     // Interface Consumer
 
     /**

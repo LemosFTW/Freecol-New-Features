@@ -668,7 +668,8 @@ public final class InGameController extends FreeColClientHolder {
      */
     private boolean askClearGotoOrders(Unit unit) {
         if (!askAssignTradeRoute(unit, null)
-            || !askSetDestination(unit, null)) return false;
+
+                     || !askSetDestination(unit, null)) return false;
 
         getGUI().clearGotoPath();
         return true;
