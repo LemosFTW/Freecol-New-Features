@@ -246,6 +246,22 @@ public class StringTemplate extends FreeColObject {
         this.kv.add(new SimpleEntry<>(key, value));
     }
 
+    /**
+     * Replace a key, value pair.
+     *
+     * @param key The {@code String} key.
+     * @param value The {@code StringTemplate} value.
+     */
+    private void replaceValue(String key, StringTemplate value) {
+        if (this.kv == null) return;
+        for (SimpleEntry<String, StringTemplate> e : this.kv) {
+            if (e.getKey() != null && e.getKey().equals(key)) {
+                e.setValue(value);
+                return;
+            }
+        }
+    }
+
     // @compat 0.11.x
     /**
      * Add a key.
@@ -410,6 +426,16 @@ public class StringTemplate extends FreeColObject {
      */
     public <T extends StringTemplate> T addAmount(String key, Number amount) {
         return addName(key, amount.toString());
+    }
+
+    /**
+     * Replaces the integer with the given key in this template.
+     *
+     * @param key The key of the value to replace.
+     * @param amount The value to replace.
+     */
+    public void replaceAmount(String key, Number amount) {
+        replaceValue(key, StringTemplate.name(amount.toString()));
     }
 
     /**

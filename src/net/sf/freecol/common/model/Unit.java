@@ -469,7 +469,10 @@ public class Unit extends GoodsLocation
                     extra = StringTemplate.label("");
                     for (AbstractGoods ag : requiredGoods) {
                         if (first) first = false; else extra.addName(" ");
-                        extra.addStringTemplate(ag.getLabel());
+                        StringTemplate goodLabel = ag.getLabel();
+                        if (ag.getId().contains("ammunition"))
+                            goodLabel.replaceAmount("%amount%", ammunitionCount);
+                        extra.addStringTemplate(goodLabel);
                     }
                 }
             }

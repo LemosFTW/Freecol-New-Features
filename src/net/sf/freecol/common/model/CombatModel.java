@@ -63,6 +63,8 @@ public abstract class CombatModel {
         SLAUGHTER_UNIT,       // Losing unit is slaughtered
         ATTACKER_NO_AMMO,     // Attacking unit ran out of ammo
         DEFENDER_NO_AMMO,     // Defending unit ran out of ammo
+        ATTACKER_AMMO_USED,   // Ammunition was used by the attacker
+        DEFENDER_AMMO_USED,   // Ammunition was used by the defender
     }
     
     public static final class CombatResult {

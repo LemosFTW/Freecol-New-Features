@@ -2643,6 +2643,19 @@ outer:  for (Effect effect : effects) {
                         defenderTileDirty = true;
                     }
                     break;
+                case ATTACKER_AMMO_USED:
+                    ok = isAttack && result != CombatEffectType.NO_RESULT;
+                    if (ok) {
+                        // Need to guarantee that the correct ammunition count is displayed
+                        // at the end of the combat.
+                        attackerTileDirty = true;
+                    }
+                    break;
+                case DEFENDER_AMMO_USED:
+                    ok = isAttack && result != CombatEffectType.NO_RESULT;
+                    if (ok)
+                        defenderTileDirty = true;
+                    break;
             default:
                 ok = false;
                 break;
