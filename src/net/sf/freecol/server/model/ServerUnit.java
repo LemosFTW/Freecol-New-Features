@@ -140,6 +140,7 @@ public class ServerUnit extends Unit implements TurnTaker {
         workType = spec.getGoodsType(template.getWorkType().getId());
         movesLeft = template.getMovesLeft();
         hitPoints = template.getType().getHitPoints();
+        ammunitionCount = template.getAmmunitionCount();
         changeRole(spec.getRole(template.getRole().getId()),
                    template.getRoleCount());
         setStateUnchecked(template.getState());
@@ -186,6 +187,7 @@ public class ServerUnit extends Unit implements TurnTaker {
         this.treasureAmount = 0;
         this.attrition = 0;
         this.visibleGoodsCount = -1;
+        this.ammunitionCount = 0;
 
         // Check for creation change
         UnitTypeChange uc = getUnitChange(UnitChangeType.CREATION);

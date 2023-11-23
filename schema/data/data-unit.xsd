@@ -106,6 +106,7 @@
     <xs:attribute name="destination" type="LocationId" use="optional"/>
     <xs:attribute name="tradeRoute" type="TradeRouteId" use="optional"/>
     <xs:attribute name="currentStop" type="xs:int" use="optional"/>
+    <xs:attribute name="ammunitionCount" type="xs:int" use="optional"/>
     <!-- Visible to other players when a carrier -->
     <xs:attribute name="visibleGoodsCount" type="xs:int" use="optional"/>
   </xs:complexType>

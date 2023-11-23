@@ -36,11 +36,7 @@ import static net.sf.freecol.common.util.CollectionUtils.transform;
 import static net.sf.freecol.common.util.StringUtils.getEnumKey;
 import static net.sf.freecol.common.util.StringUtils.lastPart;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
@@ -348,7 +344,7 @@ public class Unit extends GoodsLocation
     /**
      * Initialize the nationality and ethnicity.
      */
-    private final void initialize() {
+    private final void initialize() { //it's initializing every time it's used because why not I guess
         Player owner = getOwner();
         if (owner != null && isPerson()) {
             setNationality(owner.getNationId());
@@ -956,6 +952,16 @@ public class Unit extends GoodsLocation
         }
         setRole(role);
         setRoleCount((role.isDefaultRole()) ? 0 : roleCount);
+
+        ListIterator<AbstractGoods> it = role.getRequiredGoodsList().listIterator();
+        AbstractGoods good;
+        while (it.hasNext()) {
+            good = it.next();
+            if (good.getNameKey().contains("ammunition")) {
+                setAmmunitionCount(good.getAmount());
+                break;
+            }
+        }
     }
 
     /**
@@ -1040,9 +1046,22 @@ public class Unit extends GoodsLocation
      * @return A list of {@code AbstractGoods} defining the change
      *     in goods required.
      */
-    public List<AbstractGoods> getGoodsDifference(Role role, int roleCount) {
-        return Role.getGoodsDifference(getRole(), getRoleCount(),
-                                       role, roleCount);
+    public List<AbstractGoods> getGoodsDifference(Role role, int roleCount) { //TODO test this better
+        List<AbstractGoods> difference = Role.getGoodsDifference(getRole(), getRoleCount(), role, roleCount);
+
+        // if unit is a soldier, update the ammunition difference so that it takes into account spent ammunition
+        if (isSoldier()) {
+            ListIterator<AbstractGoods> it = difference.listIterator();
+            AbstractGoods good;
+            while (it.hasNext()) { //TODO check error situations maybe?
+                good = it.next();
+                if (good.getNameKey().contains("ammunition")) {
+                    good.setAmount(getAmmunitionCount() * -1); //TODO this is possibly changing the actual amount value of the general good and screwing things up
+                    break;
+                }
+            }
+        }
+        return difference;
     }
 
     /**
@@ -4101,7 +4120,7 @@ public class Unit extends GoodsLocation
      * @return whether unit role is soldier.
      */
     public boolean isSoldier() {
-        return this.role.getRoleSuffix().contains("soldier");
+        return this.role.getRoleSuffix().contains("soldier") || this.role.getRoleSuffix().equals("dragoon");
     }
 
     /**
@@ -4114,6 +4133,15 @@ public class Unit extends GoodsLocation
             //Role role = getGame().getSpecification().getRole("");
         }
     }
+
+    public void setAmmunitionCount(int count) {
+        this.ammunitionCount = count;
+    }
+
+    public int getAmmunitionCount() {
+        return this.ammunitionCount;
+    }
+
 
     // Interface Consumer
 
@@ -4669,6 +4697,7 @@ public class Unit extends GoodsLocation
         this.treasureAmount = o.getTreasureAmount();
         this.attrition = o.getAttrition();
         this.visibleGoodsCount = o.getVisibleGoodsCount();
+        this.ammunitionCount = o.getAmmunitionCount();
 
         this.owner.addUnit(this);
         return true;
@@ -4712,6 +4741,7 @@ public class Unit extends GoodsLocation
     private static final String VISIBLE_GOODS_COUNT_TAG = "visibleGoodsCount";
     private static final String WORK_LEFT_TAG = "workLeft";
     private static final String WORK_TYPE_TAG = "workType";
+    private static final String AMMUNITION_LEFT_TAG = "ammunitionCount";
     // @compat 0.11.0
     private static final String OLD_EQUIPMENT_TAG = "equipment";
     // end @compat 0.11.0
@@ -4740,6 +4770,8 @@ public class Unit extends GoodsLocation
         xw.writeAttribute(ROLE_COUNT_TAG, roleCount);
         
         xw.writeAttribute(HIT_POINTS_TAG, hitPoints);
+
+        xw.writeAttribute(AMMUNITION_LEFT_TAG, ammunitionCount);
 
         if (!xw.validFor(getOwner()) && isOwnerHidden()) {
             // Pirates do not disclose national characteristics.
@@ -4864,6 +4896,8 @@ public class Unit extends GoodsLocation
         turnsOfTraining = xr.getAttribute(TURNS_OF_TRAINING_TAG, 0);
 
         hitPoints = xr.getAttribute(HIT_POINTS_TAG, -1);
+
+        ammunitionCount = xr.getAttribute(AMMUNITION_LEFT_TAG, 0);
 
         teacher = xr.makeFreeColObject(game, TEACHER_TAG, Unit.class, false);
 
