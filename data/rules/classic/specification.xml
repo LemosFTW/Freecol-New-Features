@@ -1030,7 +1030,7 @@
     <role id="model.role.soldierNoAmmo"
           expert-unit="model.unit.veteranSoldier">
       <required-ability id="model.ability.canBeEquipped"
-                        value="true"/>
+                        value="false"/>
       <required-ability id="model.ability.native"
                         value="false"/>
       <required-ability id="model.ability.refUnit"
@@ -1079,6 +1079,35 @@
                 type="additive" value="2"/>
       <modifier id="model.modifier.offence" index="30"
                 type="additive" value="3"/>
+      <modifier id="model.modifier.movementBonus"
+                type="additive" value="9"/>
+    </role>
+
+    <role id="model.role.dragoonNoAmmo" downgrade="model.role.soldierNoAmmo"
+          expert-unit="model.unit.veteranSoldier">
+      <required-ability id="model.ability.canBeEquipped"
+                        value="false"/>
+      <required-ability id="model.ability.native"
+                        value="false"/>
+      <required-ability id="model.ability.refUnit"
+                        value="false"/>
+      <required-goods id="model.goods.muskets"
+                      value="50"/>
+      <required-goods id="model.goods.horses"
+                      value="50"/>
+
+      <ability id="model.ability.armed"
+               value="true"/>
+      <ability id="model.ability.canBeCaptured"
+               value="false"/>
+      <ability id="model.ability.captureUnits"
+               value="true"/>
+      <ability id="model.ability.demandTribue"
+               value="true"/>
+      <ability id="model.ability.mounted"
+               value="true"/>
+      <modifier id="model.modifier.defence" index="30"
+                type="additive" value="2"/>
       <modifier id="model.modifier.movementBonus"
                 type="additive" value="9"/>
     </role>
@@ -1248,6 +1277,34 @@
                 type="additive" value="2"/>
       <modifier id="model.modifier.offence" index="30"
                 type="additive" value="3"/>
+      <modifier id="model.modifier.movementBonus"
+                type="additive" value="9"/>
+      <role-change from="model.role.mountedBrave"
+                   capture="model.role.soldier"/>
+      <role-change from="model.role.mountedBrave"
+                   capture="model.role.infantry"/>
+      <role-change from="model.role.armedBrave" capture="model.role.scout"/>
+      <role-change from="model.role.armedBrave" capture="model.role.dragoon"/>
+      <role-change from="model.role.armedBrave" capture="model.role.cavalry"/>
+    </role>
+    <role id="model.role.nativeDragoonNoAmmo" downgrade="model.role.armedBrave">
+      <required-ability id="model.ability.canBeEquipped"
+                        value="false"/>
+      <required-ability id="model.ability.native"
+                        value="true"/>
+      <required-ability id="model.ability.refUnit"
+                        value="false"/>
+      <required-goods id="model.goods.muskets"
+                      value="25"/>
+      <required-goods id="model.goods.horses"
+                      value="25"/>
+
+      <ability id="model.ability.armed"
+               value="true"/>
+      <ability id="model.ability.mounted"
+               value="true"/>
+      <modifier id="model.modifier.defence" index="30"
+                type="additive" value="2"/>
       <modifier id="model.modifier.movementBonus"
                 type="additive" value="9"/>
       <role-change from="model.role.mountedBrave"

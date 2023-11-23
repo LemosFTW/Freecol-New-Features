@@ -4012,7 +4012,9 @@ outer:  for (Effect effect : effects) {
      * @param unit The {@code Unit} that is out of ammo
      */
     private void csNoAmmo(Unit unit) {
-        Role role = getGame().getSpecification().getRole("model.role.soldierNoAmmo");
+        String currRole = unit.getRole().getId();
+        String newRoleID = currRole + "NoAmmo";
+        Role role = getGame().getSpecification().getRole(newRoleID);
         unit.changeRole(role, 1);
     }
 
