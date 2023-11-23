@@ -214,6 +214,8 @@ public class SimpleMapGenerator implements MapGenerator {
             " lost city rumours of maximum ", number, ".\n");
     }
 
+    //TODO add creation of caves
+
     /**
      * Import the native settlements from a game.
      *

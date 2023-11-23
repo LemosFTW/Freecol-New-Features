@@ -354,6 +354,10 @@ public final class MapEditorTransformPanel extends FreeColPanel {
                 Messages.getName(ModelMessage.MessageType.LOST_CITY_RUMOUR),
                 new LostCityRumourTransform()));
 
+        listPanel.add(buildButton(getImageLibrary().getCaveImage(riverSize),
+                Messages.getName(ModelMessage.MessageType.CAVE_EXPLORATION),
+                new CaveExplorationTransform()));
+
         SettlementType settlementType = getNativeNation().getType()
             .getCapitalType();
         listPanel.add(buildButton(getImageLibrary().getSettlementTypeImage(settlementType, riverSize),

@@ -53,6 +53,10 @@ public class MapGeneratorOptions {
     public static final String IMPORT_RUMOURS 
         = "model.option.importRumours";
 
+    /** Option for using caves imported from a file. */
+    public static final String IMPORT_CAVES
+        = "model.option.importCaves";
+
     /** Option for using the settlements imported from a file. */
     public static final String IMPORT_SETTLEMENTS 
         = "model.option.importSettlements";

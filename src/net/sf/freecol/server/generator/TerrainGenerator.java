@@ -822,6 +822,8 @@ public class TerrainGenerator {
             && mapOptions.getBoolean(MapGeneratorOptions.IMPORT_BONUSES);
         final boolean importRumours = (importMap != null)
             && mapOptions.getBoolean(MapGeneratorOptions.IMPORT_RUMOURS);
+        final boolean importCaves = (importMap != null)
+            && mapOptions.getBoolean(MapGeneratorOptions.IMPORT_CAVES);
         final boolean importTerrain = (importMap != null)
             && mapOptions.getBoolean(MapGeneratorOptions.IMPORT_TERRAIN);
 

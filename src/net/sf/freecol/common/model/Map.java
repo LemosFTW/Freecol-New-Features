@@ -2428,6 +2428,7 @@ ok:     while (!openMap.isEmpty()) {
         boolean regions = false,
             rivers = false,
             lostCityRumours = false,
+            caveExploration = false,
             resources = false,
             nativeSettlements = false;
         final int hgt = getHeight(), wid = getWidth();
@@ -2437,6 +2438,7 @@ ok:     while (!openMap.isEmpty()) {
                 regions |= t.getRegion() != null;
                 rivers |= t.hasRiver();
                 lostCityRumours |= t.hasLostCityRumour();
+                caveExploration |= t.hasCaveExploration();
                 resources |= t.hasResource();
                 nativeSettlements |= t.getSettlement() instanceof IndianSettlement;
             }
@@ -2445,6 +2447,7 @@ ok:     while (!openMap.isEmpty()) {
             ? Layer.ALL
             : (nativeSettlements) ? Layer.NATIVES
             : (lostCityRumours) ? Layer.RUMOURS
+            : (caveExploration) ? Layer.CAVES
             : (resources) ? Layer.RESOURCES
             : (rivers) ? Layer.RIVERS
             : (regions) ? Layer.REGIONS
@@ -2690,6 +2693,13 @@ ok:     while (!openMap.isEmpty()) {
     @Override
     public String getLocationImageKey() {
         return ImageLibrary.LOST_CITY_RUMOUR;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String getCaveImageKey() {
+        return ImageLibrary.CAVE;
     }
 
 

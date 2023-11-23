@@ -677,6 +677,8 @@ public class ServerUnit extends Unit implements TurnTaker {
                 break;
             case TREASURE:
                 break;
+            case RESOURCES:
+                break;
         }
 
 

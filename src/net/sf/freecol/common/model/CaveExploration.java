@@ -46,7 +46,7 @@ import static net.sf.freecol.common.util.StringUtils.*;
 public  class CaveExploration extends TileItem {
     private static final Logger logger = Logger.getLogger(CaveExploration.class.getName());
 
-    public static final String TAG = "CaveExplorationExploration";
+    public static final String TAG = "CaveExploration";
 
     // The bogus end of the world year.
     private static final int MAYAN_PROPHESY_YEAR = 2012;
@@ -58,6 +58,7 @@ public  class CaveExploration extends TileItem {
         NOTHING,
         LEARN,
         COLONIST,
+        RESOURCES,
         TREASURE;
 
         /**
@@ -216,6 +217,8 @@ public  class CaveExploration extends TileItem {
                 }
                 c.add(new RandomChoice<>(CaveType.TREASURE,
                         20 * percentGood));
+                c.add(new RandomChoice<>(CaveType.RESOURCES,
+                        30 * percentGood));
             }
 
             if (percentBad > 0) { // The BAD
