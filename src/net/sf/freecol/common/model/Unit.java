@@ -968,6 +968,21 @@ public class Unit extends GoodsLocation
     }
 
     /**
+     * Downgrade the current role of this unit, maintaining the current ammunition.
+     *
+     * @param role The new {@code Role}.
+     * @param roleCount The new role count.
+     */
+    public void downgradeRole(Role role, int roleCount) {
+        if (!role.isCompatibleWith(getRole())) {
+            // Clear experience if changing to an incompatible role.
+            setExperience(0);
+        }
+        setRole(role);
+        setRoleCount((role.isDefaultRole()) ? 0 : roleCount);
+    }
+
+    /**
      * Change the current role count.  On zero, revert to default role.
      *
      * @param delta The change to apply to the role count.

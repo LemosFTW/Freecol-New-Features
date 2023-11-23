@@ -3618,7 +3618,7 @@ outer:  for (Effect effect : effects) {
 
         Role downgrade = role.getDowngrade();
         if (downgrade != null) {
-            loser.changeRole(downgrade, 1);
+            loser.downgradeRole(downgrade, 1);
         } else {
             loser.changeRole(spec.getDefaultRole(), 0);
         }
