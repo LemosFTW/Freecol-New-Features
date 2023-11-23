@@ -1011,7 +1011,7 @@
       <required-goods id="model.goods.muskets"
                       value="50"/>
       <required-goods id="model.goods.ammunition"
-                      value="1"/>
+                      value="5"/>
 
       <ability id="model.ability.armed"
                value="true"/>
@@ -1063,7 +1063,7 @@
       <required-goods id="model.goods.horses"
                       value="50"/>
       <required-goods id="model.goods.ammunition"
-                      value="1"/>
+                      value="5"/>
 
       <ability id="model.ability.armed"
                value="true"/>
@@ -1107,7 +1107,7 @@
       <ability id="model.ability.mounted"
                value="true"/>
       <modifier id="model.modifier.defence" index="30"
-                type="additive" value="2"/>
+                type="additive" value="1"/>
       <modifier id="model.modifier.movementBonus"
                 type="additive" value="9"/>
     </role>
@@ -1268,6 +1268,8 @@
                       value="25"/>
       <required-goods id="model.goods.horses"
                       value="25"/>
+      <required-goods id="model.goods.ammunition"
+                      value="5"/>
 
       <ability id="model.ability.armed"
                value="true"/>
@@ -1304,7 +1306,7 @@
       <ability id="model.ability.mounted"
                value="true"/>
       <modifier id="model.modifier.defence" index="30"
-                type="additive" value="2"/>
+                type="additive" value="1"/>
       <modifier id="model.modifier.movementBonus"
                 type="additive" value="9"/>
       <role-change from="model.role.mountedBrave"
