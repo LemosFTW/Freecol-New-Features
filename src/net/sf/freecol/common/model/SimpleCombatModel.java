@@ -714,9 +714,22 @@ public class SimpleCombatModel extends CombatModel {
 
         if (winner.isSoldier()) {
             winner.reduceAmmunition();
+            if (winner.getAmmunitionCount() == 0) {
+                if (attackerWon)
+                    crs.add(CombatEffectType.ATTACKER_NO_AMMO);
+                else
+                    crs.add(CombatEffectType.DEFENDER_NO_AMMO);
+            }
         }
+
         if (loser.isSoldier()) {
             loser.reduceAmmunition();
+            if (loser.getAmmunitionCount() == 0) {
+                if (attackerWon)
+                    crs.add(CombatEffectType.DEFENDER_NO_AMMO);
+                else
+                    crs.add(CombatEffectType.ATTACKER_NO_AMMO);
+            }
         }
 
         if (loser.isNaval()) {

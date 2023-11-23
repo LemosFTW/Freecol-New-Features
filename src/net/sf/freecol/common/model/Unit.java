@@ -4126,11 +4126,9 @@ public class Unit extends GoodsLocation
     /**
      * Decreases ammunition count by one, changing roles if we run out of it.
      */
-    public void reduceAmmunition() { //TODO check readability
-        if (ammunitionCount > 0 && --ammunitionCount == 0) {
-            Role role = getGame().getSpecification().getDefaultRole(); //TODO create a new role so we don't lose our guns
-            changeRole(role, 0);
-        }
+    public void reduceAmmunition() {
+        if (ammunitionCount > 0)
+            ammunitionCount--;
     }
 
     public void setAmmunitionCount(int count) {

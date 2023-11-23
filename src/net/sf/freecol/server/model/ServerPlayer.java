@@ -2629,6 +2629,20 @@ outer:  for (Effect effect : effects) {
                     }
                 }
                 break;
+                case ATTACKER_NO_AMMO:
+                    ok = isAttack && result != CombatEffectType.NO_RESULT;
+                    if (ok) {
+                        csNoAmmo(attackerUnit);
+                        attackerTileDirty = true;
+                    }
+                    break;
+                case DEFENDER_NO_AMMO:
+                    ok = isAttack && result != CombatEffectType.NO_RESULT;
+                    if (ok) {
+                        csNoAmmo(attackerUnit);
+                        defenderTileDirty = true;
+                    }
+                    break;
             default:
                 ok = false;
                 break;
@@ -3990,6 +4004,15 @@ outer:  for (Effect effect : effects) {
             : See.perhaps().always(loserPlayer),
             loserLoc, cs);//-vis(loserPlayer)
         loserPlayer.invalidateCanSeeTiles();//+vis(loserPlayer)
+    }
+
+    /**
+     * Change unit role when out of ammo.
+     *
+     * @param unit The {@code Unit} that is out of ammo
+     */
+    private void csNoAmmo(Unit unit) {
+        unit.changeRole(getGame().getSpecification().getDefaultRole(), 0);
     }
 
     /**

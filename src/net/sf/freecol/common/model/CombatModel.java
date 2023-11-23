@@ -61,6 +61,8 @@ public abstract class CombatModel {
         SINK_SHIP_ATTACK,     // Losing ship is sunk by normal attack
         SINK_SHIP_BOMBARD,    // Losing ship is sunk by bombardment
         SLAUGHTER_UNIT,       // Losing unit is slaughtered
+        ATTACKER_NO_AMMO,     // Attacking unit ran out of ammo
+        DEFENDER_NO_AMMO,     // Defending unit ran out of ammo
     }
     
     public static final class CombatResult {
