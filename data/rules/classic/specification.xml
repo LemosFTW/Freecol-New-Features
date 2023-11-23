@@ -1011,7 +1011,7 @@
       <required-goods id="model.goods.muskets"
                       value="50"/>
       <required-goods id="model.goods.ammunition"
-                      value="5"/>
+                      value="1"/>
 
       <ability id="model.ability.armed"
                value="true"/>
@@ -1040,7 +1040,7 @@
       <required-goods id="model.goods.horses"
                       value="50"/>
       <required-goods id="model.goods.ammunition"
-                      value="5"/>
+                      value="1"/>
 
       <ability id="model.ability.armed"
                value="true"/>

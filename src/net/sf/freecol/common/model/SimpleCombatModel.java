@@ -711,7 +711,14 @@ public class SimpleCombatModel extends CombatModel {
         boolean attackerWon = crs.get(0) == CombatEffectType.WIN;
         boolean loserMustDie = loser.hasAbility(Ability.DISPOSE_ON_COMBAT_LOSS);
         UnitTypeChange uc;
-        
+
+        if (winner.isSoldier()) {
+            winner.reduceAmmunition();
+        }
+        if (loser.isSoldier()) {
+            loser.reduceAmmunition();
+        }
+
         if (loser.isNaval()) {
             // Naval victors get to loot the defenders hold.  Sink the
             // loser on great win/loss, lack of repair location, or
