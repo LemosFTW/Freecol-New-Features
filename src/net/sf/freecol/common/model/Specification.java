@@ -438,6 +438,7 @@ public final class Specification implements OptionContainer {
     // Derived from readerMap container: goodsTypeList
     private final List<GoodsType> storableGoodsTypeList = new ArrayList<>();
     private final List<GoodsType> farmedGoodsTypeList = new ArrayList<>();
+    private final List<GoodsType> foundInCavesGoodsTypeList = new ArrayList<>();
     private final List<GoodsType> foodGoodsTypeList = new ArrayList<>();
     private final List<GoodsType> newWorldGoodsTypeList = new ArrayList<>();
     private final List<GoodsType> newWorldLuxuryGoodsTypeList = new ArrayList<>();
@@ -671,6 +672,7 @@ public final class Specification implements OptionContainer {
 
         storableGoodsTypeList.clear();
         farmedGoodsTypeList.clear();
+        foundInCavesGoodsTypeList.clear();
         foodGoodsTypeList.clear();
         newWorldGoodsTypeList.clear();
         newWorldLuxuryGoodsTypeList.clear();
@@ -685,6 +687,9 @@ public final class Specification implements OptionContainer {
             }
             if (goodsType.isFarmed()) {
                 farmedGoodsTypeList.add(goodsType);
+            }
+            if (goodsType.isFoundInCaves()) {
+                foundInCavesGoodsTypeList.add(goodsType);
             }
             if (goodsType.isFoodType()) {
                 foodGoodsTypeList.add(goodsType);
@@ -1444,7 +1449,7 @@ public final class Specification implements OptionContainer {
     public List<GoodsType> getFarmedGoodsTypeList() {
         return new ArrayList<>(farmedGoodsTypeList);
     }
-
+    public List<GoodsType> getFoundInCavesGoodsTypeList() {return new ArrayList<>(foundInCavesGoodsTypeList); }
     public List<GoodsType> getNewWorldGoodsTypeList() {
         return new ArrayList<>(newWorldGoodsTypeList);
     }

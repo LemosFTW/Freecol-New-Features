@@ -73,6 +73,8 @@ public  class CaveExploration extends TileItem {
         public String getDescriptionKey() {
             return Messages.descriptionKey("model." + getKey());
         }
+
+
     }
 
     /**
@@ -117,6 +119,16 @@ public  class CaveExploration extends TileItem {
 
         this.type = type;
         this.name = name;
+    }
+
+    /**
+     * Creates a new {@code CaveExploration} instance.
+     *
+     * @param game The enclosing {@code Game}.
+     * @param id The object identifier.
+     */
+    public CaveExploration(Game game, String id) {
+        super(game, id);
     }
 
     /**
@@ -251,6 +263,10 @@ public  class CaveExploration extends TileItem {
         return new ModelMessage(ModelMessage.MessageType.CAVE_EXPLORATION,
                 NameCache.getCaveNothingKey(random),
                 player);
+    }
+
+    public boolean isEmpty(){
+        return currentFloor >= nFloors;
     }
 
 

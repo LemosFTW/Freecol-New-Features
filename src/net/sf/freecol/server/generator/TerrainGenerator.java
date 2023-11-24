@@ -863,6 +863,7 @@ public class TerrainGenerator {
         }
 
         final Map.Layer layer = (importRumours) ? Map.Layer.RUMOURS
+            : (importCaves) ? Map.Layer.CAVES
             : (importBonuses) ? Map.Layer.RESOURCES
             : Map.Layer.RIVERS;
         List<Tile> fixRegions = new ArrayList<>();

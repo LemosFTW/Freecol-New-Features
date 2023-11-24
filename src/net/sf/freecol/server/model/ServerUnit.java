@@ -26,6 +26,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.logging.Logger;
 
+import net.sf.freecol.client.gui.label.GoodsTypeLabel;
 import net.sf.freecol.common.i18n.Messages;
 import net.sf.freecol.common.i18n.NameCache;
 import net.sf.freecol.common.model.*;
@@ -619,10 +620,11 @@ public class ServerUnit extends Unit implements TurnTaker {
         Game game = getGame();
         Specification spec = game.getSpecification();
         UnitType unitType;
+        GoodsType goodsType;
         Unit newUnit = null;
         List<UnitType> treasureUnitTypes = spec.getUnitTypesWithAbility(Ability.CARRY_TREASURE);
         List<UnitType> goodsUnitTypes = spec.getUnitTypesWithAbility(Ability.CARRY_GOODS);
-
+        List<GoodsType> goodsTypes = spec.getFoundInCavesGoodsTypeList();
         CaveType cave = caveExplore.chooseType(this, random);
 
         logger.info("Unit " + getId() + " is exploring rumour " + cave);
@@ -676,16 +678,42 @@ public class ServerUnit extends Unit implements TurnTaker {
                                 key, owner, newUnit));
                 break;
             case TREASURE:
+                int treasureAmount = randomInt(logger,
+                        "Base treasure amount", random, 2 * 600) + 2 * 300;
+                unitType = getRandomMember(logger, "Choose train",
+                        treasureUnitTypes, random);
+                newUnit = new ServerUnit(game, tile, owner,
+                        unitType);//-vis: safe, scout on tile
+                newUnit.setTreasureAmount(treasureAmount);
+                cs.addMessage(owner,
+                        new ModelMessage(ModelMessage.MessageType.CAVE_EXPLORATION,
+                                key, owner, newUnit)
+                                .addAmount("%money%", treasureAmount));
                 break;
             case RESOURCES:
+                int goodsAmount = randomInt(logger, "Base Item amount",
+                        random, 100) +100;
+                unitType = getRandomMember(logger, "Choose item train",
+                        goodsUnitTypes, random);
+                goodsType = getRandomMember(logger, "Choose found item",
+                        goodsTypes, random);
+                newUnit = new ServerUnit(game, tile, owner, unitType);
+                GoodsContainer goods = new GoodsContainer(game, tile);
+                goods.addGoods(goodsType, goodsAmount);
+                newUnit.setGoodsContainer(goods);
+                cs.addMessage(owner,
+                        new ModelMessage(ModelMessage.MessageType.CAVE_EXPLORATION,
+                                key, owner, newUnit).addName("%item%", goodsType)
+                                .addAmount("%amount%", goodsAmount));
                 break;
         }
 
 
         //equivalente a muito do csExploreLostCityRumour...
-
-        tile.cacheUnseen();//+til
-        tile.removeCaveExploration();//-til
+        if(caveExplore.isEmpty()){
+            tile.cacheUnseen();//+til
+            tile.removeCaveExploration();//-til
+        }
         return result;
     }
 

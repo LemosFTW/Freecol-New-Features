@@ -203,6 +203,7 @@ public class SimpleMapGenerator implements MapGenerator {
      */
     private void makeCaveExploration(Map map, Map importMap, LogBuilder lb) {
         final Game game = map.getGame();
+
         final boolean importCaves = game.getMapGeneratorOptions()
                 .getBoolean(MapGeneratorOptions.IMPORT_CAVES);
         if (importMap != null && importCaves) {
@@ -228,7 +229,7 @@ public class SimpleMapGenerator implements MapGenerator {
                 if (t.isLand() && t.isForested() && !t.hasLostCityRumour() && !t.hasCaveExploration()
                         && !t.hasSettlement() && t.getUnitCount() == 0) {
                     CaveExploration c = new CaveExploration(t.getGame(), t);
-                    t.addCaveExploration(c);
+                    t.add(c);
                     counter++;
                     break;
                 }
