@@ -126,6 +126,10 @@ public class MapGeneratorOptions {
     public static final String RUMOUR_NUMBER
         = "model.option.rumourNumber";
 
+    /** Option for setting the number of caves on the map.*/
+    public static final String CAVE_NUMBER
+        = "model.option.caveNumber";
+
     /** Option for setting the percentage of forests on the map. */
     public static final String FOREST_NUMBER 
         = "model.option.forestNumber";

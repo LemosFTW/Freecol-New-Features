@@ -4777,6 +4777,9 @@
         <!-- Option for using the lost city rumours imported from a file. -->
         <booleanOption id="model.option.importRumours"
                        defaultValue="false"/>
+        <!-- Option for using the lost city rumours imported from a file. -->
+        <booleanOption id="model.option.importCaves"
+                       defaultValue="false"/>
         <!-- Option for using the settlements imported from a file. -->
         <booleanOption id="model.option.importSettlements"
                        defaultValue="false"/>
@@ -4846,6 +4849,16 @@
         <!-- Option for setting the number of rumours on the map The
              value indicates the number of land tile per rumour tile -->
         <rangeOption id="model.option.rumourNumber"
+                     defaultValue="35" localizedLabels="true">
+          <rangeValue label="verySmall" value="50"/>
+          <rangeValue label="small" value="35"/>
+          <rangeValue label="medium" value="30"/>
+          <rangeValue label="large" value="25"/>
+          <rangeValue label="veryLarge" value="20"/>
+        </rangeOption>
+        <!-- Option for setting the number of caves on the map The
+             value indicates the number of land tile per cave tile -->
+        <rangeOption id="model.option.caveNumber"
                      defaultValue="35" localizedLabels="true">
           <rangeValue label="verySmall" value="50"/>
           <rangeValue label="small" value="35"/>
