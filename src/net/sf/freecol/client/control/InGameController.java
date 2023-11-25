@@ -165,23 +165,33 @@ public final class InGameController extends FreeColClientHolder {
 
     private static final short UNIT_LAST_MOVE_DELAY = 300;
 
-    /** A template to use as a magic cookie for aborted trades. */
+    /**
+     * A template to use as a magic cookie for aborted trades.
+     */
     private static final StringTemplate abortTrade
             = StringTemplate.template("");
 
-    /** A comparator for ordering trade route units. */
+    /**
+     * A comparator for ordering trade route units.
+     */
     private static final Comparator<Unit> tradeRouteUnitComparator
             = Comparator.comparing((Unit u) -> u.getTradeRoute().getName())
             .thenComparing(Function.<Unit>identity());
 
-    /** Current mode for moving units. */
+    /**
+     * Current mode for moving units.
+     */
     private MoveMode moveMode = MoveMode.NEXT_ACTIVE_UNIT;
 
-    /** A map of messages to be ignored. */
+    /**
+     * A map of messages to be ignored.
+     */
     private final java.util.Map<String, Integer> messagesToIgnore
             = Collections.synchronizedMap(new HashMap<>());
 
-    /** The messages in the last turn report. */
+    /**
+     * The messages in the last turn report.
+     */
     private final List<ModelMessage> turnReportMessages = new ArrayList<>();
 
 
@@ -229,7 +239,7 @@ public final class InGameController extends FreeColClientHolder {
      * to be called in contexts where we are expecting a settlement to
      * be there, such as when handling a particular move type.
      *
-     * @param tile The {@code Tile} to start at.
+     * @param tile      The {@code Tile} to start at.
      * @param direction The {@code Direction} to step.
      * @return A settlement on the adjacent tile if any.
      */
@@ -243,10 +253,10 @@ public final class InGameController extends FreeColClientHolder {
      * expecting a settlement or unit to be there, such as when
      * handling a particular move type.
      *
-     * @param tile The {@code Tile} to start at.
+     * @param tile      The {@code Tile} to start at.
      * @param direction The {@code Direction} to step.
      * @return The name of the nation controlling a settlement on the
-     *         adjacent tile if any.
+     * adjacent tile if any.
      */
     private StringTemplate getNationAt(Tile tile, Direction direction) {
         Tile newTile = tile.getNeighbourOrNull(direction);
@@ -273,9 +283,9 @@ public final class InGameController extends FreeColClientHolder {
     /**
      * Wrapper for GUI.changeView.
      *
-     * @param unit The {@code Unit} to select.
+     * @param unit  The {@code Unit} to select.
      * @param force Set true if the unit is the same, but *has*
-     *     changed in some way (e.g. moves left).
+     *              changed in some way (e.g. moves left).
      */
     private void changeView(final Unit unit, final boolean force) {
         invokeLater(() -> getGUI().changeView(unit, force));
@@ -299,10 +309,10 @@ public final class InGameController extends FreeColClientHolder {
     /**
      * Wrapper for GUI.displayChat.
      *
-     * @param sender The sender of the chat message.
+     * @param sender  The sender of the chat message.
      * @param message What to say.
-     * @param color The message color.
-     * @param pri If true, the message is private.
+     * @param color   The message color.
+     * @param pri     If true, the message is private.
      */
     private void displayChat(String sender, String message, Color color,
                              boolean pri) {
@@ -327,7 +337,7 @@ public final class InGameController extends FreeColClientHolder {
      * Wrapper for GUI.showColonyPanel.
      *
      * @param colony The {@code Colony} to show.
-     * @param unit An optional {@code Unit} to select within the panel.
+     * @param unit   An optional {@code Unit} to select within the panel.
      */
     private void showColonyPanel(final Colony colony, final Unit unit) {
         invokeLater(() -> {
@@ -340,7 +350,7 @@ public final class InGameController extends FreeColClientHolder {
      * arrived there if it is a carrier.
      *
      * @param colony The {@code Colony} to display.
-     * @param unit An optional {@code Unit} to select.
+     * @param unit   An optional {@code Unit} to select.
      */
     private void showColonyPanelWithCarrier(Colony colony, Unit unit) {
         showColonyPanel(colony, (unit.isCarrier()) ? unit : null);
@@ -350,7 +360,7 @@ public final class InGameController extends FreeColClientHolder {
      * Wrapper for GUI.showErrorPanel.
      *
      * @param template A {@code StringTemplate} to display.
-     * @param message An extra non-i18n message to display if debugging.
+     * @param message  An extra non-i18n message to display if debugging.
      */
     private void error(StringTemplate template, String message) {
         invokeLater(() -> getGUI().showErrorPanel(template, message));
@@ -360,8 +370,8 @@ public final class InGameController extends FreeColClientHolder {
      * Wrapper for GUI.showEmigrationDialog
      *
      * @param player The {@code Player} who has migrating units.
-     * @param foy True if this is a fountain of youth event.
-     * @param n The number of migrants available.
+     * @param foy    True if this is a fountain of youth event.
+     * @param n      The number of migrants available.
      */
     private void showEmigrationDialog(final Player player, final boolean foy,
                                       final int n) {
@@ -377,9 +387,9 @@ public final class InGameController extends FreeColClientHolder {
     /**
      * Wrapper for GUI.showEventPanel.
      *
-     * @param header The title.
+     * @param header   The title.
      * @param imageKey A resource key for the image to display.
-     * @param footer Optional footer text.
+     * @param footer   Optional footer text.
      */
     private void showEventPanel(String header, String imageKey,
                                 String footer) {
@@ -389,7 +399,7 @@ public final class InGameController extends FreeColClientHolder {
     /**
      * Wrapper for GUI.showInformationPanel.
      *
-     * @param disp An optional object to display in the panel.
+     * @param disp      An optional object to display in the panel.
      * @param messageId A message identifier.
      */
     private void showInformationPanel(FreeColObject disp, String messageId) {
@@ -399,7 +409,7 @@ public final class InGameController extends FreeColClientHolder {
     /**
      * Wrapper for GUI.showInformationPanel.
      *
-     * @param disp An optional object to display in the panel.
+     * @param disp     An optional object to display in the panel.
      * @param template A {@code StringTemplate} to display.
      */
     private void showInformationPanel(final FreeColObject disp,
@@ -410,8 +420,8 @@ public final class InGameController extends FreeColClientHolder {
     /**
      * Wrapper for GUI.getMissionaryChoice
      *
-     * @param unit The {@code Unit} that will enter the settlement.
-     * @param is The {@code IndianSettlement} to check.
+     * @param unit      The {@code Unit} that will enter the settlement.
+     * @param is        The {@code IndianSettlement} to check.
      * @param direction The {@code Direction} to move the unit.
      */
     private void getMissionaryChoice(final Unit unit,
@@ -454,10 +464,10 @@ public final class InGameController extends FreeColClientHolder {
     /**
      * Wrapper for GUI.showNamingDialog.
      *
-     * @param template A message template.
+     * @param template    A message template.
      * @param defaultName The default name for the object.
-     * @param unit The {@code Unit} that is naming.
-     * @param handler A callback to handle the user response.
+     * @param unit        The {@code Unit} that is naming.
+     * @param handler     A callback to handle the user response.
      */
     private void showNamingDialog(final StringTemplate template,
                                   final String defaultName, final Unit unit,
@@ -469,13 +479,13 @@ public final class InGameController extends FreeColClientHolder {
     /**
      * Wrapper for GUI.showNegotiationDialog and followup.
      *
-     * @param unit The {@code Unit} that is negotiating.
+     * @param unit       The {@code Unit} that is negotiating.
      * @param settlement The {@code Settlement} that is negotiating.
-     * @param agreement The proposed agreement.
-     * @param comment An optional {@code StringTemplate} containing a
-     *     commentary message.
-     * @param direction An optional {@code Direction} to move the unit
-     *     to the settlement on success.
+     * @param agreement  The proposed agreement.
+     * @param comment    An optional {@code StringTemplate} containing a
+     *                   commentary message.
+     * @param direction  An optional {@code Direction} to move the unit
+     *                   to the settlement on success.
      */
     private void showNegotiationDialog(final Unit unit,
                                        final Settlement settlement, final DiplomaticTrade agreement,
@@ -507,12 +517,12 @@ public final class InGameController extends FreeColClientHolder {
     /**
      * Makes a new unit active if any, or focus on a tile (useful if the
      * current unit just died).
-     *
+     * <p>
      * Displays any new {@code ModelMessage}s with
      * {@link #nextModelMessage}.
      *
      * @param tile The {@code Tile} to select if no new unit can
-     *     be made active.
+     *             be made active.
      * @return True if the active unit changes.
      */
     private boolean updateActiveUnit(Tile tile) {
@@ -567,9 +577,9 @@ public final class InGameController extends FreeColClientHolder {
     /**
      * Update the GUI and the active unit, with a fallback tile.
      *
-     * @param tile An optional fallback {@code Tile}.
+     * @param tile       An optional fallback {@code Tile}.
      * @param updateUnit An override setting which if true forces a new
-     *     active unit to be selected (useful for the Wait command).
+     *                   active unit to be selected (useful for the Wait command).
      */
     private void updateGUI(final Tile tile, boolean updateUnit) {
         displayModelMessages(false, false);
@@ -610,7 +620,7 @@ public final class InGameController extends FreeColClientHolder {
     /**
      * Ask the server to assign a trade route.
      *
-     * @param unit The {@code Unit} to assign to.
+     * @param unit       The {@code Unit} to assign to.
      * @param tradeRoute The {@code TradeRoute} to assign.
      * @return True if the assignment succeeds.
      */
@@ -628,10 +638,10 @@ public final class InGameController extends FreeColClientHolder {
     /**
      * Claim a tile.
      *
-     * @param player The {@code Player} that is claiming.
-     * @param tile The {@code Tile} to claim.
+     * @param player   The {@code Player} that is claiming.
+     * @param tile     The {@code Tile} to claim.
      * @param claimant The {@code Unit} or {@code Colony} claiming.
-     * @param price The price required.
+     * @param price    The price required.
      * @return True if the claim succeeded.
      */
     private boolean askClaimTile(Player player, Tile tile,
@@ -678,7 +688,7 @@ public final class InGameController extends FreeColClientHolder {
     /**
      * Embark onto a carrier.
      *
-     * @param unit The {@code Unit} to embark.
+     * @param unit    The {@code Unit} to embark.
      * @param carrier The carrier {@code Unit} to board.
      * @return True if boarding succeeded.
      */
@@ -699,12 +709,12 @@ public final class InGameController extends FreeColClientHolder {
 
     /**
      * A unit in Europe emigrates.
-     *
+     * <p>
      * This is unusual for an ask* routine in that it uses a *Was
      * structure, but it is needed to extract the unit.
      *
      * @param europe The {@code Europe} where the unit appears.
-     * @param slot The slot to choose, [0..RECRUIT_COUNT].
+     * @param slot   The slot to choose, [0..RECRUIT_COUNT].
      * @return The new {@code Unit} or null on failure.
      */
     private Unit askEmigrate(Europe europe, int slot) {
@@ -725,13 +735,13 @@ public final class InGameController extends FreeColClientHolder {
      * the same they can be picked automatically, but otherwise use
      * the emigration dialog.  Only to be called if the player is
      * allowed to select the unit type (i.e. FoY or has Brewster).
-     *
+     * <p>
      * The server contains the count of available FoY-units, and
      * maintains the immigration/immigrationRequired amounts, so this
      * routine will fail harmlessly if it asks for too much.
      *
-     * @param player The {@code Player} that owns the unit.
-     * @param n The number of units known to be eligible to emigrate.
+     * @param player          The {@code Player} that owns the unit.
+     * @param n               The number of units known to be eligible to emigrate.
      * @param fountainOfYouth True if this migration if due to a FoY.
      */
     private void emigration(Player player, int n, boolean fountainOfYouth) {
@@ -752,9 +762,9 @@ public final class InGameController extends FreeColClientHolder {
     /**
      * Load some goods onto a carrier.
      *
-     * @param loc The {@code Location} to load from.
-     * @param type The {@code GoodsType} to load.
-     * @param amount The amount of goods to load.
+     * @param loc     The {@code Location} to load from.
+     * @param type    The {@code GoodsType} to load.
+     * @param amount  The amount of goods to load.
      * @param carrier The {@code Unit} to load onto.
      * @return True if the load succeeded.
      */
@@ -792,7 +802,7 @@ public final class InGameController extends FreeColClientHolder {
     /**
      * Set a destination for a unit.
      *
-     * @param unit The {@code Unit} to direct.
+     * @param unit        The {@code Unit} to direct.
      * @param destination The destination {@code Location}.
      * @return True if the destination was set.
      */
@@ -806,8 +816,8 @@ public final class InGameController extends FreeColClientHolder {
     /**
      * Unload some goods from a carrier.
      *
-     * @param type The {@code GoodsType} to unload.
-     * @param amount The amount of goods to unload.
+     * @param type    The {@code GoodsType} to unload.
+     * @param amount  The amount of goods to unload.
      * @param carrier The {@code Unit} carrying the goods.
      * @return True if the unload succeeded.
      */
@@ -923,7 +933,7 @@ public final class InGameController extends FreeColClientHolder {
     /**
      * Start ignoring a kind of message.
      *
-     * @param key The key for a message to ignore.
+     * @param key  The key for a message to ignore.
      * @param turn The current {@code Turn}.
      */
     private void startIgnoringMessage(String key, Turn turn) {
@@ -954,7 +964,7 @@ public final class InGameController extends FreeColClientHolder {
      * See if messages with a given key were ignored last turn.  If so,
      * continue to ignore them.
      *
-     * @param key The key to check.
+     * @param key  The key to check.
      * @param turn The current {@code Turn}.
      * @return True if the message should continue to be ignored.
      */
@@ -978,7 +988,7 @@ public final class InGameController extends FreeColClientHolder {
      * Displays pending {@code ModelMessage}s.
      *
      * @param allMessages Display all messages or just the undisplayed ones.
-     * @param endOfTurn Use a turn report panel if necessary.
+     * @param endOfTurn   Use a turn report panel if necessary.
      * @return True if any messages were displayed.
      */
     private boolean displayModelMessages(final boolean allMessages,
@@ -1025,7 +1035,7 @@ public final class InGameController extends FreeColClientHolder {
 
     /**
      * Displays the next {@code ModelMessage}.
-     *
+     * <p>
      * Called from CC.reconnect, CargoPanel,
      * ColonyPanel.closeColonyPanel, EuropePanel.exitAction,
      * EuropePanel.MarketPanel
@@ -1044,7 +1054,7 @@ public final class InGameController extends FreeColClientHolder {
      * Do the goto orders operation.
      *
      * @return True if all goto orders have been performed and no units
-     *     reached their destination and are free to move again.
+     * reached their destination and are free to move again.
      */
     private boolean doExecuteGotoOrders() {
         final Player player = getMyPlayer();
@@ -1171,11 +1181,11 @@ public final class InGameController extends FreeColClientHolder {
     /**
      * Moves the given unit towards its destination/s if possible.
      *
-     * @param unit The {@code Unit} to move.
+     * @param unit     The {@code Unit} to move.
      * @param messages An optional list in which to retain any
-     *     trade route {@code ModelMessage}s generated.
+     *                 trade route {@code ModelMessage}s generated.
      * @return True if all is well with the unit, false if the unit
-     *     should be selected and examined by the user.
+     * should be selected and examined by the user.
      */
     private boolean moveToDestination(Unit unit, List<ModelMessage> messages) {
         final Player player = getMyPlayer();
@@ -1287,11 +1297,11 @@ public final class InGameController extends FreeColClientHolder {
 
     /**
      * Move a unit in a given direction.
-     *
+     * <p>
      * Public for the test suite.
      *
-     * @param unit The {@code Unit} to move.
-     * @param direction The {@code Direction} to move in.
+     * @param unit        The {@code Unit} to move.
+     * @param direction   The {@code Direction} to move in.
      * @param interactive Interactive mode: play sounds and emit errors.
      * @return True if automatic movement of the unit can proceed.
      */
@@ -1502,7 +1512,7 @@ public final class InGameController extends FreeColClientHolder {
     /**
      * Move a unit from off map to an on map location.
      *
-     * @param unit The {@code Unit} to be moved.
+     * @param unit        The {@code Unit} to be moved.
      * @param destination The {@code Location} to be moved to.
      * @return True if automatic movement of the unit can proceed (never).
      */
@@ -1531,7 +1541,7 @@ public final class InGameController extends FreeColClientHolder {
     /**
      * Move a unit from on map towards Europe.
      *
-     * @param unit The {@code Unit} to be moved.
+     * @param unit   The {@code Unit} to be moved.
      * @param europe The {@code Europe} to be moved to.
      * @return True if automatic movement of the unit can proceed (never).
      */
@@ -1548,7 +1558,7 @@ public final class InGameController extends FreeColClientHolder {
      * Confirm attack or demand a tribute from a native settlement, following
      * an attacking move.
      *
-     * @param unit The {@code Unit} to perform the attack.
+     * @param unit      The {@code Unit} to perform the attack.
      * @param direction The direction in which to attack.
      * @return True if automatic movement of the unit can proceed (never).
      */
@@ -1591,7 +1601,7 @@ public final class InGameController extends FreeColClientHolder {
      * Confirm attack or demand a tribute from a settlement, following
      * an attacking move.
      *
-     * @param unit The {@code Unit} to perform the attack.
+     * @param unit      The {@code Unit} to perform the attack.
      * @param direction The direction in which to attack.
      * @return True if automatic movement of the unit can proceed (never).
      */
@@ -1641,7 +1651,7 @@ public final class InGameController extends FreeColClientHolder {
      * Primitive to handle autoloading of a list of units onto a carrier.
      *
      * @param carrier The carrier {@code Unit} to load onto.
-     * @param embark A list of {@code Unit}s to load.
+     * @param embark  A list of {@code Unit}s to load.
      * @return True if automatic movement of the carrier can proceed.
      */
     private boolean moveAutoload(Unit carrier, List<Unit> embark) {
@@ -1661,10 +1671,10 @@ public final class InGameController extends FreeColClientHolder {
     /**
      * Initiates diplomacy with a foreign power.
      *
-     * @param unit The {@code Unit} negotiating.
+     * @param unit      The {@code Unit} negotiating.
      * @param direction The direction of a settlement to negotiate with.
-     * @param dt The base {@code DiplomaticTrade} agreement to
-     *     begin the negotiation with.
+     * @param dt        The base {@code DiplomaticTrade} agreement to
+     *                  begin the negotiation with.
      * @return True if automatic movement of the unit can proceed (never).
      */
     private boolean moveDiplomacy(Unit unit, Direction direction,
@@ -1689,10 +1699,10 @@ public final class InGameController extends FreeColClientHolder {
      * snatching a useful result from the jaws of a
      * MOVE_NO_ACCESS_LAND failure.
      *
-     * @param unit The carrier containing the unit to disembark.
+     * @param unit      The carrier containing the unit to disembark.
      * @param direction The direction in which to disembark the unit.
      * @return True if the disembark "succeeds" (which deliberately includes
-     *     declined disembarks).
+     * declined disembarks).
      */
     private boolean moveDisembark(Unit unit, final Direction direction) {
         final Tile tile = unit.getTile().getNeighbourOrNull(direction);
@@ -1743,7 +1753,7 @@ public final class InGameController extends FreeColClientHolder {
      * Embarks the specified unit onto a carrier in a specified direction
      * following a move of MoveType.EMBARK.
      *
-     * @param unit The {@code Unit} that wishes to embark.
+     * @param unit      The {@code Unit} that wishes to embark.
      * @param direction The direction in which to embark.
      * @return True if automatic movement of the unit can proceed (never).
      */
@@ -1785,7 +1795,7 @@ public final class InGameController extends FreeColClientHolder {
      * Confirm exploration of a lost city rumour, following a move of
      * MoveType.EXPLORE_LOST_CITY_RUMOUR.
      *
-     * @param unit The {@code Unit} that is exploring.
+     * @param unit      The {@code Unit} that is exploring.
      * @param direction The direction of a rumour.
      * @return True if automatic movement of the unit can proceed (never).
      */
@@ -1819,7 +1829,7 @@ public final class InGameController extends FreeColClientHolder {
      * a move of MoveType.MOVE_HIGH_SEAS.
      * This may result in a move to Europe, no move, or an ordinary move.
      *
-     * @param unit The {@code Unit} to be moved.
+     * @param unit      The {@code Unit} to be moved.
      * @param direction The direction in which to move.
      * @return True if automatic movement of the unit can proceed.
      */
@@ -1856,7 +1866,7 @@ public final class InGameController extends FreeColClientHolder {
      * The colonist does not physically get into the village, it will
      * just stay where it is and gain the skill.
      *
-     * @param unit The {@code Unit} to learn the skill.
+     * @param unit      The {@code Unit} to learn the skill.
      * @param direction The direction in which the Indian settlement lies.
      * @return True if automatic movement of the unit can proceed (never).
      */
@@ -1896,7 +1906,7 @@ public final class InGameController extends FreeColClientHolder {
      * Move a unit in a specified direction on the map, following a
      * move of MoveType.MOVE.
      *
-     * @param unit The {@code Unit} to be moved.
+     * @param unit      The {@code Unit} to be moved.
      * @param direction The direction in which to move the Unit.
      * @return True if automatic movement of the unit can proceed.
      */
@@ -1957,10 +1967,10 @@ public final class InGameController extends FreeColClientHolder {
      * Move to a foreign colony and either attack, negotiate with the
      * foreign power or spy on them.  Follows a move of
      * MoveType.ENTER_FOREIGN_COLONY_WITH_SCOUT.
-     *
+     * <p>
      * FIXME: Unify trade and negotiation.
      *
-     * @param unit The unit that will spy, negotiate or attack.
+     * @param unit      The unit that will spy, negotiate or attack.
      * @param direction The direction in which the foreign colony lies.
      * @return True if automatic movement of the unit can proceed (never).
      */
@@ -2001,7 +2011,7 @@ public final class InGameController extends FreeColClientHolder {
      * The scout does not physically get into the village, it will
      * just stay where it is.
      *
-     * @param unit The {@code Unit} that is scouting.
+     * @param unit      The {@code Unit} that is scouting.
      * @param direction The direction in which the Indian settlement lies.
      * @return True if automatic movement of the unit can proceed (never).
      */
@@ -2043,7 +2053,7 @@ public final class InGameController extends FreeColClientHolder {
     /**
      * Spy on a foreign colony.
      *
-     * @param unit The {@code Unit} that is spying.
+     * @param unit      The {@code Unit} that is spying.
      * @param direction The {@code Direction} of a colony to spy on.
      * @return True if automatic movement of the unit can proceed (never).
      */
@@ -2061,7 +2071,7 @@ public final class InGameController extends FreeColClientHolder {
      * Arrive at a settlement with a laden carrier following a move of
      * MoveType.ENTER_SETTLEMENT_WITH_CARRIER_AND_GOODS.
      *
-     * @param unit The carrier.
+     * @param unit      The carrier.
      * @param direction The direction to the settlement.
      * @return True if automatic movement of the unit can proceed (never).
      */
@@ -2091,8 +2101,8 @@ public final class InGameController extends FreeColClientHolder {
     /**
      * Demand a tribute.
      *
-     * @param unit The {@code Unit} to perform the attack.
-     * @param amount An amount of tribute to demand.
+     * @param unit      The {@code Unit} to perform the attack.
+     * @param amount    An amount of tribute to demand.
      * @param direction The direction in which to attack.
      * @return True if automatic movement of the unit can proceed (never).
      */
@@ -2122,7 +2132,7 @@ public final class InGameController extends FreeColClientHolder {
      * Move a missionary into a native settlement, following a move of
      * MoveType.ENTER_INDIAN_SETTLEMENT_WITH_MISSIONARY.
      *
-     * @param unit The {@code Unit} that will enter the settlement.
+     * @param unit      The {@code Unit} that will enter the settlement.
      * @param direction The direction in which the Indian settlement lies.
      * @return True if automatic movement of the unit can proceed (never).
      */
@@ -2142,9 +2152,9 @@ public final class InGameController extends FreeColClientHolder {
      * Follows a trade route, doing load/unload actions, moving the unit,
      * and updating the stop and destination.
      *
-     * @param unit The {@code Unit} on the route.
+     * @param unit     The {@code Unit} on the route.
      * @param messages An optional list in which to retain any
-     *     {@code ModelMessage}s generated.
+     *                 {@code ModelMessage}s generated.
      * @return True if automatic movement can proceed.
      */
     private boolean followTradeRoute(Unit unit, List<ModelMessage> messages) {
@@ -2290,7 +2300,7 @@ public final class InGameController extends FreeColClientHolder {
      * Work out what goods to load onto a unit at a stop, and load them.
      *
      * @param unit The {@code Unit} to load.
-     * @param lb A {@code LogBuilder} to update.
+     * @param lb   A {@code LogBuilder} to update.
      * @return True if goods were loaded.
      */
     private boolean loadUnitAtStop(Unit unit, LogBuilder lb) {
@@ -2517,7 +2527,7 @@ public final class InGameController extends FreeColClientHolder {
      * Work out what goods to unload from a unit at a stop, and unload them.
      *
      * @param unit The {@code Unit} to unload.
-     * @param lb A {@code LogBuilder} to update.
+     * @param lb   A {@code LogBuilder} to update.
      * @return True if something was unloaded.
      */
     private boolean unloadUnitAtStop(Unit unit, LogBuilder lb) {
@@ -2641,7 +2651,7 @@ public final class InGameController extends FreeColClientHolder {
 
     /**
      * Abandon a colony with no units.
-     *
+     * <p>
      * Called from ColonyPanel.closeColonyPanel
      *
      * @param colony The {@code Colony} to be abandoned.
@@ -2675,11 +2685,11 @@ public final class InGameController extends FreeColClientHolder {
     /**
      * Animate an attack.
      *
-     * @param attacker The attacking {@code Unit}.
-     * @param defender The defending {@code Unit}.
+     * @param attacker     The attacking {@code Unit}.
+     * @param defender     The defending {@code Unit}.
      * @param attackerTile The {@code Tile} the attack originates from.
      * @param defenderTile The {@code Tile} the defence takes place on.
-     * @param success True if the attack succeeds.
+     * @param success      True if the attack succeeds.
      */
     public void animateAttackHandler(Unit attacker, Unit defender,
                                      Tile attackerTile, Tile defenderTile,
@@ -2692,7 +2702,7 @@ public final class InGameController extends FreeColClientHolder {
     /**
      * Animate a move.
      *
-     * @param unit The {@code Unit} that moves.
+     * @param unit    The {@code Unit} that moves.
      * @param oldTile The {@code Tile} the move begins at.
      * @param newTile The {@code Tile} the move ends at.
      */
@@ -2704,7 +2714,7 @@ public final class InGameController extends FreeColClientHolder {
 
     /**
      * Assigns a student to a teacher.
-     *
+     * <p>
      * Called from UnitLabel
      *
      * @param student The student {@code Unit}.
@@ -2737,11 +2747,11 @@ public final class InGameController extends FreeColClientHolder {
 
     /**
      * Assigns a trade route to a unit.
-     *
+     * <p>
      * Called from EuropePanel.DestinationPanel, TradeRoutePanel(),
      * TradeRoutePanel.newRoute
      *
-     * @param unit The {@code Unit} to assign a trade route to.
+     * @param unit       The {@code Unit} to assign a trade route to.
      * @param tradeRoute The {@code TradeRoute} to assign.
      * @return True if the route was successfully assigned.
      */
@@ -2760,10 +2770,10 @@ public final class InGameController extends FreeColClientHolder {
     /**
      * Boards a specified unit onto a carrier.
      * The carrier must be at the same location as the boarding unit.
-     *
+     * <p>
      * Called from CargoPanel, TilePopup.
      *
-     * @param unit The {@code Unit} which is to board the carrier.
+     * @param unit    The {@code Unit} which is to board the carrier.
      * @param carrier The location of this Unit.
      * @return True if the unit boards the carrier.
      */
@@ -2782,7 +2792,7 @@ public final class InGameController extends FreeColClientHolder {
 
     /**
      * Use the active unit to build a colony.
-     *
+     * <p>
      * Called from BuildColonyAction.
      *
      * @param unit The {@code Unit} to build the colony.
@@ -2859,11 +2869,11 @@ public final class InGameController extends FreeColClientHolder {
     /**
      * Buy goods in Europe.
      * The amount of goods is adjusted to the space in the carrier.
-     *
+     * <p>
      * Called from CargoPanel, TilePopup, loadCargo()
      *
-     * @param type The type of goods to buy.
-     * @param amount The amount of goods to buy.
+     * @param type    The type of goods to buy.
+     * @param amount  The amount of goods to buy.
      * @param carrier The {@code Unit} acting as carrier.
      * @return True if the purchase succeeds.
      */
@@ -2890,7 +2900,7 @@ public final class InGameController extends FreeColClientHolder {
 
     /**
      * Sends a public chat message.
-     *
+     * <p>
      * Called from ChatPanel
      *
      * @param chat The text of the message.
@@ -2908,10 +2918,10 @@ public final class InGameController extends FreeColClientHolder {
     /**
      * Chat with another player.
      *
-     * @param sender The sender of the chat message.
+     * @param sender  The sender of the chat message.
      * @param message What to say.
-     * @param color The message color.
-     * @param pri If true, the message is private.
+     * @param color   The message color.
+     * @param pri     If true, the message is private.
      */
     public void chatHandler(String sender, String message, Color color,
                             boolean pri) {
@@ -2920,10 +2930,10 @@ public final class InGameController extends FreeColClientHolder {
 
     /**
      * Changes the state of this {@code Unit}.
-     *
+     * <p>
      * Called from FortifyAction, SentryAction, TilePopup, UnitLabel
      *
-     * @param unit The {@code Unit}
+     * @param unit  The {@code Unit}
      * @param state The state of the unit.
      * @return True if the state was changed.
      */
@@ -2959,10 +2969,10 @@ public final class InGameController extends FreeColClientHolder {
 
     /**
      * Changes the work type of this {@code Unit}.
-     *
+     * <p>
      * Called from ImprovementAction.
      *
-     * @param unit The {@code Unit}
+     * @param unit            The {@code Unit}
      * @param improvementType a {@code TileImprovementType} value
      * @return True if the improvement was changed.
      */
@@ -2996,10 +3006,10 @@ public final class InGameController extends FreeColClientHolder {
 
     /**
      * Changes the work type of this {@code Unit}.
-     *
+     * <p>
      * Called from ColonyPanel.tryWork, UnitLabel
      *
-     * @param unit The {@code Unit}
+     * @param unit     The {@code Unit}
      * @param workType The new {@code GoodsType} to produce.
      * @return True if the work type was changed.
      */
@@ -3019,7 +3029,7 @@ public final class InGameController extends FreeColClientHolder {
     /**
      * Check if a unit is a treasure train, and if it should be cashed in.
      * Transfers the gold carried by this unit to the {@link Player owner}.
-     *
+     * <p>
      * Called from TilePopup
      *
      * @param unit The {@code Unit} to be checked.
@@ -3063,7 +3073,7 @@ public final class InGameController extends FreeColClientHolder {
      * Choose a founding father from an offered list.
      *
      * @param ffs A list of {@code FoundingFather}s to choose from.
-     * @param ff The chosen {@code FoundingFather} (may be null).
+     * @param ff  The chosen {@code FoundingFather} (may be null).
      * @return True if a father was chosen.
      */
     private boolean chooseFoundingFather(List<FoundingFather> ffs,
@@ -3096,10 +3106,10 @@ public final class InGameController extends FreeColClientHolder {
 
     /**
      * Claim a tile.
-     *
+     * <p>
      * Called from ColonyPanel.ASingleTilePanel, UnitLabel and work()
      *
-     * @param tile The {@code Tile} to claim.
+     * @param tile     The {@code Tile} to claim.
      * @param claimant The {@code Unit} or {@code Colony} claiming.
      * @return True if the claim succeeded.
      */
@@ -3127,7 +3137,7 @@ public final class InGameController extends FreeColClientHolder {
     /**
      * Clears the goto orders of the given unit by setting its destination
      * to null.
-     *
+     * <p>
      * Called from CanvasMouseListener
      *
      * @param unit The {@code Unit} to clear the destination for.
@@ -3148,7 +3158,7 @@ public final class InGameController extends FreeColClientHolder {
     /**
      * Clears the orders of the given unit.
      * Make the unit active and set a null destination and trade route.
-     *
+     * <p>
      * Called from ClearOrdersAction, TilePopup, TradeRoutePanel, UnitLabel
      *
      * @param unit The {@code Unit} to clear the orders of
@@ -3177,7 +3187,7 @@ public final class InGameController extends FreeColClientHolder {
 
     /**
      * Clear the speciality of a Unit, making it a Free Colonist.
-     *
+     * <p>
      * Called from UnitLabel
      *
      * @param unit The {@code Unit} to clear the speciality of.
@@ -3222,7 +3232,7 @@ public final class InGameController extends FreeColClientHolder {
     /**
      * Special handling when we close a colony panel.
      *
-     * @param colony The {@code Colony} to close.
+     * @param colony  The {@code Colony} to close.
      * @param abandon True if abandoning, otherwise just update.
      */
     public void closeColony(Colony colony, boolean abandon) {
@@ -3244,7 +3254,7 @@ public final class InGameController extends FreeColClientHolder {
 
     /**
      * Declares independence for the home country.
-     *
+     * <p>
      * Called from DeclareIndependenceAction
      *
      * @return True if independence was declared.
@@ -3282,7 +3292,7 @@ public final class InGameController extends FreeColClientHolder {
 
     /**
      * Delete a trade route.
-     *
+     * <p>
      * Called from TradeRoutePanel button.
      *
      * @param tradeRoute The {@code TradeRoute} to delete.
@@ -3298,8 +3308,8 @@ public final class InGameController extends FreeColClientHolder {
     /**
      * Handle a diplomatic offer.
      *
-     * @param our Our {@code FreeColGameObject} that is negotiating.
-     * @param other The other {@code FreeColGameObject}.
+     * @param our       Our {@code FreeColGameObject} that is negotiating.
+     * @param other     The other {@code FreeColGameObject}.
      * @param agreement The {@code DiplomaticTrade} agreement.
      */
     public void diplomacyHandler(final FreeColGameObject our,
@@ -3353,7 +3363,7 @@ public final class InGameController extends FreeColClientHolder {
 
     /**
      * Disbands the active unit.
-     *
+     * <p>
      * Called from DisbandUnitAction.
      *
      * @param unit The {@code Unit} to disband.
@@ -3386,9 +3396,9 @@ public final class InGameController extends FreeColClientHolder {
      * Emigrate a unit from Europe.
      *
      * @param player The {@code Player} that owns the unit.
-     * @param slot The slot to emigrate from, [0..RECRUIT_COUNT].
-     * @param n The number of remaining units known to be eligible to migrate.
-     * @param foY True if this migration is due to a fountain of youth event.
+     * @param slot   The slot to emigrate from, [0..RECRUIT_COUNT].
+     * @param n      The number of remaining units known to be eligible to migrate.
+     * @param foY    True if this migration is due to a fountain of youth event.
      */
     private void emigrate(Player player, int slot, int n, boolean foY) {
         if (player == null || !player.isColonial()
@@ -3401,7 +3411,7 @@ public final class InGameController extends FreeColClientHolder {
 
     /**
      * End the turn command.
-     *
+     * <p>
      * Called from EndTurnAction, GUI.showEndTurnDialog
      *
      * @param showDialog If false, suppress showing the end turn dialog.
@@ -3416,11 +3426,11 @@ public final class InGameController extends FreeColClientHolder {
 
     /**
      * Change the role-equipment a unit has.
-     *
+     * <p>
      * Called from DefaultTransferHandler, QuickActionMenu
      *
-     * @param unit The {@code Unit}.
-     * @param role The {@code Role} to assume.
+     * @param unit      The {@code Unit}.
+     * @param role      The {@code Role} to assume.
      * @param roleCount The role count.
      * @return True if the role is taken.
      */
@@ -3495,7 +3505,7 @@ public final class InGameController extends FreeColClientHolder {
      * Handle an error.
      *
      * @param template A {@code StringTemplate} to display.
-     * @param message An extra non-i18n message to display if debugging.
+     * @param message  An extra non-i18n message to display if debugging.
      */
     public void errorHandler(StringTemplate template, String message) {
         error(template, message);
@@ -3503,11 +3513,11 @@ public final class InGameController extends FreeColClientHolder {
 
     /**
      * Execute goto orders command.
-     *
+     * <p>
      * Called from ExecuteGotoOrdersAction.
      *
      * @return True if all goto orders have been performed and no units
-     *     reached their destination and are free to move again.
+     * reached their destination and are free to move again.
      */
     public boolean executeGotoOrders() {
         if (!requireOurTurn()
@@ -3519,9 +3529,9 @@ public final class InGameController extends FreeColClientHolder {
     /**
      * Handle feature changes.
      *
-     * @param parent The parent {@code FreeColGameObject} to add to.
+     * @param parent   The parent {@code FreeColGameObject} to add to.
      * @param children The child {@code FreeColObject}s that change.
-     * @param add If true, add the child, otherwise remove it.
+     * @param add      If true, add the child, otherwise remove it.
      */
     public void featureChangeHandler(FreeColGameObject parent,
                                      List<FreeColObject> children, boolean add) {
@@ -3572,9 +3582,9 @@ public final class InGameController extends FreeColClientHolder {
      * A player makes first contact with a native player.
      *
      * @param player The {@code Player} making contact.
-     * @param other The native {@code Player} being contacted.
-     * @param tile An optional {@code Tile} to offer the player if
-     *     they have made a first landing.
+     * @param other  The native {@code Player} being contacted.
+     * @param tile   An optional {@code Tile} to offer the player if
+     *               they have made a first landing.
      * @param result Whether the initial treaty was accepted.
      * @return True if first contact occurs.
      */
@@ -3593,10 +3603,10 @@ public final class InGameController extends FreeColClientHolder {
      * A player makes first contact with a native player.
      *
      * @param player The {@code Player} making contact.
-     * @param other The native {@code Player} being contacted.
-     * @param tile An optional {@code Tile} to offer the player if
-     *     they have made a first landing.
-     * @param n The number of settlements claimed by the native player.
+     * @param other  The native {@code Player} being contacted.
+     * @param tile   An optional {@code Tile} to offer the player if
+     *               they have made a first landing.
+     * @param n      The number of settlements claimed by the native player.
      */
     public void firstContactHandler(Player player, Player other, Tile tile,
                                     int n) {
@@ -3628,7 +3638,7 @@ public final class InGameController extends FreeColClientHolder {
 
     /**
      * Go to a tile.
-     *
+     * <p>
      * Called from CanvasMouseListener, TilePopup
      *
      * @param unit The {@code Unit} to move.
@@ -3655,11 +3665,11 @@ public final class InGameController extends FreeColClientHolder {
 
     /**
      * Display the high scores.
-     *
+     * <p>
      * Called from ReportHighScoresAction
      *
      * @param high A {@code Boolean} whose values indicates whether
-     *     a new high score has been achieved, or no information if null.
+     *             a new high score has been achieved, or no information if null.
      * @return True if the server interaction succeeded.
      */
     public boolean highScore(Boolean high) {
@@ -3670,7 +3680,7 @@ public final class InGameController extends FreeColClientHolder {
     /**
      * Display the high scores.
      *
-     * @param key An optional message key.
+     * @param key    An optional message key.
      * @param scores The list of {@code HighScore} records to display.
      */
     public void highScoresHandler(String key, List<HighScore> scores) {
@@ -3681,11 +3691,11 @@ public final class InGameController extends FreeColClientHolder {
     /**
      * Ignore this ModelMessage from now on until it is not generated
      * in a turn.
-     *
+     * <p>
      * Called from ReportTurnPanel
      *
      * @param message a {@code ModelMessage} value
-     * @param flag whether to ignore the ModelMessage or not
+     * @param flag    whether to ignore the ModelMessage or not
      * @return True, ignore message status changes can not fail.
      */
     public boolean ignoreMessage(ModelMessage message, boolean flag) {
@@ -3706,10 +3716,10 @@ public final class InGameController extends FreeColClientHolder {
     /**
      * Handle an incite response.
      *
-     * @param unit The {@code Unit} that is inciting.
-     * @param is The {@code IndianSettlement} being incited.
+     * @param unit  The {@code Unit} that is inciting.
+     * @param is    The {@code IndianSettlement} being incited.
      * @param enemy The {@code Player} incited against.
-     * @param gold The gold required by the natives to become hostile.
+     * @param gold  The gold required by the natives to become hostile.
      */
     public void inciteHandler(Unit unit, IndianSettlement is, Player enemy,
                               int gold) {
@@ -3738,9 +3748,9 @@ public final class InGameController extends FreeColClientHolder {
     /**
      * Handle a native demand at a colony.
      *
-     * @param unit The native {@code Unit} making the demand.
+     * @param unit   The native {@code Unit} making the demand.
      * @param colony The {@code Colony} demanded of.
-     * @param type The {@code GoodsType} demanded (null means gold).
+     * @param type   The {@code GoodsType} demanded (null means gold).
      * @param amount The amount of goods/gold demanded.
      */
     public void indianDemandHandler(Unit unit, Colony colony,
@@ -3811,7 +3821,7 @@ public final class InGameController extends FreeColClientHolder {
 
     /**
      * Leave a ship.  The ship must be in harbour.
-     *
+     * <p>
      * Called from CargoPanel, ColonyPanel, EuropePanel.unloadAction,
      * UnitLabel
      *
@@ -3837,10 +3847,10 @@ public final class InGameController extends FreeColClientHolder {
 
     /**
      * Loads a cargo onto a carrier.
-     *
+     * <p>
      * Called from CargoPanel, ColonyPanel, LoadAction, TilePopup.
      *
-     * @param goods The {@code Goods} which are going aboard the carrier.
+     * @param goods   The {@code Goods} which are going aboard the carrier.
      * @param carrier The {@code Unit} acting as carrier.
      * @return True if the goods were loaded.
      */
@@ -3878,9 +3888,9 @@ public final class InGameController extends FreeColClientHolder {
     /**
      * Opens a dialog where the user should specify the filename and
      * loads the game.
-     *
+     * <p>
      * Called from OpenAction.
-     *
+     * <p>
      * Returns no status as this game is stopped.
      */
     public void loadGame() {
@@ -3928,11 +3938,11 @@ public final class InGameController extends FreeColClientHolder {
 
     /**
      * Loot some cargo.
-     *
+     * <p>
      * Called from GUI.showCaptureGoodsDialog
      *
-     * @param unit The {@code Unit} that is looting.
-     * @param goods A list of {@code Goods} to choose from.
+     * @param unit       The {@code Unit} that is looting.
+     * @param goods      A list of {@code Goods} to choose from.
      * @param defenderId The identifier of the defender unit (may have sunk).
      * @return True if looting occurs.
      */
@@ -3949,11 +3959,28 @@ public final class InGameController extends FreeColClientHolder {
         return ret;
     }
 
+    private boolean captureShip(Unit unit, String defenderId) {
+        if (unit == null
+                || defenderId == null) return false;
+
+        UnitWas unitWas = new UnitWas(unit);
+        boolean ret = askServer().capture(unit, defenderId);
+        if (ret) {
+            fireChanges(unitWas);
+            updateGUI(null, false);
+        }
+        return ret;
+    }
+
+    public void captureShipHandler(Unit unit, String loserId) {
+        logger.warning("You just captured the enemy ship!");
+    }
+
     /**
      * Loot some cargo.
      *
-     * @param unit The {@code Unit} that is looting.
-     * @param goods A list of {@code Goods} to choose from.
+     * @param unit    The {@code Unit} that is looting.
+     * @param goods   A list of {@code Goods} to choose from.
      * @param loserId The identifier of the defender unit (may have sunk).
      */
     public void lootCargoHandler(Unit unit, List<Goods> goods, String loserId) {
@@ -3964,7 +3991,7 @@ public final class InGameController extends FreeColClientHolder {
 
     /**
      * Accept or reject a monarch action.
-     *
+     * <p>
      * Called from GUI.showMonarchDialog
      *
      * @param action The {@code MonarchAction} performed.
@@ -3994,8 +4021,8 @@ public final class InGameController extends FreeColClientHolder {
     /**
      * Do a monarch interaction.
      *
-     * @param action The {@code MonarchAction} to perform.
-     * @param template A {@code StringTemplate} describing the action.
+     * @param action     The {@code MonarchAction} to perform.
+     * @param template   A {@code StringTemplate} describing the action.
      * @param monarchKey A key for the monarch involved.
      */
     public void monarchActionHandler(MonarchAction action,
@@ -4009,10 +4036,10 @@ public final class InGameController extends FreeColClientHolder {
     /**
      * Moves the specified unit somewhere that requires crossing the
      * high seas.
-     *
+     * <p>
      * Called from EuropePanel.DestinationPanel, TilePopup
      *
-     * @param unit The {@code Unit} to be moved.
+     * @param unit        The {@code Unit} to be moved.
      * @param destination The {@code Location} to be moved to.
      * @return True if automatic movement of the unit can proceed.
      */
@@ -4049,12 +4076,12 @@ public final class InGameController extends FreeColClientHolder {
     /**
      * Moves the active unit in a specified direction. This may result in an
      * attack, move... action.
-     *
+     * <p>
      * Called from MoveAction, CornerMapControls
      *
-     * @param unit The {@code Unit} to move.
+     * @param unit      The {@code Unit} to move.
      * @param direction The {@code Direction} in which to move
-     *     the active unit.
+     *                  the active unit.
      */
     public void moveUnit(Unit unit, Direction direction) {
         if (unit == null || !unit.hasTile()
@@ -4083,13 +4110,13 @@ public final class InGameController extends FreeColClientHolder {
 
     /**
      * The player names a new region.
-     *
+     * <p>
      * Called from newRegionName, GUI.showNameNewRegionDialog
      *
-     * @param tile The {@code Tile} within the region.
-     * @param unit The {@code Unit} that has discovered the region.
+     * @param tile   The {@code Tile} within the region.
+     * @param unit   The {@code Unit} that has discovered the region.
      * @param region The {@code Region} to name.
-     * @param name The name to offer.
+     * @param name   The name to offer.
      * @return True if the new region was named.
      */
     public boolean nameNewRegion(final Tile tile, final Unit unit,
@@ -4101,7 +4128,7 @@ public final class InGameController extends FreeColClientHolder {
 
     /**
      * Get the nation summary for a player.
-     *
+     * <p>
      * Called from DiplomaticTradePanel, ReportForeignAffairsPanel,
      * ReportIndianPanel
      *
@@ -4125,7 +4152,7 @@ public final class InGameController extends FreeColClientHolder {
      * Handle a nation summary update.
      *
      * @param other The {@code Player} to update.
-     * @param ns The {@code NationSummary} for the other player.
+     * @param ns    The {@code NationSummary} for the other player.
      */
     public void nationSummaryHandler(Player other, NationSummary ns) {
         final Player player = getMyPlayer();
@@ -4138,7 +4165,7 @@ public final class InGameController extends FreeColClientHolder {
      * Cache a native trade update.
      *
      * @param action The {@code NativeTradeAction} to handle.
-     * @param nt The {@code NativeTrade} underway.
+     * @param nt     The {@code NativeTrade} underway.
      */
     public void nativeTradeHandler(NativeTradeAction action, NativeTrade nt) {
         if (nt == null) return;
@@ -4236,9 +4263,9 @@ public final class InGameController extends FreeColClientHolder {
     /**
      * Execute the native trade.
      *
-     * @param nt The {@code NativeTrade} underway.
-     * @param act The {@code TradeAction} to perform.
-     * @param nti The {@code NativeTradeItem} being haggled over, if any.
+     * @param nt     The {@code NativeTrade} underway.
+     * @param act    The {@code TradeAction} to perform.
+     * @param nti    The {@code NativeTradeItem} being haggled over, if any.
      * @param prompt An action-specific base prompt, if any.
      */
     private void nativeTrade(NativeTrade nt, TradeAction act,
@@ -4340,7 +4367,7 @@ public final class InGameController extends FreeColClientHolder {
 
     /**
      * A player names the New World.
-     *
+     * <p>
      * Called from GUI.showNameNewLandDialog
      *
      * @param unit The {@code Unit} that landed.
@@ -4380,7 +4407,7 @@ public final class InGameController extends FreeColClientHolder {
     /**
      * Ask the player to name the new land.
      *
-     * @param unit The {@code Unit} that has landed.
+     * @param unit        The {@code Unit} that has landed.
      * @param defaultName The default name to use.
      */
     public void newLandNameHandler(Unit unit, String defaultName) {
@@ -4392,10 +4419,10 @@ public final class InGameController extends FreeColClientHolder {
     /**
      * The player names a new region.
      *
-     * @param tile The {@code Tile} within the region.
-     * @param unit The {@code Unit} that has discovered the region.
+     * @param tile   The {@code Tile} within the region.
+     * @param unit   The {@code Unit} that has discovered the region.
      * @param region The {@code Region} to name.
-     * @param name The name to offer.
+     * @param name   The name to offer.
      * @return True if the new region was named.
      */
     private boolean newRegionName(final Region region, final Tile tile,
@@ -4409,9 +4436,9 @@ public final class InGameController extends FreeColClientHolder {
      * Handle new region naming.
      *
      * @param region The {@code Region} to name.
-     * @param tile The {@code Tile} the unit landed at.
-     * @param unit The {@code Unit} that has landed.
-     * @param name The default name to use.
+     * @param tile   The {@code Tile} the unit landed at.
+     * @param unit   The {@code Unit} that has landed.
+     * @param name   The default name to use.
      */
     public void newRegionNameHandler(Region region, Tile tile, Unit unit,
                                      String name) {
@@ -4440,7 +4467,7 @@ public final class InGameController extends FreeColClientHolder {
 
     /**
      * Gets a new trade route for a player.
-     *
+     * <p>
      * Called from TradeRoutePanel.newRoute.  Relies on new trade routes
      * being added at the end of the trade route list.
      *
@@ -4512,7 +4539,7 @@ public final class InGameController extends FreeColClientHolder {
 
     /**
      * Makes a new unit active.
-     *
+     * <p>
      * Called from PGC.startGame, ColonyPanel.closeColonyPanel
      *
      * @return True unless it was not our turn.
@@ -4527,7 +4554,7 @@ public final class InGameController extends FreeColClientHolder {
     /**
      * Handle partial updates.
      *
-     * @param fcgo The {@code FreeColGameObject} to update.
+     * @param fcgo   The {@code FreeColGameObject} to update.
      * @param fields A map of fields to update.
      */
     public void partialHandler(FreeColGameObject fcgo,
@@ -4551,7 +4578,7 @@ public final class InGameController extends FreeColClientHolder {
 
     /**
      * Pays the tax arrears on this type of goods.
-     *
+     * <p>
      * Called from CargoPanel, EuropePanel.MarketPanel,
      * EuropePanel.unloadAction, QuickActionMenu
      *
@@ -4585,11 +4612,11 @@ public final class InGameController extends FreeColClientHolder {
     /**
      * Buys the remaining hammers and tools for the {@link Building} currently
      * being built in the given {@code Colony}.
-     *
+     * <p>
      * Called from BuildQueuePanel
      *
      * @param colony The {@code Colony} where the building should be
-     *     bought.
+     *               bought.
      * @return True if the building was bought.
      */
     public boolean payForBuilding(Colony colony) {
@@ -4622,7 +4649,7 @@ public final class InGameController extends FreeColClientHolder {
 
     /**
      * Puts the specified unit outside the colony.
-     *
+     * <p>
      * Called from ColonyPanel.OutsideColonyPanel, UnitLabel
      *
      * @param unit The {@code Unit}
@@ -4649,9 +4676,9 @@ public final class InGameController extends FreeColClientHolder {
 
     /**
      * Query whether the user wants to reconnect?
-     *
+     * <p>
      * Called from ReconnectAction.
-     *
+     * <p>
      * Returns no status, this game is going away.
      */
     public void reconnect() {
@@ -4677,7 +4704,7 @@ public final class InGameController extends FreeColClientHolder {
 
     /**
      * Recruit a unit from a specified index in Europe.
-     *
+     * <p>
      * Called from RecruitPanel
      *
      * @param index The index in Europe to recruit from, [0..RECRUIT_COUNT).
@@ -4708,7 +4735,7 @@ public final class InGameController extends FreeColClientHolder {
      * Remove game objects.
      *
      * @param objects A list of {@code FreeColGameObject}s to remove.
-     * @param divert An object to divert to when the original disappears.
+     * @param divert  An object to divert to when the original disappears.
      */
     public void removeHandler(List<FreeColGameObject> objects,
                               FreeColGameObject divert) {
@@ -4745,9 +4772,9 @@ public final class InGameController extends FreeColClientHolder {
 
     /**
      * Renames a {@code Nameable}.
-     *
+     * <p>
      * Apparently this can be done while it is not your turn.
-     *
+     * <p>
      * Called from RenameAction, TilePopup.
      *
      * @param object The object to rename.
@@ -4799,7 +4826,7 @@ public final class InGameController extends FreeColClientHolder {
 
     /**
      * Save and quit the game.
-     *
+     * <p>
      * Called from and SaveAndQuitAction.
      *
      * @return False if the game was not saved, otherwise the game quits.
@@ -4813,7 +4840,7 @@ public final class InGameController extends FreeColClientHolder {
     /**
      * Opens a dialog where the user should specify the filename and
      * saves the game.
-     *
+     * <p>
      * Called from SaveAction and SaveAndQuitAction.
      *
      * @return True if the game was saved.
@@ -4840,8 +4867,8 @@ public final class InGameController extends FreeColClientHolder {
     /**
      * Display the results of speaking to a chief.
      *
-     * @param unit The {@code Unit} that was speaking.
-     * @param is The {@code IndianSettlement} spoken to.
+     * @param unit   The {@code Unit} that was speaking.
+     * @param is     The {@code IndianSettlement} spoken to.
      * @param result The result.
      */
     public void scoutSpeakToChiefHandler(Unit unit, IndianSettlement is,
@@ -4876,7 +4903,7 @@ public final class InGameController extends FreeColClientHolder {
     /**
      * Selects a destination for this unit. Europe and the player's
      * colonies are valid destinations.
-     *
+     * <p>
      * Called from GotoAction.
      *
      * @param unit The unit for which to select a destination.
@@ -4914,7 +4941,7 @@ public final class InGameController extends FreeColClientHolder {
 
     /**
      * Sells goods in Europe.
-     *
+     * <p>
      * Called from EuropePanel.MarketPanel, EuropePanel.unloadAction,
      * unload(), unloadCargo()
      *
@@ -4946,7 +4973,7 @@ public final class InGameController extends FreeColClientHolder {
      * Handle setting the AI state of a player.
      *
      * @param player The {@code Player} to set.
-     * @param ai The new AI state.
+     * @param ai     The new AI state.
      */
     public void setAIHandler(Player player, boolean ai) {
         player.setAI(ai);
@@ -4954,10 +4981,10 @@ public final class InGameController extends FreeColClientHolder {
 
     /**
      * Changes the current construction project of a {@code Colony}.
-     *
+     * <p>
      * Called from BuildQueuePanel
      *
-     * @param colony The {@code Colony}
+     * @param colony     The {@code Colony}
      * @param buildQueue List of {@code BuildableType}
      * @return True if the build queue was changed.
      */
@@ -5091,9 +5118,9 @@ public final class InGameController extends FreeColClientHolder {
 
     /**
      * Informs this controller that a game has been newly loaded.
-     *
+     * <p>
      * Called from ConnectController.startSavedGame
-     *
+     * <p>
      * No status returned to connect controller.
      */
     public void setGameConnected() {
@@ -5105,10 +5132,10 @@ public final class InGameController extends FreeColClientHolder {
 
     /**
      * Sets the export settings of the custom house.
-     *
+     * <p>
      * Called from WarehouseDialog
      *
-     * @param colony The colony with the custom house.
+     * @param colony    The colony with the custom house.
      * @param goodsType The goods for which to set the settings.
      * @return True if the levels were set.
      */
@@ -5121,7 +5148,7 @@ public final class InGameController extends FreeColClientHolder {
 
     /**
      * Sets the debug mode to include the extra menu commands.
-     *
+     * <p>
      * Called from DebugAction
      *
      * @return True, always succeeds.
@@ -5137,7 +5164,7 @@ public final class InGameController extends FreeColClientHolder {
      * Notify the player that the stance between two players has changed.
      *
      * @param stance The changed {@code Stance}.
-     * @param first The first {@code Player}.
+     * @param first  The first {@code Player}.
      * @param second The second {@code Player}.
      * @return True if the stance change succeeds.
      */
@@ -5172,7 +5199,7 @@ public final class InGameController extends FreeColClientHolder {
 
     /**
      * Trains a unit of a specified type in Europe.
-     *
+     * <p>
      * Called from NewUnitPanel.
      *
      * @param unitType The type of unit to be trained.
@@ -5202,7 +5229,7 @@ public final class InGameController extends FreeColClientHolder {
 
     /**
      * Unload, including dumping cargo.
-     *
+     * <p>
      * Called from UnloadAction, UnitLabel
      *
      * @param unit The {@code Unit} that is dumping.
@@ -5247,12 +5274,12 @@ public final class InGameController extends FreeColClientHolder {
      * Unload cargo.  If the unit carrying the cargo is not in a
      * harbour, or if the given boolean is true, the goods will be
      * dumped.
-     *
+     * <p>
      * Called from CargoPanel, ColonyPanel, EuropePanel.MarketPanel,
      * GUI.showDumpCargoDialog, QuickActionMenu, unload()
      *
      * @param goods The {@code Goods} to unload.
-     * @param dump If true, dump the goods.
+     * @param dump  If true, dump the goods.
      * @return True if the unload succeeds.
      */
     public boolean unloadCargo(Goods goods, boolean dump) {
@@ -5307,7 +5334,7 @@ public final class InGameController extends FreeColClientHolder {
 
     /**
      * Updates a trade route.
-     *
+     * <p>
      * Called from TradeRoutePanel(), TradeRoutePanel.newRoute
      *
      * @param route The trade route to update.
@@ -5337,7 +5364,7 @@ public final class InGameController extends FreeColClientHolder {
 
     /**
      * Tell a unit to wait.
-     *
+     * <p>
      * Called from WaitAction.
      *
      * @return True, this can not fail.
@@ -5351,10 +5378,10 @@ public final class InGameController extends FreeColClientHolder {
 
     /**
      * Moves a {@code Unit} to a {@code WorkLocation}.
-     *
+     * <p>
      * Called from ColonyPanel.tryWork, UnitLabel
      *
-     * @param unit The {@code Unit}.
+     * @param unit         The {@code Unit}.
      * @param workLocation The new {@code WorkLocation}.
      * @return True if the unit is now working at the new work location.
      */

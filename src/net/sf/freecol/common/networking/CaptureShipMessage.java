@@ -1,3 +1,22 @@
+/**
+ *  Copyright (C) 2002-2022   The FreeCol Team
+ *
+ *  This file is part of FreeCol.
+ *
+ *  FreeCol is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  FreeCol is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with FreeCol.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package net.sf.freecol.common.networking;
 
 import java.util.ArrayList;
@@ -14,24 +33,25 @@ import net.sf.freecol.server.FreeColServer;
 import net.sf.freecol.server.ai.AIPlayer;
 import net.sf.freecol.server.model.ServerPlayer;
 
-public class CaptureShipMessage extends ObjectMessage{
 
-    public static final String TAG = "getShip";
+/**
+ * The message sent when looting cargo.
+ */
+public class CaptureShipMessage extends ObjectMessage {
+
+    public static final String TAG = "lootCargo";
     private static final String LOSER_TAG = "loser";
     private static final String WINNER_TAG = "winner";
 
-    //we can pass the arguments here in the constructor
-    public CaptureShipMessage(Unit winner) {
-        super(TAG);
 
-    }
     /**
-     * Create a new {@code LootCargoMessage}.
      *
-     * @param winner The {@code Unit} that is looting.
-     * @param loserId The identifier of the {@code Unit} that is looted.
-     * @param goods The {@code AbstractGoods} to loot.
+     * @param winner
+     * @param loserId
      */
+    public CaptureShipMessage(Unit winner, String loserId) {
+        super(TAG, WINNER_TAG, winner.getId(), LOSER_TAG, loserId);
+    }
 
     /**
      * Create a new {@code LootCargoMessage} from a stream.
@@ -43,20 +63,6 @@ public class CaptureShipMessage extends ObjectMessage{
     public CaptureShipMessage(Game game, FreeColXMLReader xr)
             throws XMLStreamException {
         super(TAG, xr, WINNER_TAG, LOSER_TAG);
-
-        List<Goods> goods = new ArrayList<>();
-        while (xr.moreTags()) {
-            String tag = xr.getLocalName();
-            if (Goods.TAG.equals(tag)) {
-                Goods g = xr.readFreeColObject(game, Goods.class);
-                if (g != null) goods.add(g);
-            } else {
-                expected(Goods.TAG, tag);
-            }
-            xr.expectTag(tag);
-        }
-        xr.expectTag(TAG);
-        appendChildren(goods);
     }
 
 
@@ -69,6 +75,15 @@ public class CaptureShipMessage extends ObjectMessage{
     private Unit getWinner(Game game) {
         return game.getFreeColGameObject(getStringAttribute(WINNER_TAG),
                 Unit.class);
+    }
+
+    /**
+     * Accessor for the losing unit identifier.
+     *
+     * @return The loser unit object Identifier.
+     */
+    private String getLoserId() {
+        return getStringAttribute(LOSER_TAG);
     }
 
     /**
@@ -86,9 +101,7 @@ public class CaptureShipMessage extends ObjectMessage{
     public void aiHandler(FreeColServer freeColServer, AIPlayer aiPlayer) {
         final Game game = freeColServer.getGame();
         final Unit winner = getWinner(game);
-
-
-      //  aiPlayer.lootCargoHandler(winner, initialGoods, loserId);
+        final String loserId = getLoserId();
     }
 
     /**
@@ -98,12 +111,11 @@ public class CaptureShipMessage extends ObjectMessage{
     public void clientHandler(FreeColClient freeColClient) {
         final Game game = freeColClient.getGame();
         final Unit unit = getWinner(game);
-        //  final String loserId = getLoserId();
-      //  final List<Goods> goods = getGoods();
+        final String loserId = getLoserId();
 
         if (unit == null) return;
 
-       // igc(freeColClient).lootCargoHandler(unit, goods, loserId);
+        igc(freeColClient).captureShipHandler(unit, loserId);
         clientGeneric(freeColClient);
     }
 
@@ -121,16 +133,12 @@ public class CaptureShipMessage extends ObjectMessage{
         } catch (Exception e) {
             return serverPlayer.clientError(e.getMessage());
         }
+        // Do not check the defender identifier, as it might have
+        // sunk.  It is enough that the attacker knows it.  Similarly
+        // the server is better placed to check the goods validity.
 
         // Try to loot.
-     //   return igc(freeColServer)
-       //         .lootCargo(serverPlayer, winner, getLoserId(), getGoods());
-        return null;
+        return igc(freeColServer)
+                .captureShip(serverPlayer, winner, getLoserId());
     }
 }
-
-
-
-
-
-

@@ -266,7 +266,6 @@ public abstract class ServerAPI {
      * @return True if the server interaction succeeded.
      */
 
-    //TODO: alterar aqui? unit instanceof .... acho que nao mas eh uma ideia
     public boolean attack(Unit unit, Direction direction) {
         return ask(new AttackMessage(unit, direction));
     }
@@ -685,6 +684,10 @@ public abstract class ServerAPI {
      */
     public boolean loot(Unit winner, String defenderId, List<Goods> goods) {
         return ask(new LootCargoMessage(winner, defenderId, goods));
+    }
+
+    public boolean capture(Unit winner, String defenderId) {
+        return ask(new CaptureShipMessage(winner, defenderId));
     }
 
     /**

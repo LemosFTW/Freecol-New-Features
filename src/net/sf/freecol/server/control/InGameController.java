@@ -101,23 +101,11 @@ import net.sf.freecol.common.model.Unit.UnitState;
 import net.sf.freecol.common.model.UnitLocation;
 import net.sf.freecol.common.model.UnitType;
 import net.sf.freecol.common.model.WorkLocation;
+import net.sf.freecol.common.networking.*;
 import net.sf.freecol.common.option.GameOptions;
-import net.sf.freecol.common.networking.ChangeSet;
 import net.sf.freecol.common.networking.ChangeSet.See;
-import net.sf.freecol.common.networking.ChatMessage;
-import net.sf.freecol.common.networking.GameEndedMessage;
-import net.sf.freecol.common.networking.GameStateMessage;
-import net.sf.freecol.common.networking.HighScoresMessage;
-import net.sf.freecol.common.networking.InciteMessage;
-import net.sf.freecol.common.networking.IndianDemandMessage;
-import net.sf.freecol.common.networking.LootCargoMessage;
-import net.sf.freecol.common.networking.MonarchActionMessage;
-import net.sf.freecol.common.networking.NationSummaryMessage;
-import net.sf.freecol.common.networking.NativeTradeMessage;
-import net.sf.freecol.common.networking.NewTradeRouteMessage;
 import net.sf.freecol.common.networking.RearrangeColonyMessage.Arrangement;
-import net.sf.freecol.common.networking.ScoutSpeakToChiefMessage;
-import net.sf.freecol.common.networking.SetCurrentPlayerMessage;
+
 import static net.sf.freecol.common.util.CollectionUtils.*;
 import net.sf.freecol.common.util.LogBuilder;
 import net.sf.freecol.common.util.RandomChoice;
@@ -2762,6 +2750,21 @@ public final class InGameController extends Controller {
             cs.add(See.perhaps(), winner);
             getGame().sendToOthers(serverPlayer, cs);
         }
+        return cs;
+    }
+
+    /**
+     * Capture Ship
+     *
+     * @param serverPlayer
+     * @param winner
+     * @param loserId
+     * @return
+     */
+    public ChangeSet captureShip(ServerPlayer serverPlayer, Unit winner,
+                                 String loserId) {
+        ChangeSet cs = new ChangeSet();
+        cs.add(See.only(serverPlayer), new CaptureShipMessage(winner, loserId));
         return cs;
     }
 
