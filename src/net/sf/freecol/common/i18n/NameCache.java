@@ -223,8 +223,7 @@ public class NameCache {
         synchronized (caveNothingLock) {
             if (caveNothingKeys == null) {
                 caveNothingKeys = new ArrayList<>();
-                //TODO: Check this string...
-                collectKeys("model.caveExploration.nothing",
+                collectKeys("model.caveExploration.nothing.",
                         caveNothingKeys, Messages.DESCRIPTION_SUFFIX);
             }
         }

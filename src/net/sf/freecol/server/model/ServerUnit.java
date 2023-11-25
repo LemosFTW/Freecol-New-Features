@@ -623,7 +623,6 @@ public class ServerUnit extends Unit implements TurnTaker {
         GoodsType goodsType;
         Unit newUnit = null;
         List<UnitType> treasureUnitTypes = spec.getUnitTypesWithAbility(Ability.CARRY_TREASURE);
-        List<UnitType> goodsUnitTypes = spec.getUnitTypesWithAbility(Ability.CARRY_GOODS);
         List<GoodsType> goodsTypes = spec.getFoundInCavesGoodsTypeList();
         CaveType cave = caveExplore.chooseType(this, random);
 
@@ -634,17 +633,23 @@ public class ServerUnit extends Unit implements TurnTaker {
             case NOTHING_MORE_TO_EXPLORE:
                 break;
             case TRAP:
-                Role downgrade = role.getDowngrade();
-                if (downgrade != null) {
-                    this.changeRole(downgrade, 1);
-                    this.setMovesLeft(Math.min(this.getMovesLeft(),
-                            this.getInitialMovesLeft()));
-                    //TODO: add message
+                Role previousRole = this.getRole();
+                if(previousRole == spec.getDefaultRole()){
+                    result = false;
+                    cs.addMessage(owner,
+                            new ModelMessage(ModelMessage.MessageType.CAVE_EXPLORATION,
+                                    CaveType.LETHAL_TRAP.getDescriptionKey(), owner));
                 } else {
+                    Role downgrade = role.getDowngrade();
+                    if (downgrade != null) {
+                        this.changeRole(downgrade, 1);
+
+                    } else {
+                        this.changeRole(spec.getDefaultRole(), 0);
+                    }
                     cs.addMessage(owner,
                             new ModelMessage(ModelMessage.MessageType.CAVE_EXPLORATION,
                                     key, owner));
-                    result = false;
                 }
                 break;
             case LETHAL_TRAP:
@@ -679,7 +684,7 @@ public class ServerUnit extends Unit implements TurnTaker {
                 break;
             case TREASURE:
                 int treasureAmount = randomInt(logger,
-                        "Base treasure amount", random, 2 * 600) + 2 * 300;
+                        "Base treasure amount", random, 400) + 100;
                 unitType = getRandomMember(logger, "Choose train",
                         treasureUnitTypes, random);
                 newUnit = new ServerUnit(game, tile, owner,
@@ -692,15 +697,13 @@ public class ServerUnit extends Unit implements TurnTaker {
                 break;
             case RESOURCES:
                 int goodsAmount = randomInt(logger, "Base Item amount",
-                        random, 100) +100;
-                unitType = getRandomMember(logger, "Choose item train",
-                        goodsUnitTypes, random);
+                        random, 100) + 40;
+                unitType = spec.getUnitType("model.unit.wagonTrain");
                 goodsType = getRandomMember(logger, "Choose found item",
                         goodsTypes, random);
-                newUnit = new ServerUnit(game, tile, owner, unitType);
-                GoodsContainer goods = new GoodsContainer(game, tile);
-                goods.addGoods(goodsType, goodsAmount);
-                newUnit.setGoodsContainer(goods);
+                Unit wagon = new ServerUnit(game, tile, owner, unitType);
+                Goods goods = new Goods(game, wagon, goodsType, goodsAmount);
+                wagon.add(goods);
                 cs.addMessage(owner,
                         new ModelMessage(ModelMessage.MessageType.CAVE_EXPLORATION,
                                 key, owner, newUnit).addName("%item%", goodsType)
@@ -864,12 +867,15 @@ public class ServerUnit extends Unit implements TurnTaker {
             this.csRemove(See.perhaps().always(owner),
                 oldLocation, cs);//-vis(serverPlayer)
         }
-        owner.invalidateCanSeeTiles();//+vis(serverPlayer)
 
         //TODO:Aqui.Fazer o check pela cave
-        /*
-        if(newTile.hasCave() && !
-         */
+
+        if(newTile.hasCaveExploration() && owner.isEuropean()
+            && !csExploreCave(random, cs)) {
+            this.csRemove(See.perhaps().always(owner),
+                    oldLocation, cs);
+        }
+        owner.invalidateCanSeeTiles();//+vis(serverPlayer)
 
         // Update tiles that are now invisible.
         removeInPlace(oldTiles, t -> owner.canSee(t));

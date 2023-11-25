@@ -3537,6 +3537,10 @@
                             value="11" />
           <percentageOption id="model.option.goodRumour"
                             value="75" />
+          <percentageOption id="model.option.badCave"
+                            value="25" />
+          <percentageOption id="model.option.goodCave"
+                            value="60" />
         </optionGroup>
         <optionGroup id="model.difficulty.cheat" editable="false">
           <integerOption id="model.option.liftBoycottCheat"
@@ -3731,6 +3735,10 @@
                             value="17" />
           <percentageOption id="model.option.goodRumour"
                             value="62" />
+          <percentageOption id="model.option.badCave"
+                            value="27" />
+          <percentageOption id="model.option.goodCave"
+                            value="56" />
         </optionGroup>
         <optionGroup id="model.difficulty.cheat" editable="false">
           <integerOption id="model.option.liftBoycottCheat"
@@ -3920,6 +3928,10 @@
                             value="23"/>
           <percentageOption id="model.option.goodRumour"
                             value="48"/>
+          <percentageOption id="model.option.badCave"
+                            value="30" />
+          <percentageOption id="model.option.goodCave"
+                            value="55" />
         </optionGroup>
         <optionGroup id="model.difficulty.cheat" editable="false">
           <integerOption id="model.option.liftBoycottCheat"
@@ -4103,6 +4115,10 @@
                             value="30"/>
           <percentageOption id="model.option.goodRumour"
                             value="33"/>
+          <percentageOption id="model.option.badCave"
+                            value="40" />
+          <percentageOption id="model.option.goodCave"
+                            value="40" />
         </optionGroup>
         <optionGroup id="model.difficulty.cheat" editable="false">
           <integerOption id="model.option.liftBoycottCheat"
@@ -4286,6 +4302,10 @@
                             value="37"/>
           <percentageOption id="model.option.goodRumour"
                             value="17"/>
+          <percentageOption id="model.option.badCave"
+                            value="50" />
+          <percentageOption id="model.option.goodCave"
+                            value="30" />
         </optionGroup>
         <optionGroup id="model.difficulty.cheat" editable="false">
           <integerOption id="model.option.liftBoycottCheat"
@@ -4563,6 +4583,10 @@
                             value="37"/>
           <percentageOption id="model.option.goodRumour"
                             value="17"/>
+          <percentageOption id="model.option.badCave"
+                            value="60" />
+          <percentageOption id="model.option.goodCave"
+                            value="30" />
         </optionGroup>
         <optionGroup id="model.difficulty.cheat">
           <integerOption id="model.option.liftBoycottCheat"

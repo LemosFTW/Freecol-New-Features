@@ -2717,7 +2717,7 @@ public final class Specification implements OptionContainer {
                                                48);
         ret |= checkDifficultyPercentageOption(GameOptions.BAD_CAVE,
                                                 GameOptions.DIFFICULTY_OTHER, lb,
-                                                35);
+                                                45);
         ret |= checkDifficultyPercentageOption(GameOptions.GOOD_CAVE,
                                                 GameOptions.DIFFICULTY_OTHER, lb,
                                                 45);
