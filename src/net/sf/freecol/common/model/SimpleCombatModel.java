@@ -74,11 +74,22 @@ public class SimpleCombatModel extends CombatModel {
         = new Modifier("bogus", Modifier.UNKNOWN, ModifierType.ADDITIVE);
 
 
+    /**
+     * Used to know if the player choose in preferences to capture enemy ships
+     */
     private static boolean getShipActivated = false;
 
+    /**
+     * Changes value of {@code getShipActivated} for true, or false
+     */
     public static void autoGetShipSwitchMode() {
         getShipActivated = !getShipActivated;
     }
+
+    /**
+     *
+     * @return true if Auto Get Ship option in preferences menu is activated, false otherwise
+     */
     public static boolean isAutoGetShipActivated() {
         return getShipActivated;
     }
@@ -738,7 +749,9 @@ public class SimpleCombatModel extends CombatModel {
             // Naval victors get to loot the defenders hold.  Sink the
             // loser on great win/loss, lack of repair location, or
             // beached.
-            if(getShipActivated)
+
+            // Only frigates, man-o-war and privateer can capture enemy ships
+            if(winner.isNaval() && isAutoGetShipActivated() && winner.canCaptureGoods())
                 crs.add(CombatEffectType.CAPTURE_SHIP);
 
             if (winner.isNaval() && winner.canCaptureGoods()

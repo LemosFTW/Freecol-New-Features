@@ -3546,6 +3546,13 @@ public class ServerPlayer extends Player implements TurnTaker {
         loser.setState(Unit.UnitState.ACTIVE);
     }
 
+    /**
+     * Capture a ship
+     *
+     * @param winner The winning naval {@code Unit}.
+     * @param loser The losing naval {@code Unit}
+     * @param cs A {@code ChangeSet} to update.
+     */
     private void csCaptureShip(Unit winner, Unit loser, ChangeSet cs) {
 
         final Player winnerPlayer = winner.getOwner();
