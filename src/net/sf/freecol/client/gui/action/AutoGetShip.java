@@ -25,6 +25,8 @@ import javax.swing.AbstractButton;
 
 import net.sf.freecol.client.ClientOptions;
 import net.sf.freecol.client.FreeColClient;
+import net.sf.freecol.common.model.SimpleCombatModel;
+
 
 
 /**
@@ -43,7 +45,7 @@ public class AutoGetShip extends SelectableAction {
     public AutoGetShip(FreeColClient freeColClient) {
         super(freeColClient, id, ClientOptions.AUTO_GET_SHIP);
 
-        setSelected(shouldBeSelected());
+
     }
 
 
@@ -68,6 +70,7 @@ public class AutoGetShip extends SelectableAction {
     @Override
     public void actionPerformed(ActionEvent ae) {
         setSelected(((AbstractButton)ae.getSource()).isSelected());
+        SimpleCombatModel.autoGetShipSwitchMode();
         setOption(isSelected());
         update();
     }

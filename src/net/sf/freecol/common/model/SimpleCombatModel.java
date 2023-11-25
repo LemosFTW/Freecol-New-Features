@@ -74,6 +74,16 @@ public class SimpleCombatModel extends CombatModel {
         = new Modifier("bogus", Modifier.UNKNOWN, ModifierType.ADDITIVE);
 
 
+    private static boolean getShipActivated = true;
+
+    public static void autoGetShipSwitchMode() {
+        getShipActivated = !getShipActivated;
+    }
+    public static boolean isAutoGetShipActivated() {
+        return getShipActivated;
+    }
+
+
     /**
      * Deliberately empty constructor.
      */
@@ -722,15 +732,15 @@ public class SimpleCombatModel extends CombatModel {
         boolean loserMustDie = loser.hasAbility(Ability.DISPOSE_ON_COMBAT_LOSS);
         UnitTypeChange uc;
 
-        //JPanel panel = new JPanel();
-        //panel.add(new JLabel("Do you want to capture the enemy unit?"));
-        //System.out.println("add");
+
 
         if (loser.isNaval()) {
             // Naval victors get to loot the defenders hold.  Sink the
             // loser on great win/loss, lack of repair location, or
             // beached.
+            if(isAutoGetShipActivated())
             crs.add(CombatEffectType.CAPTURE_SHIP);
+
             if (winner.isNaval() && winner.canCaptureGoods()
                 && !loser.getGoodsList().isEmpty()) {
                 crs.add(CombatEffectType.LOOT_SHIP);

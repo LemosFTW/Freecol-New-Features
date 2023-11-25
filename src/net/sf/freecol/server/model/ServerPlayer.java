@@ -188,7 +188,6 @@ public class ServerPlayer extends Player implements TurnTaker {
     /** Accumulate extra trades here. */
     private final List<AbstractGoods> extraTrades = new ArrayList<>();
 
-
     /**
      * Trivial constructor for Game.newInstance.
      *
