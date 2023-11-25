@@ -39,6 +39,8 @@ import java.util.logging.Logger;
 import net.sf.freecol.FreeCol;
 import net.sf.freecol.client.gui.GUI;
 import net.sf.freecol.client.gui.SwingGUI;
+import net.sf.freecol.client.gui.action.ActionManager;
+import net.sf.freecol.client.gui.action.AutoGetShip;
 import net.sf.freecol.client.gui.panel.FreeColPanel;
 import net.sf.freecol.client.gui.panel.NewPanel;
 import net.sf.freecol.common.model.Modifier.ModifierType;

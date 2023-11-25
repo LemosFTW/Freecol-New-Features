@@ -28,7 +28,7 @@ import net.sf.freecol.client.FreeColClient;
 
 
 /**
- * An action for displaying the map controls.
+ * An action for capturing an enemy ship automatically.
  */
 public class AutoGetShip extends SelectableAction {
 
@@ -56,7 +56,7 @@ public class AutoGetShip extends SelectableAction {
     public void update() {
         super.update();
 
-        getGUI().enableMapControls(isEnabled() && isSelected());
+        getGUI();
     }
 
 
