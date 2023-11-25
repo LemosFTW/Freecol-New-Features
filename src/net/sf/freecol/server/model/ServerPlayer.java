@@ -64,6 +64,9 @@ import javax.xml.stream.XMLStreamException;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.sf.freecol.FreeCol;
 import net.sf.freecol.client.ClientOptions;
+import net.sf.freecol.client.FreeColClient;
+import net.sf.freecol.client.gui.action.ActionManager;
+import net.sf.freecol.client.gui.action.AutoGetShip;
 import net.sf.freecol.common.FreeColException;
 import net.sf.freecol.common.debug.FreeColDebugger;
 import net.sf.freecol.common.i18n.Messages;
@@ -118,16 +121,8 @@ import net.sf.freecol.common.model.UnitType;
 import net.sf.freecol.common.model.UnitTypeChange;
 import net.sf.freecol.common.model.WorkLocation;
 import net.sf.freecol.common.model.pathfinding.GoalDeciders;
-import net.sf.freecol.common.networking.ChangeSet;
+import net.sf.freecol.common.networking.*;
 import net.sf.freecol.common.networking.ChangeSet.See;
-import net.sf.freecol.common.networking.ChooseFoundingFatherMessage;
-import net.sf.freecol.common.networking.Connection;
-import net.sf.freecol.common.networking.FirstContactMessage;
-import net.sf.freecol.common.networking.IndianDemandMessage;
-import net.sf.freecol.common.networking.LootCargoMessage;
-import net.sf.freecol.common.networking.MonarchActionMessage;
-import net.sf.freecol.common.networking.SetDeadMessage;
-import net.sf.freecol.common.networking.CaptureShipMessage;
 import net.sf.freecol.common.option.GameOptions;
 import net.sf.freecol.common.option.IntegerOption;
 import net.sf.freecol.common.util.LogBuilder;
@@ -3552,10 +3547,11 @@ public class ServerPlayer extends Player implements TurnTaker {
     }
 
     private void csCaptureShip(Unit winner, Unit loser, ChangeSet cs) {
+
         final Player winnerPlayer = winner.getOwner();
         ServerUnit ship = new ServerUnit(loser.getGame(), loser.getLocation(), winnerPlayer, loser.getType(), loser.getRole());
         winnerPlayer.addUnit(ship);
-        cs.add(See.only(winnerPlayer), new CaptureShipMessage(winner));
+        cs.add(See.only(winnerPlayer), new AttackMessage(winner, null));
     }
 
     /**

@@ -57,8 +57,6 @@ public class AutoGetShip extends SelectableAction {
     @Override
     public void update() {
         super.update();
-
-        getGUI();
     }
 
 
@@ -73,5 +71,6 @@ public class AutoGetShip extends SelectableAction {
         SimpleCombatModel.autoGetShipSwitchMode();
         setOption(isSelected());
         update();
+
     }
 }

@@ -74,7 +74,7 @@ public class SimpleCombatModel extends CombatModel {
         = new Modifier("bogus", Modifier.UNKNOWN, ModifierType.ADDITIVE);
 
 
-    private static boolean getShipActivated = true;
+    private static boolean getShipActivated = false;
 
     public static void autoGetShipSwitchMode() {
         getShipActivated = !getShipActivated;
@@ -738,17 +738,12 @@ public class SimpleCombatModel extends CombatModel {
             // Naval victors get to loot the defenders hold.  Sink the
             // loser on great win/loss, lack of repair location, or
             // beached.
-            if(isAutoGetShipActivated())
-            crs.add(CombatEffectType.CAPTURE_SHIP);
+            if(getShipActivated)
+                crs.add(CombatEffectType.CAPTURE_SHIP);
 
             if (winner.isNaval() && winner.canCaptureGoods()
                 && !loser.getGoodsList().isEmpty()) {
                 crs.add(CombatEffectType.LOOT_SHIP);
-                //and add a menu choosing if he wants the ship or not
-                //freeColClient.getGUI().showInformationPanel
-                //TODO:isso aqui pode nao dar certo, pq eu nem testei, mas pq precisamos de um objeto game pra instanciar uma unit?
-                //TODO:criar um panel de escolha se quer o navio ou nao.
-
             }
             if (great || loserMustDie
                 || loser.getRepairLocation() == null
