@@ -219,26 +219,25 @@ public  class CaveExploration extends TileItem {
             }
 
             if (percentBad > 0) { // The BAD
-                List<RandomChoice<CaveType>> cbad = new ArrayList<>();
+                //List<RandomChoice<CaveType>> cbad = new ArrayList<>();
                 if (isExpert) {
-                    cbad.add(new RandomChoice<>(CaveType.TRAP,
+                    c.add(new RandomChoice<>(CaveType.TRAP,
                             90 * percentBad));
-                    cbad.add(new RandomChoice<>(CaveType.LETHAL_TRAP,
+                    c.add(new RandomChoice<>(CaveType.LETHAL_TRAP,
                             10 * percentBad));
                 } else {
-                    cbad.add(new RandomChoice<>(CaveType.TRAP,
+                    c.add(new RandomChoice<>(CaveType.TRAP,
                             75 * percentBad));
-                    cbad.add(new RandomChoice<>(CaveType.LETHAL_TRAP,
+                    c.add(new RandomChoice<>(CaveType.LETHAL_TRAP,
                             25 * percentBad));
                 }
-                RandomChoice.normalize(cbad, 100);
-                c.addAll(cbad);
             }
 
             if (percentNeutral > 0) { // The NEUTRAL
                 c.add(new RandomChoice<>(CaveType.NOTHING,
                         100 * percentNeutral));
             }
+            RandomChoice.normalize(c, 100);
             currentFloor++;
             return RandomChoice.getWeightedRandom(logger, "Choose cave", c, random);
         }
