@@ -190,12 +190,12 @@
     <goods-type id="model.goods.hammers" is-farmed="false"
                 made-from="model.goods.lumber"
                 ignore-limit="true" storable="false" price="20"/>
-    <goods-type id="model.goods.gunpowder" is-farmed="false"
+    <goods-type id="model.goods.gunpowder" is-farmed="true"
                 production-weight="2.5">
       <market initial-amount="3000" initial-price="1" price-difference="5" />
     </goods-type>
     <goods-type id="model.goods.ammunition" is-farmed="false"
-                production-weight="2.5">
+                made-from="model.goods.gunpowder">
       <market initial-amount="3000" initial-price="5" price-difference="10" />
     </goods-type>
   </goods-types>
@@ -2655,6 +2655,17 @@
       <required-ability id="model.ability.buildFactory"/>
       <ability id="model.ability.expertsUseConnections"
                value="true"/>
+    </building-type>
+    <building-type id="model.building.ammunitionFactory"
+                   upkeep="15">
+      <production>
+        <input goods-type="model.goods.gunpowder" value="5"/>
+        <output goods-type="model.goods.ammunition" value="5"/>
+      </production>
+      <required-goods id="model.goods.hammers"
+                      value="100"/>
+      <required-goods id="model.goods.tools"
+                      value="50"/>
     </building-type>
     <building-type id="model.building.chapel" workplaces="0">
       <production unattended="true">
