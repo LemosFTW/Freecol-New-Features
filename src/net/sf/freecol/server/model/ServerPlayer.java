@@ -4026,8 +4026,9 @@ outer:  for (Effect effect : effects) {
      */
     private void csNoAmmo(Unit unit) {
         String currRole = unit.getRole().getId();
-        String newRoleID = currRole + "NoAmmo";
-        Role role = getGame().getSpecification().getRole(newRoleID);
+        if (!currRole.contains("NoAmmo"))
+            currRole = currRole + "NoAmmo";
+        Role role = getGame().getSpecification().getRole(currRole);
         unit.changeRole(role, 1);
     }
 

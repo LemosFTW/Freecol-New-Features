@@ -4138,7 +4138,9 @@ public class Unit extends GoodsLocation
      * @return whether unit role is soldier.
      */
     public boolean isSoldier() {
-        return this.role.getRoleSuffix().contains("soldier") || this.role.getRoleSuffix().equals("dragoon");
+        return  this.role.getRoleSuffix().toLowerCase().contains("soldier") ||
+                this.role.getRoleSuffix().toLowerCase().contains("dragoon") ||
+                this.role.getRoleSuffix().toLowerCase().contains("armed");
     }
 
     /**
