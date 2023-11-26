@@ -1274,7 +1274,7 @@
       <ability id="model.ability.disposeOnCombatLoss"
                value="true"/>
       <modifier id="model.modifier.defence" index="30"
-                type="additive" value="10"/>
+                type="additive" value="1"/>
       <role-change from="model.role.default" capture="model.role.soldierNoAmmo"/>
       <role-change from="model.role.default" capture="model.role.infantry"/>
     </role>
