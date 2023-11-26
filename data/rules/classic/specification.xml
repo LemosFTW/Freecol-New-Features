@@ -1261,7 +1261,7 @@
 
     <role id="model.role.armedBraveNoAmmo">
       <required-ability id="model.ability.canBeEquipped"
-                        value="true"/>
+                        value="false"/>
       <required-ability id="model.ability.native"
                         value="true"/>
       <required-ability id="model.ability.refUnit"
