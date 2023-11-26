@@ -1164,6 +1164,8 @@
                         value="true"/>
       <required-goods id="model.goods.muskets"
                       value="50"/>
+      <required-goods id="model.goods.ammunition"
+                      value="5"/>
 
       <ability id="model.ability.armed"
                value="true"/>
@@ -1177,6 +1179,31 @@
                 type="additive" value="1"/>
       <modifier id="model.modifier.offence" index="30"
                 type="additive" value="2"/>
+    </role>
+
+    <role id="model.role.infantryNoAmmo"
+          expert-unit="model.unit.kingsRegular">
+      <required-ability id="model.ability.canBeEquipped"
+                        value="false"/>
+      <required-ability id="model.ability.native"
+                        value="false"/>
+      <required-ability id="model.ability.refUnit"
+                        value="true"/>
+      <required-ability id="model.ability.royalExpeditionaryForce"
+                        value="true"/>
+      <required-goods id="model.goods.muskets"
+                      value="50"/>
+
+      <ability id="model.ability.armed"
+               value="true"/>
+      <ability id="model.ability.captureUnits"
+               value="true"/>
+      <ability id="model.ability.demandTribute"
+               value="true"/>
+      <ability id="model.ability.disposeOnCombatLoss"
+               value="true"/>
+      <modifier id="model.modifier.defence" index="30"
+                type="additive" value="1"/>
     </role>
 
     <role id="model.role.cavalry" downgrade="model.role.infantry"
@@ -1306,7 +1333,7 @@
                value="true"/>
       <modifier id="model.modifier.defence" index="30"
                 type="additive" value="1"/>
-      <role-change from="model.role.default" capture="model.role.soldierNoAmmo"/>
+      <role-change from="model.role.default" capture="model.role.soldier"/>
       <role-change from="model.role.default" capture="model.role.infantry"/>
     </role>
 
@@ -1366,9 +1393,9 @@
                    capture="model.role.soldier"/>
       <role-change from="model.role.mountedBrave"
                    capture="model.role.infantry"/>
-      <role-change from="model.role.armedBraveNoAmmo" capture="model.role.scout"/>
-      <role-change from="model.role.armedBraveNoAmmo" capture="model.role.dragoon"/>
-      <role-change from="model.role.armedBraveNoAmmo" capture="model.role.cavalry"/>
+      <role-change from="model.role.armedBrave" capture="model.role.scout"/>
+      <role-change from="model.role.armedBrave" capture="model.role.dragoon"/>
+      <role-change from="model.role.armedBrave" capture="model.role.cavalry"/>
     </role>
   </roles>
 
