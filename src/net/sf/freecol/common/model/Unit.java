@@ -4138,9 +4138,15 @@ public class Unit extends GoodsLocation
      * @return whether unit role is soldier.
      */
     public boolean isSoldier() {
-        return  this.role.getRoleSuffix().toLowerCase().contains("soldier") ||
-                this.role.getRoleSuffix().toLowerCase().contains("dragoon") ||
-                this.role.getRoleSuffix().toLowerCase().contains("armed");
+        boolean hasWeapon = false;
+        ListIterator<AbstractGoods> it = role.getRequiredGoodsList().listIterator();
+        AbstractGoods good;
+        while (it.hasNext() && !hasWeapon) {
+            good = it.next();
+            if (good.getNameKey().toLowerCase().contains("musket"))
+                hasWeapon = true;
+        }
+        return hasWeapon;
     }
 
     /**

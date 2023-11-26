@@ -1193,6 +1193,8 @@
                       value="50"/>
       <required-goods id="model.goods.horses"
                       value="50"/>
+      <required-goods id="model.goods.ammunition"
+                      value="5"/>
 
       <ability id="model.ability.armed"
                value="true"/>
@@ -1206,6 +1208,35 @@
                 type="additive" value="2"/>
       <modifier id="model.modifier.offence" index="30"
                 type="additive" value="3"/>
+      <modifier id="model.modifier.movementBonus"
+                type="additive" value="9"/>
+    </role>
+
+    <role id="model.role.cavalryNoAmmo" downgrade="model.role.infantryNoAmmo"
+          expert-unit="model.unit.kingsRegular">
+      <required-ability id="model.ability.canBeEquipped"
+                        value="false"/>
+      <required-ability id="model.ability.native"
+                        value="false"/>
+      <required-ability id="model.ability.refUnit"
+                        value="true"/>
+      <required-ability id="model.ability.royalExpeditionaryForce"
+                        value="true"/>
+      <required-goods id="model.goods.muskets"
+                      value="50"/>
+      <required-goods id="model.goods.horses"
+                      value="50"/>
+
+      <ability id="model.ability.armed"
+               value="true"/>
+      <ability id="model.ability.captureUnits"
+               value="true"/>
+      <ability id="model.ability.demandTribute"
+               value="true"/>
+      <ability id="model.ability.mounted"
+               value="true"/>
+      <modifier id="model.modifier.defence" index="30"
+                type="additive" value="2"/>
       <modifier id="model.modifier.movementBonus"
                 type="additive" value="9"/>
     </role>
