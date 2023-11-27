@@ -2127,7 +2127,8 @@
     </unit-type>
     <unit-type id="model.unit.veteranSoldier" extends="colonist"
                price="2000" skill="2"
-               recruit-probability="1" score-value="5">
+               recruit-probability="1" score-value="5"
+               expert-production="model.goods.ammunition">
       <default-role id="model.role.soldier"/>
       <ability id="model.ability.mercenaryUnit"
                value="true"/>
@@ -2139,6 +2140,8 @@
                 type="percentage" value="50"/>
       <modifier id="model.modifier.defence"
                 type="percentage" value="50" index="40"/>
+      <modifier id="model.goods.ammunition" index="30"
+                type="multiplicative" value="2"/>
     </unit-type>
     <unit-type id="model.unit.jesuitMissionary" extends="colonist"
                price="1400" skill="3"
@@ -2162,6 +2165,7 @@
       <modifier id="model.goods.crosses" index="30" type="additive" value="-1"/>
       <modifier id="model.goods.hammers" index="30" type="additive" value="-1"/>
       <modifier id="model.goods.tools"   index="30" type="additive" value="-1"/>
+      <modifier id="model.goods.ammunition" index="30" type="additive" value="-1"/>
     </unit-type>
     <unit-type id="model.unit.pettyCriminal" extends="colonist"
                skill="-2" recruit-probability="20" score-value="1">
@@ -2174,6 +2178,7 @@
       <modifier id="model.goods.crosses" index="30" type="additive" value="-2"/>
       <modifier id="model.goods.hammers" index="30" type="additive" value="-2"/>
       <modifier id="model.goods.tools"   index="30" type="additive" value="-2"/>
+      <modifier id="model.goods.ammunition" index="30" type="additive" value="-2"/>
     </unit-type>
     <unit-type id="model.unit.indianConvert"
                skill="0" offence="0" defence="1" movement="3" line-of-sight="1"
@@ -2199,6 +2204,7 @@
       <modifier id="model.goods.crosses" index="30" type="additive" value="-2"/>
       <modifier id="model.goods.hammers" index="30" type="additive" value="-2"/>
       <modifier id="model.goods.tools"   index="30" type="additive" value="-2"/>
+      <modifier id="model.goods.ammunition" index="30" type="additive" value="-2"/>
     </unit-type>
     <unit-type id="model.unit.brave"
                offence="1" defence="1"
