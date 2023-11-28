@@ -36,11 +36,13 @@ public class StandardAIPlayerTest extends FreeColTestCase {
         = spec().getGoodsType("model.goods.horses");
     private static final GoodsType musketsType
         = spec().getGoodsType("model.goods.muskets");
+    private static final GoodsType ammunitionType
+    	= spec().getGoodsType("model.goods.ammunition");
 
     private static final Role nativeDragoonRole
         = spec().getRole("model.role.nativeDragoon");
 
-    private int horsesReqPerUnit = 0, musketsReqPerUnit = 0;
+    private int horsesReqPerUnit = 0, musketsReqPerUnit = 0, ammunitionReqPerUnit = 0;
 
     private LogBuilder lb = new LogBuilder(0); // dummy
 
@@ -57,10 +59,13 @@ public class StandardAIPlayerTest extends FreeColTestCase {
                 horsesReqPerUnit = ag.getAmount();
             } else if (ag.getType() == musketsType) {
                 musketsReqPerUnit = ag.getAmount();
+            } else if (ag.getType() == ammunitionType) {
+            	ammunitionReqPerUnit = ag.getAmount();
             }
         }
         assertFalse(horsesReqPerUnit == 0);
         assertFalse(musketsReqPerUnit == 0);
+        assertFalse(ammunitionReqPerUnit == 0);
     }
 
     public void testEquipBraves() {
@@ -77,14 +82,18 @@ public class StandardAIPlayerTest extends FreeColTestCase {
         int bravesToEquip = camp.getUnitCount();
         int totalHorsesReq = bravesToEquip * horsesReqPerUnit;
         int totalMusketsReq = bravesToEquip * musketsReqPerUnit;
+        int totalAmmunitionReq = bravesToEquip * ammunitionReqPerUnit;
         int totalHorsesAvail = totalHorsesReq*2;
         int totalMusketsAvail = totalMusketsReq*2;
+        int totalAmmunitionAvail = totalAmmunitionReq*2;
 
         // Verify initial conditions
         assertEquals("No horses should exist in camp", 0,
             camp.getGoodsCount(horsesType));
         assertEquals("No muskets should exist in camp", 0,
             camp.getGoodsCount(musketsType));
+        assertEquals("No ammunition should exist in camp", 0,
+        	camp.getGoodsCount(ammunitionType));
 
         for (Unit unit : camp.getUnitList()) {
             assertFalse("Indian should not have mounted braves",
@@ -96,11 +105,14 @@ public class StandardAIPlayerTest extends FreeColTestCase {
         // Setup
         camp.addGoods(horsesType, totalHorsesAvail);
         camp.addGoods(musketsType, totalMusketsAvail);
+        camp.addGoods(ammunitionType, totalAmmunitionAvail);
 
         assertEquals("Wrong initial number of horses in Indian camp",
             totalHorsesAvail, camp.getGoodsCount(horsesType));
         assertEquals("Wrong initial number of muskets in Indian camp",
             totalMusketsAvail, camp.getGoodsCount(musketsType));
+        assertEquals("Wrong initial number of ammunition in Indian camp",
+        	totalAmmunitionAvail, camp.getGoodsCount(ammunitionType));
 
         player.equipBraves(camp, lb);
 
@@ -117,6 +129,8 @@ public class StandardAIPlayerTest extends FreeColTestCase {
             totalMusketsReq, camp.getGoodsCount(musketsType));
         assertEquals("Wrong final number of horses in Indian camp",
             totalHorsesReq, camp.getGoodsCount(horsesType));
+        assertEquals("Wrong final number of ammunition in Indian camp",
+            totalAmmunitionReq, camp.getGoodsCount(ammunitionType));
     }
 
     public void testEquipBravesNotEnoughReqGoods() {
@@ -134,12 +148,15 @@ public class StandardAIPlayerTest extends FreeColTestCase {
         int totalHorsesAvail = bravesToEquip * horsesReqPerUnit
             + horsesType.getBreedingNumber();
         int totalMusketsAvail = bravesToEquip * musketsReqPerUnit;
+        int totalAmmunitionAvail = bravesToEquip * ammunitionReqPerUnit;
 
         // Verify initial conditions
         assertEquals("No horses should exist in camp", 0,
             camp.getGoodsCount(horsesType));
         assertEquals("No muskets should exist in camp", 0,
             camp.getGoodsCount(musketsType));
+        assertEquals("No ammunition should exist in camp", 0,
+            camp.getGoodsCount(ammunitionType));
 
         for (Unit unit : camp.getUnitList()) {
             if (unit.isMounted()) {
@@ -153,11 +170,14 @@ public class StandardAIPlayerTest extends FreeColTestCase {
         // Setup
         camp.addGoods(horsesType, totalHorsesAvail);
         camp.addGoods(musketsType, totalMusketsAvail);
+        camp.addGoods(ammunitionType, totalAmmunitionAvail);
 
         assertEquals("Wrong initial number of horses in Indian camp",
             totalHorsesAvail, camp.getGoodsCount(horsesType));
         assertEquals("Wrong initial number of muskets in Indian camp",
             totalMusketsAvail, camp.getGoodsCount(musketsType));
+        assertEquals("Wrong initial number of ammunition in Indian camp",
+            totalAmmunitionAvail, camp.getGoodsCount(ammunitionType));
 
         player.equipBraves(camp, lb);
 

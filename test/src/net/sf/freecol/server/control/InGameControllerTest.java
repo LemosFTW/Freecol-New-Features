@@ -2254,4 +2254,140 @@ public class InGameControllerTest extends FreeColTestCase {
         assertEquals("Soldier should have 4 ammunition", soldier.getAmmunitionCount(), 4);
     }
 
+    public void testAmmunitionDepletion() {
+        final Game game = ServerTestHelper.startServerGame(getTestMap(plains));
+        final Map map = game.getMap();
+        final InGameController igc = ServerTestHelper.getInGameController();
+
+        ServerPlayer dutch = getServerPlayer(game, "model.nation.dutch");
+        ServerPlayer french = getServerPlayer(game, "model.nation.french");
+        igc.changeStance(dutch, Stance.WAR, french, true);
+
+        Tile tile1 = map.getTile(5, 8);
+        tile1.setExplored(dutch, true);
+        tile1.setExplored(french, true);
+        Tile tile2 = map.getTile(4, 8);
+        tile2.setExplored(dutch, true);
+        tile2.setExplored(french, true);
+        Unit winner = new ServerUnit(game, tile1, dutch,
+                colonistType, dragoonRole);
+        Unit loser = new ServerUnit(game, tile2, french,
+                colonistType, dragoonRole);
+
+        // Verify starting ammunition
+        assertEquals("Winner should start with 5 ammunition", winner.getAmmunitionCount(), 5);
+        assertEquals("Loser should start with 5 ammunition", loser.getAmmunitionCount(), 5);
+
+        // First combat, both lose ammunition
+        List<CombatEffectType> crs
+                = fakeAttackResult(CombatEffectType.WIN, winner, loser);
+        checkCombat("Ammunition Spent", crs,
+                CombatEffectType.WIN, CombatEffectType.ATTACKER_AMMO_USED,
+                CombatEffectType.DEFENDER_AMMO_USED, CombatEffectType.LOSE_EQUIP);
+        igc.combat(dutch, winner, loser, crs);
+
+        // Verify that ammunition was spent
+        assertEquals("Winner should have 4 ammunition", winner.getAmmunitionCount(), 4);
+        assertEquals("Loser should have 4 ammunition", loser.getAmmunitionCount(), 4);
+
+        // Verify that loser changed to soldier
+        assertEquals("Loser should be a soldier", loser.getRole(), soldierRole);
+
+        // Reset loser
+        loser.changeRole(dragoonRole, 1);
+
+        // Second combat, both lose ammunition
+        crs = fakeAttackResult(CombatEffectType.WIN, winner, loser);
+        checkCombat("Ammunition Spent", crs,
+                CombatEffectType.WIN, CombatEffectType.ATTACKER_AMMO_USED,
+                CombatEffectType.DEFENDER_AMMO_USED, CombatEffectType.LOSE_EQUIP);
+        igc.combat(dutch, winner, loser, crs);
+
+        // Verify that ammunition was spent
+        assertEquals("Winner should have 3 ammunition", winner.getAmmunitionCount(), 3);
+
+        // Reset loser
+        loser.changeRole(dragoonRole, 1);
+
+        // Third combat, both lose ammunition
+        crs = fakeAttackResult(CombatEffectType.WIN, winner, loser);
+        checkCombat("Ammunition Spent", crs,
+                CombatEffectType.WIN, CombatEffectType.ATTACKER_AMMO_USED,
+                CombatEffectType.DEFENDER_AMMO_USED, CombatEffectType.LOSE_EQUIP);
+        igc.combat(dutch, winner, loser, crs);
+
+        // Verify that ammunition was spent
+        assertEquals("Winner should have 2 ammunition", winner.getAmmunitionCount(), 2);
+
+        // Reset loser
+        loser.changeRole(dragoonRole, 1);
+
+        // Fourth combat, both lose ammunition
+        crs = fakeAttackResult(CombatEffectType.WIN, winner, loser);
+        checkCombat("Ammunition Spent", crs,
+                CombatEffectType.WIN, CombatEffectType.ATTACKER_AMMO_USED,
+                CombatEffectType.DEFENDER_AMMO_USED, CombatEffectType.LOSE_EQUIP);
+        igc.combat(dutch, winner, loser, crs);
+
+        // Verify that ammunition was spent
+        assertEquals("Winner should have 1 ammunition", winner.getAmmunitionCount(), 1);
+
+        // Reset loser
+        loser.changeRole(dragoonRole, 1);
+
+        // Fifth combat, winner runs out of ammunition
+        crs = fakeAttackResult(CombatEffectType.WIN, winner, loser);
+        checkCombat("Ammunition Spent", crs,
+                CombatEffectType.WIN, CombatEffectType.ATTACKER_AMMO_USED,
+                CombatEffectType.ATTACKER_NO_AMMO, CombatEffectType.DEFENDER_AMMO_USED,
+                CombatEffectType.LOSE_EQUIP);
+        igc.combat(dutch, winner, loser, crs);
+
+        // Verify that ammunition was spent
+        assertEquals("Winner should have 0 ammunition", winner.getAmmunitionCount(), 0);
+
+        // Verify that winner role has no ammunition
+        assertEquals("Winner should have no ammunition", winner.getRole(), dragoonNoAmmoRole);
+
+        // Verify that winner cannot attack without ammunition
+        assertFalse("Winner should not be able to attack without ammunition", winner.canAttack(loser));
+    }
+
+    public void testAmmunitionReturnedColony() {
+        final Game game = ServerTestHelper.startServerGame(getTestMap(plains));
+        final Map map = game.getMap();
+        final InGameController igc = ServerTestHelper.getInGameController();
+
+        ServerPlayer dutch = getServerPlayer(game, "model.nation.dutch");
+        ServerPlayer french = getServerPlayer(game, "model.nation.french");
+        igc.changeStance(dutch, Stance.WAR, french, true);
+
+        Tile tile1 = map.getTile(5, 8);
+        tile1.setExplored(dutch, true);
+        tile1.setExplored(french, true);
+        Tile tile2 = map.getTile(4, 8);
+        tile2.setExplored(dutch, true);
+        tile2.setExplored(french, true);
+        Unit soldier = new ServerUnit(game, tile1, dutch,
+                colonistType, soldierRole);
+        Unit brave = new ServerUnit(game, tile2, french,
+                braveType, armedBraveRole);
+
+        // Soldier loses 1 ammunition, 4 remains
+        List<CombatEffectType> crs
+                = fakeAttackResult(CombatEffectType.WIN, soldier, brave);
+        igc.combat(dutch, soldier, brave, crs);
+
+        // Create new colony
+        Colony colony = getStandardColony();
+
+        // Colony should have no Ammunition
+        assertEquals(colony.getGoodsCount(ammunitionType), 0);
+
+        // Add soldier to colony
+        igc.joinColony(dutch, soldier, colony);
+
+        // Colony should have only 4 ammunition
+        assertEquals(colony.getGoodsCount(ammunitionType), 4);
+    }
 }

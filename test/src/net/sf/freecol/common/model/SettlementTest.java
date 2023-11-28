@@ -31,6 +31,8 @@ public class SettlementTest extends FreeColTestCase {
         = spec().getGoodsType("model.goods.horses");
     private static final GoodsType musketsType
         = spec().getGoodsType("model.goods.muskets");
+    private static final GoodsType ammunitionType
+    	= spec().getGoodsType("model.goods.ammunition");
 
     private static final Role dragoonRole
         = spec().getRole("model.role.dragoon");
@@ -164,6 +166,7 @@ public class SettlementTest extends FreeColTestCase {
 
         // Colony now has enough equipment
         colony.addGoods(musketsType, 10);
+        colony.addGoods(ammunitionType, 5);
         assertTrue(colony.canProvideGoods(soldierRole.getRequiredGoodsList()));
         assertEquals(soldierRole,
                      colony.canImproveUnitMilitaryRole(colonist));
@@ -209,6 +212,7 @@ public class SettlementTest extends FreeColTestCase {
         assertNull(is.canImproveUnitMilitaryRole(brave));
 
         is.addGoods(musketsType, 100);
+        is.addGoods(ammunitionType, 10);
         assertEquals(nativeDragoonRole,
                      is.canImproveUnitMilitaryRole(brave));
 
