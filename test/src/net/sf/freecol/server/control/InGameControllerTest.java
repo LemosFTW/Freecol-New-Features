@@ -98,6 +98,8 @@ public class InGameControllerTest extends FreeColTestCase {
         = spec().getGoodsType("model.goods.lumber");
     private static final GoodsType musketsType
         = spec().getGoodsType("model.goods.muskets");
+    private static final GoodsType ammunitionType
+    	= spec().getGoodsType("model.goods.ammunition");
     private static final GoodsType toolsType
         = spec().getGoodsType("model.goods.tools");
 
@@ -107,6 +109,8 @@ public class InGameControllerTest extends FreeColTestCase {
         = spec().getRole("model.role.soldier");
     private static final Role dragoonRole
         = spec().getRole("model.role.dragoon");
+    private static final Role dragoonNoAmmoRole
+    	= spec().getRole("model.role.dragoonNoAmmo");
     private static final Role pioneerRole
         = spec().getRole("model.role.pioneer");
     private static final Role missionaryRole
@@ -585,7 +589,9 @@ public class InGameControllerTest extends FreeColTestCase {
         List<CombatEffectType> crs
             = fakeAttackResult(CombatEffectType.WIN, soldier, colonial);
         checkCombat("Soldier v Colonial (1)", crs,
-            CombatEffectType.WIN, CombatEffectType.LOSE_EQUIP, CombatEffectType.DEMOTE_UNIT);
+            CombatEffectType.WIN, CombatEffectType.ATTACKER_AMMO_USED,
+            CombatEffectType.DEFENDER_AMMO_USED,
+            CombatEffectType.LOSE_EQUIP, CombatEffectType.DEMOTE_UNIT);
         igc.combat(french, soldier, colonial, crs);
 
         assertEquals("Colonial Regular is demoted",
@@ -594,7 +600,7 @@ public class InGameControllerTest extends FreeColTestCase {
         // Veteran attacks and captures the Colonial Regular
         crs = fakeAttackResult(CombatEffectType.WIN, soldier, colonial);
         checkCombat("Soldier v Colonial (2)", crs,
-            CombatEffectType.WIN, CombatEffectType.CAPTURE_UNIT);
+            CombatEffectType.WIN, CombatEffectType.ATTACKER_AMMO_USED, CombatEffectType.CAPTURE_UNIT);
         igc.combat(french, soldier, colonial, crs);
 
         assertEquals("Colonial Regular is demoted",
@@ -634,7 +640,7 @@ public class InGameControllerTest extends FreeColTestCase {
         List<CombatEffectType> crs
             = fakeAttackResult(CombatEffectType.WIN, attacker, defender);
         checkCombat("Veteran v Colony (1)", crs,
-            CombatEffectType.WIN, CombatEffectType.LOSE_EQUIP);
+            CombatEffectType.WIN, CombatEffectType.ATTACKER_AMMO_USED, CombatEffectType.DEFENDER_AMMO_USED, CombatEffectType.LOSE_EQUIP);
         igc.combat(french, attacker, defender, crs);
 
         assertTrue("Attacker should be mounted",
@@ -655,7 +661,7 @@ public class InGameControllerTest extends FreeColTestCase {
         // Attacker loses and loses horses
         crs = fakeAttackResult(CombatEffectType.LOSE, attacker, defender);
         checkCombat("Veteran v Colony (2) ", crs,
-            CombatEffectType.LOSE, CombatEffectType.LOSE_EQUIP);
+    		CombatEffectType.LOSE, CombatEffectType.DEFENDER_AMMO_USED, CombatEffectType.ATTACKER_AMMO_USED, CombatEffectType.LOSE_EQUIP);
         igc.combat(french, attacker, defender, crs);
 
         assertFalse("Attacker should not be mounted",
@@ -676,7 +682,7 @@ public class InGameControllerTest extends FreeColTestCase {
         // Attacker wins and defender loses muskets
         crs = fakeAttackResult(CombatEffectType.WIN, attacker, defender);
         checkCombat("Veteran v Colony (3)", crs,
-            CombatEffectType.WIN, CombatEffectType.LOSE_EQUIP);
+    		CombatEffectType.WIN, CombatEffectType.ATTACKER_AMMO_USED, CombatEffectType.DEFENDER_AMMO_USED, CombatEffectType.LOSE_EQUIP);
         igc.combat(french, attacker, defender, crs);
 
         assertFalse("Attacker should not be mounted",
@@ -697,7 +703,7 @@ public class InGameControllerTest extends FreeColTestCase {
         // Attacker wins and captures the settlement
         crs = fakeAttackResult(CombatEffectType.WIN, attacker, defender);
         checkCombat("Veteran v Colony (4)", crs,
-            CombatEffectType.WIN, CombatEffectType.CAPTURE_COLONY);
+            CombatEffectType.WIN, CombatEffectType.ATTACKER_AMMO_USED, CombatEffectType.CAPTURE_COLONY);
         igc.combat(french, attacker, defender, crs);
 
         assertFalse("Attacker should not be mounted",
@@ -752,7 +758,8 @@ public class InGameControllerTest extends FreeColTestCase {
         List<CombatEffectType> crs
             = fakeAttackResult(CombatEffectType.WIN, attacker, defender);
         checkCombat("Brave v Colony (1)", crs,
-            CombatEffectType.WIN, CombatEffectType.LOSE_EQUIP);
+            CombatEffectType.WIN, CombatEffectType.ATTACKER_AMMO_USED, 
+            CombatEffectType.DEFENDER_AMMO_USED, CombatEffectType.LOSE_EQUIP);
         igc.combat(inca, attacker, defender, crs);
 
         assertEquals("Colony size should be 1",
@@ -777,7 +784,8 @@ public class InGameControllerTest extends FreeColTestCase {
         // Attacker wins and defender loses muskets
         crs = fakeAttackResult(CombatEffectType.WIN, attacker, defender);
         checkCombat("Brave v Colony (2)", crs,
-            CombatEffectType.WIN, CombatEffectType.LOSE_EQUIP);
+    		CombatEffectType.WIN, CombatEffectType.ATTACKER_AMMO_USED, 
+            CombatEffectType.DEFENDER_AMMO_USED, CombatEffectType.LOSE_EQUIP);
         igc.combat(inca, attacker, defender, crs);
 
         assertEquals("Colony size should be 1",
@@ -806,7 +814,7 @@ public class InGameControllerTest extends FreeColTestCase {
         // Attacker wins and slaughters the defender.
         crs = fakeAttackResult(CombatEffectType.WIN, attacker, defender);
         checkCombat("Brave v Colony (3)", crs,
-            CombatEffectType.WIN, CombatEffectType.SLAUGHTER_UNIT);
+            CombatEffectType.WIN, CombatEffectType.ATTACKER_AMMO_USED, CombatEffectType.SLAUGHTER_UNIT);
         igc.combat(inca, attacker, defender, crs);
 
         assertEquals("Colony size should be 1",
@@ -832,7 +840,7 @@ public class InGameControllerTest extends FreeColTestCase {
                    colony.canBePillaged(attacker));
         crs = fakeAttackResult(CombatEffectType.WIN, attacker, defender);
         checkCombat("Brave v Colony (4)", crs,
-            CombatEffectType.WIN, CombatEffectType.PILLAGE_COLONY);
+            CombatEffectType.WIN, CombatEffectType.ATTACKER_AMMO_USED, CombatEffectType.PILLAGE_COLONY);
         igc.combat(inca, attacker, defender, crs);
 
         assertTrue("Attacker should be mounted",
@@ -856,7 +864,8 @@ public class InGameControllerTest extends FreeColTestCase {
                    colony.canBePillaged(attacker));
         crs = fakeAttackResult(CombatEffectType.WIN, attacker, defender);
         checkCombat("Brave v Colony (5)", crs,
-            CombatEffectType.WIN, CombatEffectType.PILLAGE_COLONY);
+            CombatEffectType.WIN, CombatEffectType.ATTACKER_AMMO_USED, 
+            CombatEffectType.ATTACKER_NO_AMMO, CombatEffectType.PILLAGE_COLONY);
         igc.combat(inca, attacker, defender, crs);
 
         assertTrue("Attacker should be mounted",
@@ -878,9 +887,14 @@ public class InGameControllerTest extends FreeColTestCase {
         colony.addGoods(cottonType, 100);
         assertTrue("Colony has goods, should be pillageable",
                    colony.canBePillaged(attacker));
+        
+        // Restock attacker ammunition
+        attacker.changeRole(nativeDragoonRole, 1);
+        
         crs = fakeAttackResult(CombatEffectType.WIN, attacker, defender);
         checkCombat("Brave v Colony (6)", crs,
-            CombatEffectType.WIN, CombatEffectType.PILLAGE_COLONY);
+            CombatEffectType.WIN, CombatEffectType.ATTACKER_AMMO_USED, 
+            CombatEffectType.PILLAGE_COLONY);
         igc.combat(inca, attacker, defender, crs);
 
         assertTrue("Attacker should be mounted",
@@ -903,7 +917,8 @@ public class InGameControllerTest extends FreeColTestCase {
                    colony.canBePillaged(attacker));
         crs = fakeAttackResult(CombatEffectType.WIN, attacker, defender);
         checkCombat("Brave v Colony (7)", crs,
-            CombatEffectType.WIN, CombatEffectType.PILLAGE_COLONY);
+    		CombatEffectType.WIN, CombatEffectType.ATTACKER_AMMO_USED, 
+            CombatEffectType.PILLAGE_COLONY);
         igc.combat(inca, attacker, defender, crs);
 
         assertTrue("Attacker should be mounted",
@@ -923,7 +938,8 @@ public class InGameControllerTest extends FreeColTestCase {
         // Attacker wins and destroys the colony
         crs = fakeAttackResult(CombatEffectType.WIN, attacker, defender);
         checkCombat("Brave v Colony (8)", crs,
-            CombatEffectType.WIN, CombatEffectType.SLAUGHTER_UNIT, CombatEffectType.DESTROY_COLONY);
+            CombatEffectType.WIN, CombatEffectType.ATTACKER_AMMO_USED,
+            CombatEffectType.SLAUGHTER_UNIT, CombatEffectType.DESTROY_COLONY);
         igc.combat(inca, attacker, defender, crs);
 
         assertTrue("Attacker should be mounted",
@@ -969,7 +985,8 @@ public class InGameControllerTest extends FreeColTestCase {
         List<CombatEffectType> crs
             = fakeAttackResult(CombatEffectType.WIN, attacker, colonist);
         checkCombat("Inca v Colony", crs,
-                    CombatEffectType.WIN, CombatEffectType.AUTOEQUIP_UNIT,
+                    CombatEffectType.WIN, CombatEffectType.ATTACKER_AMMO_USED,
+                    CombatEffectType.AUTOEQUIP_UNIT,
                     CombatEffectType.LOSE_AUTOEQUIP);
         igc.combat(inca, attacker, colonist, crs);
 
@@ -1006,7 +1023,7 @@ public class InGameControllerTest extends FreeColTestCase {
         List<CombatEffectType> crs
             = fakeAttackResult(CombatEffectType.WIN, soldier, pioneer);
         checkCombat("Soldier v Pioneer", crs,
-                    CombatEffectType.WIN, CombatEffectType.SLAUGHTER_UNIT);
+                    CombatEffectType.WIN, CombatEffectType.ATTACKER_AMMO_USED, CombatEffectType.SLAUGHTER_UNIT);
         igc.combat(french, soldier, pioneer, crs);
 
         assertTrue("Pioneer should be dead",
@@ -1038,7 +1055,7 @@ public class InGameControllerTest extends FreeColTestCase {
         List<CombatEffectType> crs
             = fakeAttackResult(CombatEffectType.WIN, soldier, scout);
         checkCombat("Soldier v scout", crs,
-                    CombatEffectType.WIN, CombatEffectType.SLAUGHTER_UNIT);
+                    CombatEffectType.WIN, CombatEffectType.ATTACKER_AMMO_USED, CombatEffectType.SLAUGHTER_UNIT);
         igc.combat(french, soldier, scout, crs);
 
         assertTrue("Scout should be dead",
@@ -1102,7 +1119,8 @@ public class InGameControllerTest extends FreeColTestCase {
         List<CombatEffectType> crs
             = fakeAttackResult(CombatEffectType.WIN, unit, soldier);
         checkCombat("Criminal promotion", crs,
-                    CombatEffectType.WIN, CombatEffectType.LOSE_EQUIP,
+                    CombatEffectType.WIN, CombatEffectType.ATTACKER_AMMO_USED,
+                    CombatEffectType.DEFENDER_AMMO_USED, CombatEffectType.LOSE_EQUIP,
                     CombatEffectType.PROMOTE_UNIT);
         igc.combat(dutch, unit, soldier, crs);
 
@@ -1113,8 +1131,9 @@ public class InGameControllerTest extends FreeColTestCase {
         soldier.changeRole(soldierRole, 1);
         crs = fakeAttackResult(CombatEffectType.WIN, unit, soldier);
         checkCombat("Servant promotion", crs,
-                    CombatEffectType.WIN, CombatEffectType.LOSE_EQUIP,
-                    CombatEffectType.PROMOTE_UNIT);
+	        		CombatEffectType.WIN, CombatEffectType.ATTACKER_AMMO_USED,
+	                CombatEffectType.DEFENDER_AMMO_USED, CombatEffectType.LOSE_EQUIP,
+	                CombatEffectType.PROMOTE_UNIT);
         igc.combat(dutch, unit, soldier, crs);
 
         assertEquals("Servant should be promoted to colonist",
@@ -1124,8 +1143,9 @@ public class InGameControllerTest extends FreeColTestCase {
         soldier.changeRole(soldierRole, 1);
         crs = fakeAttackResult(CombatEffectType.WIN, unit, soldier);
         checkCombat("Colonist promotion failed", crs,
-                    CombatEffectType.WIN, CombatEffectType.LOSE_EQUIP,
-                    CombatEffectType.PROMOTE_UNIT);
+	        		CombatEffectType.WIN, CombatEffectType.ATTACKER_AMMO_USED,
+	                CombatEffectType.DEFENDER_AMMO_USED, CombatEffectType.LOSE_EQUIP,
+	                CombatEffectType.PROMOTE_UNIT);
         igc.combat(dutch, unit, soldier, crs);
 
         assertEquals("Colonist should be promoted to Veteran",
@@ -1149,8 +1169,9 @@ public class InGameControllerTest extends FreeColTestCase {
         soldier.changeRole(soldierRole, 1);
         crs = fakeAttackResult(CombatEffectType.WIN, unit, soldier);
         checkCombat("Veteran promotion", crs,
-                    CombatEffectType.WIN, CombatEffectType.LOSE_EQUIP,
-                    CombatEffectType.PROMOTE_UNIT);
+        		CombatEffectType.WIN, CombatEffectType.ATTACKER_AMMO_USED,
+                CombatEffectType.DEFENDER_AMMO_USED, CombatEffectType.LOSE_EQUIP,
+                CombatEffectType.PROMOTE_UNIT);
         igc.combat(dutch, unit, soldier, crs);
 
         assertEquals("Veteran should be promoted to Colonial Regular",
@@ -1160,7 +1181,9 @@ public class InGameControllerTest extends FreeColTestCase {
         soldier.changeRole(soldierRole, 1);
         crs = fakeAttackResult(CombatEffectType.WIN, unit, soldier);
         checkCombat("Colonial Regular over-promotion failed", crs,
-                    CombatEffectType.WIN, CombatEffectType.LOSE_EQUIP);
+        		CombatEffectType.WIN, CombatEffectType.ATTACKER_AMMO_USED,
+        		CombatEffectType.ATTACKER_NO_AMMO, CombatEffectType.DEFENDER_AMMO_USED, 
+        		CombatEffectType.LOSE_EQUIP);
         igc.combat(dutch, unit, soldier, crs);
 
         assertEquals("Colonial Regular should still be Colonial Regular",
@@ -1197,7 +1220,7 @@ public class InGameControllerTest extends FreeColTestCase {
         List<CombatEffectType> crs
             = fakeAttackResult(CombatEffectType.LOSE, colonist, soldier);
         checkCombat("Colonist v Soldier", crs,
-                    CombatEffectType.LOSE, CombatEffectType.CAPTURE_UNIT);
+                    CombatEffectType.LOSE, CombatEffectType.DEFENDER_AMMO_USED, CombatEffectType.CAPTURE_UNIT);
         igc.combat(dutch, colonist, soldier, crs);
 
         assertEquals("Colonist should still be a colonist",
@@ -1232,7 +1255,8 @@ public class InGameControllerTest extends FreeColTestCase {
         List<CombatEffectType> crs
             = fakeAttackResult(CombatEffectType.LOSE, soldier1, soldier2);
         checkCombat("Soldier should lose equipment", crs,
-                    CombatEffectType.LOSE, CombatEffectType.LOSE_EQUIP);
+                    CombatEffectType.LOSE, CombatEffectType.DEFENDER_AMMO_USED, 
+                    CombatEffectType.ATTACKER_AMMO_USED, CombatEffectType.LOSE_EQUIP);
         igc.combat(dutch, soldier1, soldier2, crs);
 
         assertEquals("Soldier should be a colonist",
@@ -1247,7 +1271,8 @@ public class InGameControllerTest extends FreeColTestCase {
         // Soldier loses and is captured
         crs = fakeAttackResult(CombatEffectType.LOSE, soldier1, soldier2);
         checkCombat("Soldier v soldier", crs,
-                    CombatEffectType.LOSE, CombatEffectType.CAPTURE_UNIT);
+                    CombatEffectType.LOSE, CombatEffectType.DEFENDER_AMMO_USED, 
+                    CombatEffectType.CAPTURE_UNIT);
         igc.combat(dutch, soldier1, soldier2, crs);
 
         assertEquals("Soldier should be a colonist",
@@ -1288,7 +1313,8 @@ public class InGameControllerTest extends FreeColTestCase {
         List<CombatEffectType> crs
             = fakeAttackResult(CombatEffectType.LOSE, dragoon, soldier);
         checkCombat("Dragoon v soldier (1)", crs,
-            CombatEffectType.LOSE, CombatEffectType.LOSE_EQUIP);
+            CombatEffectType.LOSE, CombatEffectType.DEFENDER_AMMO_USED, 
+            CombatEffectType.ATTACKER_AMMO_USED, CombatEffectType.LOSE_EQUIP);
         igc.combat(dutch, dragoon, soldier, crs);
 
         assertEquals("Attacker should be a colonist", colonistType,
@@ -1310,7 +1336,8 @@ public class InGameControllerTest extends FreeColTestCase {
 
         crs = fakeAttackResult(CombatEffectType.LOSE, dragoon, soldier);
         checkCombat("Dragoon v soldier (2)", crs,
-            CombatEffectType.LOSE, CombatEffectType.LOSE_EQUIP);
+    		CombatEffectType.LOSE, CombatEffectType.DEFENDER_AMMO_USED, 
+            CombatEffectType.ATTACKER_AMMO_USED, CombatEffectType.LOSE_EQUIP);
         igc.combat(dutch, dragoon, soldier, crs);
 
         assertEquals("Attacker should be a colonist", colonistType,
@@ -1324,7 +1351,8 @@ public class InGameControllerTest extends FreeColTestCase {
 
         crs = fakeAttackResult(CombatEffectType.WIN, soldier, dragoon);
         checkCombat("Soldier v ex-dragoon", crs,
-                    CombatEffectType.WIN, CombatEffectType.CAPTURE_UNIT);
+            CombatEffectType.WIN, CombatEffectType.ATTACKER_AMMO_USED, 
+            CombatEffectType.CAPTURE_UNIT);
         igc.combat(french, soldier, dragoon, crs);
 
         assertEquals("Defender should be a colonist", colonistType,
@@ -1368,7 +1396,7 @@ public class InGameControllerTest extends FreeColTestCase {
         List<CombatEffectType> crs
             = fakeAttackResult(CombatEffectType.LOSE, dragoon, brave);
         checkCombat("Dragoon v Brave (1)", crs,
-                    CombatEffectType.LOSE, CombatEffectType.CAPTURE_EQUIP);
+                    CombatEffectType.LOSE, CombatEffectType.ATTACKER_AMMO_USED, CombatEffectType.CAPTURE_EQUIP);
         igc.combat(dutch, dragoon, brave, crs);
 
         assertEquals("Dragoon should be a colonist",
@@ -1389,7 +1417,7 @@ public class InGameControllerTest extends FreeColTestCase {
         // Dragoon loses and brave captures its muskets
         crs = fakeAttackResult(CombatEffectType.LOSE, dragoon, brave);
         checkCombat("Dragoon v Brave (2)", crs,
-                    CombatEffectType.LOSE, CombatEffectType.CAPTURE_EQUIP);
+                    CombatEffectType.LOSE, CombatEffectType.ATTACKER_AMMO_USED, CombatEffectType.CAPTURE_EQUIP);
         igc.combat(dutch, dragoon, brave, crs);
 
         assertEquals("Attacker should be a colonist",
@@ -1410,7 +1438,7 @@ public class InGameControllerTest extends FreeColTestCase {
         // Dragoon loses and is slaughtered
         crs = fakeAttackResult(CombatEffectType.LOSE, dragoon, brave);
         checkCombat("Dragoon v Brave (3)", crs,
-                    CombatEffectType.LOSE, CombatEffectType.SLAUGHTER_UNIT);
+                    CombatEffectType.LOSE, CombatEffectType.DEFENDER_AMMO_USED, CombatEffectType.SLAUGHTER_UNIT);
         igc.combat(dutch, dragoon, brave, crs);
 
         assertTrue("Dragoon should be disposed",
@@ -1441,7 +1469,8 @@ public class InGameControllerTest extends FreeColTestCase {
         List<CombatEffectType> crs
             = fakeAttackResult(CombatEffectType.LOSE, scout, soldier);
         checkCombat("Scout v Soldier", crs,
-                    CombatEffectType.LOSE, CombatEffectType.SLAUGHTER_UNIT);
+                    CombatEffectType.LOSE, CombatEffectType.DEFENDER_AMMO_USED, 
+                    CombatEffectType.SLAUGHTER_UNIT);
         igc.combat(dutch, scout, soldier, crs);
 
         assertTrue("Scout should be disposed",
@@ -1477,7 +1506,8 @@ public class InGameControllerTest extends FreeColTestCase {
         List<CombatEffectType> crs
             = fakeAttackResult(CombatEffectType.LOSE, soldier1, soldier2);
         checkCombat("Soldier v Soldier", crs,
-            CombatEffectType.LOSE, CombatEffectType.LOSE_EQUIP);
+            CombatEffectType.LOSE, CombatEffectType.DEFENDER_AMMO_USED, 
+            CombatEffectType.ATTACKER_AMMO_USED, CombatEffectType.LOSE_EQUIP);
         igc.combat(dutch, soldier1, soldier2, crs);
 
         assertEquals("Soldier1 should be a Veteran", veteranType,
@@ -1492,7 +1522,8 @@ public class InGameControllerTest extends FreeColTestCase {
         // Soldier1 loses and is captured
         crs = fakeAttackResult(CombatEffectType.LOSE, soldier1, soldier2);
         checkCombat("Soldier1 v Soldier2", crs,
-            CombatEffectType.LOSE, CombatEffectType.CAPTURE_UNIT);
+            CombatEffectType.LOSE, CombatEffectType.DEFENDER_AMMO_USED,
+            CombatEffectType.CAPTURE_UNIT);
         igc.combat(dutch, soldier1, soldier2, crs);
 
         assertEquals("Soldier1 should be a colonist", colonistType,
@@ -1528,7 +1559,7 @@ public class InGameControllerTest extends FreeColTestCase {
         List<CombatEffectType> crs
             = fakeAttackResult(CombatEffectType.LOSE, artillery, soldier);
         checkCombat("Artillery v Soldier (1)", crs,
-            CombatEffectType.LOSE, CombatEffectType.DEMOTE_UNIT);
+            CombatEffectType.LOSE, CombatEffectType.DEFENDER_AMMO_USED, CombatEffectType.DEMOTE_UNIT);
         igc.combat(dutch, artillery, soldier, crs);
 
         assertEquals("Artillery should be damaged artillery",
@@ -1541,7 +1572,7 @@ public class InGameControllerTest extends FreeColTestCase {
         // Artillery loses and is slaughtered
         crs = fakeAttackResult(CombatEffectType.LOSE, artillery, soldier);
         checkCombat("Artillery v Soldier (2)", crs,
-            CombatEffectType.LOSE, CombatEffectType.SLAUGHTER_UNIT);
+            CombatEffectType.LOSE, CombatEffectType.DEFENDER_AMMO_USED, CombatEffectType.SLAUGHTER_UNIT);
         igc.combat(dutch, artillery, soldier, crs);
 
         assertTrue("Artillery should be disposed",
@@ -1738,15 +1769,19 @@ public class InGameControllerTest extends FreeColTestCase {
         List<AbstractGoods> required = nativeDragoonRole.getRequiredGoodsList();
         int horsesReqPerUnit = AbstractGoods.getCount(horsesType, required);
         int musketsReqPerUnit = AbstractGoods.getCount(musketsType, required);
+        int ammunitionReqPerUnit = AbstractGoods.getCount(ammunitionType, required);
 
         // Setup
         camp.addGoods(horsesType,horsesReqPerUnit);
         camp.addGoods(musketsType,musketsReqPerUnit);
+        camp.addGoods(ammunitionType,ammunitionReqPerUnit);
 
         assertEquals("Initial number of horses in Indian camp not as expected",
             horsesReqPerUnit, camp.getGoodsCount(horsesType));
         assertEquals("Initial number of muskets in Indian camp not as expected",
             musketsReqPerUnit, camp.getGoodsCount(musketsType));
+        assertEquals("Initial number of ammunition in Indian camp not as expected",
+    		ammunitionReqPerUnit, camp.getGoodsCount(ammunitionType));
 
         Unit brave = camp.getUnitList().get(0);
         assertFalse("Brave should not be mounted",
@@ -1776,6 +1811,8 @@ public class InGameControllerTest extends FreeColTestCase {
                      camp.getGoodsCount(musketsType));
         assertEquals("No horses should remain in camp", 0,
                      camp.getGoodsCount(horsesType));
+        assertEquals("No ammunition should remain in camp", 0,
+                camp.getGoodsCount(ammunitionType));
     }
 
     public void testEquipIndianNotEnoughReqGoods() {
@@ -2179,5 +2216,42 @@ public class InGameControllerTest extends FreeColTestCase {
         assertFalse(unit.isDisposed());
         ServerTestHelper.newTurn();
         assertTrue(unit.isDisposed());
-    }        
+    }
+    
+    public void testAmmunitionSpentCombat() {
+        final Game game = ServerTestHelper.startServerGame(getTestMap(plains));
+        final Map map = game.getMap();
+        final InGameController igc = ServerTestHelper.getInGameController();
+
+        ServerPlayer dutch = getServerPlayer(game, "model.nation.dutch");
+        ServerPlayer french = getServerPlayer(game, "model.nation.french");
+        igc.changeStance(dutch, Stance.WAR, french, true);
+
+        Tile tile1 = map.getTile(5, 8);
+        tile1.setExplored(dutch, true);
+        tile1.setExplored(french, true);
+        Tile tile2 = map.getTile(4, 8);
+        tile2.setExplored(dutch, true);
+        tile2.setExplored(french, true);
+        Unit soldier = new ServerUnit(game, tile1, dutch,
+                                   colonistType, soldierRole);
+        Unit brave = new ServerUnit(game, tile2, french,
+                                      braveType, armedBraveRole);
+
+        // Verify starting ammunition
+        assertEquals("Soldier should start with 5 ammunition", soldier.getAmmunitionCount(), 5);
+        assertEquals("Armed Brave should start with 5 ammunition", brave.getAmmunitionCount(), 5);
+        
+        // First combat, both lose ammunition
+        List<CombatEffectType> crs
+            = fakeAttackResult(CombatEffectType.WIN, soldier, brave);
+        checkCombat("Ammunition Spent", crs,
+                    CombatEffectType.WIN, CombatEffectType.ATTACKER_AMMO_USED,
+                    CombatEffectType.DEFENDER_AMMO_USED, CombatEffectType.SLAUGHTER_UNIT);
+        igc.combat(dutch, soldier, brave, crs);
+
+        // Verify that ammunition was spent
+        assertEquals("Soldier should have 4 ammunition", soldier.getAmmunitionCount(), 4);
+    }
+
 }

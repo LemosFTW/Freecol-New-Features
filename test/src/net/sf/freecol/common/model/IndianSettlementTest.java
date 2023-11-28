@@ -28,6 +28,8 @@ public class IndianSettlementTest extends FreeColTestCase {
         = spec().getGoodsType("model.goods.horses");
     private static final GoodsType musketsType
         = spec().getGoodsType("model.goods.muskets");
+    private static final GoodsType ammunitionType
+    	= spec().getGoodsType("model.goods.ammunition");
 
     private static final Role armedBraveRole
         = spec().getRole("model.role.armedBrave");
@@ -46,10 +48,11 @@ public class IndianSettlementTest extends FreeColTestCase {
 
         Unit indianBrave = camp.getUnitList().get(0);
 
-        assertNull("No auto-equip, no muskets",
+        assertNull("No auto-equip, no muskets nor ammunition",
                    indianBrave.getAutomaticRole());
         camp.addGoods(musketsType, 100);
-        assertEquals("Auto-equip to armed brave, muskets present",
+        camp.addGoods(ammunitionType, 10);
+        assertEquals("Auto-equip to armed brave, muskets and ammunition present",
                      armedBraveRole, indianBrave.getAutomaticRole());
         camp.addGoods(horsesType, 100);
         assertEquals("Auto-equip to native dragoon, horses and muskets present",

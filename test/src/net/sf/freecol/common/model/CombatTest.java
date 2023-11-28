@@ -25,6 +25,7 @@ import java.util.Random;
 import java.util.Set;
 
 import net.sf.freecol.common.model.CombatModel.CombatEffectType;
+import net.sf.freecol.common.model.Player.PlayerType;
 import net.sf.freecol.common.model.Unit.MoveType;
 import net.sf.freecol.common.networking.ChangeSet;
 import net.sf.freecol.common.option.GameOptions;
@@ -41,18 +42,30 @@ public class CombatTest extends FreeColTestCase {
 
     private static final Role armedBraveRole
         = spec().getRole("model.role.armedBrave");
+    private static final Role armedBraveNoAmmoRole
+    	= spec().getRole("model.role.armedBraveNoAmmo");
     private static final Role cavalryRole
         = spec().getRole("model.role.cavalry");
+    private static final Role cavalryNoAmmoRole
+    	= spec().getRole("model.role.cavalryNoAmmo");
     private static final Role dragoonRole
         = spec().getRole("model.role.dragoon");
+    private static final Role dragoonNoAmmoRole
+    	= spec().getRole("model.role.dragoonNoAmmo");
     private static final Role infantryRole
         = spec().getRole("model.role.infantry");
+    private static final Role infantryNoAmmoRole
+    	= spec().getRole("model.role.infantryNoAmmo");
     private static final Role missionaryRole
         = spec().getRole("model.role.missionary");
     private static final Role nativeDragoonRole
         = spec().getRole("model.role.nativeDragoon");
+    private static final Role nativeDragoonNoAmmoRole
+    	= spec().getRole("model.role.nativeDragoonNoAmmo");
     private static final Role soldierRole
         = spec().getRole("model.role.soldier");
+    private static final Role soldierNoAmmoRole
+    	= spec().getRole("model.role.soldierNoAmmo");
 
     private static final TileType hills
         = spec().getTileType("model.tile.hills");
@@ -506,11 +519,13 @@ public class CombatTest extends FreeColTestCase {
 
         List<CombatEffectType> crs
             = combatModel.generateAttackResult(loseRandom, regular, colonial).getEffects();
+
         checkCombat("Regular v Colonial", crs,
-            CombatEffectType.LOSE, CombatEffectType.LOSE_EQUIP);
+            CombatEffectType.LOSE, CombatEffectType.DEFENDER_AMMO_USED, 
+            CombatEffectType.ATTACKER_AMMO_USED, CombatEffectType.LOSE_EQUIP);
         refPlayer.csCombat(regular, colonial, crs, loseRandom, new ChangeSet());
         assertEquals(infantryRole, regular.getRole());
-
+        
         // (colonist + regular + infantry) * attack bonus
         offence = (0 + 4 + 2) * 1.5;
         assertEquals(offence, combatModel.getOffencePower(regular, colonial));
@@ -518,28 +533,34 @@ public class CombatTest extends FreeColTestCase {
         // slaughter King's Regular
         crs = combatModel.generateAttackResult(winRandom, colonial, regular).getEffects();
         checkCombat("Regular should be slaughtered upon losing all equipment",
-            crs, CombatEffectType.WIN, CombatEffectType.SLAUGHTER_UNIT);
+            crs, CombatEffectType.WIN, CombatEffectType.ATTACKER_AMMO_USED,
+            CombatEffectType.DEFENDER_AMMO_USED, CombatEffectType.SLAUGHTER_UNIT);
 
         regular = new ServerUnit(game, tile2, french, kingsRegularType,
                                  cavalryRole);
 
         crs = combatModel.generateAttackResult(winRandom, regular, colonial).getEffects();
         checkCombat("Regular v Colonial (2)", crs,
-            CombatEffectType.WIN, CombatEffectType.LOSE_EQUIP);
+    		CombatEffectType.WIN, CombatEffectType.ATTACKER_AMMO_USED,
+            CombatEffectType.DEFENDER_AMMO_USED, CombatEffectType.LOSE_EQUIP);
         refPlayer.csCombat(regular, colonial, crs, winRandom, new ChangeSet());
         assertEquals(soldierRole, colonial.getRole());
 
         crs = combatModel.generateAttackResult(winRandom, regular, colonial).getEffects();
         checkCombat("Regular v Colonial (3)", crs,
-            CombatEffectType.WIN, CombatEffectType.LOSE_EQUIP, CombatEffectType.DEMOTE_UNIT);
+        		CombatEffectType.WIN, CombatEffectType.ATTACKER_AMMO_USED,
+                CombatEffectType.DEFENDER_AMMO_USED, CombatEffectType.LOSE_EQUIP,
+                CombatEffectType.DEMOTE_UNIT);
         refPlayer.csCombat(regular, colonial, crs, winRandom, new ChangeSet());
         assertFalse(colonial.isArmed());
         assertEquals(veteranType, colonial.getType());
         assertEquals(spec().getDefaultRole(), colonial.getRole());
 
         crs = combatModel.generateAttackResult(winRandom, regular, colonial).getEffects();
+
         checkCombat("Regular v Colonial (4)", crs,
-            CombatEffectType.WIN, CombatEffectType.CAPTURE_UNIT);
+            CombatEffectType.WIN, CombatEffectType.ATTACKER_AMMO_USED, 
+            CombatEffectType.CAPTURE_UNIT);
         refPlayer.csCombat(regular, colonial, crs, winRandom, new ChangeSet());
     }
 
@@ -582,8 +603,8 @@ public class CombatTest extends FreeColTestCase {
         List<CombatEffectType> crs = combatModel.generateAttackResult(random,
             soldier, defender).getEffects();
         checkCombat("Capture convert", crs,
-                    CombatEffectType.WIN, CombatEffectType.SLAUGHTER_UNIT,
-                    CombatEffectType.CAPTURE_CONVERT);
+                    CombatEffectType.WIN, CombatEffectType.ATTACKER_AMMO_USED,
+                    CombatEffectType.SLAUGHTER_UNIT, CombatEffectType.CAPTURE_CONVERT);
         assertEquals("One unit on tile", 1, tile2.getUnitList().size());
         dutch.csCombat(soldier, defender, crs, new Random(),
                        new ChangeSet());

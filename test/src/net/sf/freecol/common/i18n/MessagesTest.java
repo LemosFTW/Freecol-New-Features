@@ -69,6 +69,8 @@ public class MessagesTest extends FreeColTestCase {
         = spec().getRole("model.role.scout");
     private static final Role soldierRole
         = spec().getRole("model.role.soldier");
+    private static final Role soldierNoAmmoRole
+    	= spec().getRole("model.role.soldierNoAmmo");
 
     private static final UnitType artillery
         = spec().getUnitType("model.unit.artillery");
@@ -413,7 +415,8 @@ public class MessagesTest extends FreeColTestCase {
             unit.getDescription());
         assertEquals("Dutch Royal Expeditionary Force Infantry",
             unit.getDescription(UnitLabelType.NATIONAL));
-        assertEquals("Dutch Royal Expeditionary Force Infantry (50 Muskets)",
+
+        assertEquals("Dutch Royal Expeditionary Force Infantry (50 Muskets 5 Ammunition)",
             unit.getDescription(UnitLabelType.FULL));
 
         unit.changeRole(cavalryRole, 1);
@@ -421,7 +424,7 @@ public class MessagesTest extends FreeColTestCase {
             unit.getDescription());
         assertEquals("Dutch Royal Expeditionary Force Cavalry",
             unit.getDescription(UnitLabelType.NATIONAL));
-        assertEquals("Dutch Royal Expeditionary Force Cavalry (50 Muskets 50 Horses)",
+        assertEquals("Dutch Royal Expeditionary Force Cavalry (50 Muskets 50 Horses 5 Ammunition)",
             unit.getDescription(UnitLabelType.FULL));
 
         // Colonial regulars
@@ -438,7 +441,7 @@ public class MessagesTest extends FreeColTestCase {
             unit.getDescription());
         assertEquals("Dutch Continental Army",
             unit.getDescription(UnitLabelType.NATIONAL));
-        assertEquals("Dutch Continental Army (50 Muskets)",
+        assertEquals("Dutch Continental Army (50 Muskets 5 Ammunition)",
             unit.getDescription(UnitLabelType.FULL));
 
         unit.changeRole(dragoonRole, 1);
@@ -446,8 +449,16 @@ public class MessagesTest extends FreeColTestCase {
             unit.getDescription());
         assertEquals("Dutch Continental Cavalry",
             unit.getDescription(UnitLabelType.NATIONAL));
-        assertEquals("Dutch Continental Cavalry (50 Muskets 50 Horses)",
+        assertEquals("Dutch Continental Cavalry (50 Muskets 50 Horses 5 Ammunition)",
             unit.getDescription(UnitLabelType.FULL));
+        
+        unit.changeRole(soldierNoAmmoRole, 1);
+        assertEquals("Continental Army (no ammo)",
+                unit.getDescription());
+            assertEquals("Dutch Continental Army (no ammo)",
+                unit.getDescription(UnitLabelType.NATIONAL));
+            assertEquals("Dutch Continental Army (no ammo) (50 Muskets)",
+                unit.getDescription(UnitLabelType.FULL));
 
         // Veteran Soldiers
         unit = new ServerUnit(game, null, dutch, veteranSoldier, soldierRole);
@@ -455,7 +466,7 @@ public class MessagesTest extends FreeColTestCase {
             unit.getDescription());
         assertEquals("Dutch Veteran Soldier",
             unit.getDescription(UnitLabelType.NATIONAL));
-        assertEquals("Dutch Veteran Soldier (50 Muskets)",
+        assertEquals("Dutch Veteran Soldier (50 Muskets 5 Ammunition)",
             unit.getDescription(UnitLabelType.FULL));
 
         unit.changeRole(defaultRole, 0);
@@ -471,7 +482,7 @@ public class MessagesTest extends FreeColTestCase {
             unit.getDescription());
         assertEquals("Dutch Veteran Dragoon",
             unit.getDescription(UnitLabelType.NATIONAL));
-        assertEquals("Dutch Veteran Dragoon (50 Muskets 50 Horses)",
+        assertEquals("Dutch Veteran Dragoon (50 Muskets 50 Horses 5 Ammunition)",
             unit.getDescription(UnitLabelType.FULL));
 
         unit.setName("Davy Crockett");
@@ -479,7 +490,7 @@ public class MessagesTest extends FreeColTestCase {
             unit.getDescription());
         assertEquals("Davy Crockett (Dutch Veteran Dragoon)",
             unit.getDescription(UnitLabelType.NATIONAL));
-        assertEquals("Davy Crockett (Dutch Veteran Dragoon/50 Muskets 50 Horses)",
+        assertEquals("Davy Crockett (Dutch Veteran Dragoon/50 Muskets 50 Horses 5 Ammunition)",
             unit.getDescription(UnitLabelType.FULL));
 
         // Indian Braves
@@ -496,7 +507,7 @@ public class MessagesTest extends FreeColTestCase {
             unit.getDescription());
         assertEquals("Sioux Armed Brave",
             unit.getDescription(UnitLabelType.NATIONAL));
-        assertEquals("Sioux Armed Brave (25 Muskets)",
+        assertEquals("Sioux Armed Brave (25 Muskets 5 Ammunition)",
             unit.getDescription(UnitLabelType.FULL));
 
         unit.changeRole(mountedBraveRole, 1);
@@ -512,7 +523,7 @@ public class MessagesTest extends FreeColTestCase {
             unit.getDescription());
         assertEquals("Sioux Native Dragoon",
             unit.getDescription(UnitLabelType.NATIONAL));
-        assertEquals("Sioux Native Dragoon (25 Muskets 25 Horses)",
+        assertEquals("Sioux Native Dragoon (25 Muskets 25 Horses 5 Ammunition)",
             unit.getDescription(UnitLabelType.FULL));
 
         unit.setName("Chingachgook");
@@ -520,7 +531,7 @@ public class MessagesTest extends FreeColTestCase {
             unit.getDescription());
         assertEquals("Chingachgook (Sioux Native Dragoon)",
             unit.getDescription(UnitLabelType.NATIONAL));
-        assertEquals("Chingachgook (Sioux Native Dragoon/25 Muskets 25 Horses)",
+        assertEquals("Chingachgook (Sioux Native Dragoon/25 Muskets 25 Horses 5 Ammunition)",
             unit.getDescription(UnitLabelType.FULL));
 
         // Hardy Pioneers
@@ -575,12 +586,13 @@ public class MessagesTest extends FreeColTestCase {
         assertEquals("Dutch Free Colonist",
             unit.getDescription(UnitLabelType.FULL));
 
-        unit.setRole(soldierRole);
+        unit.changeRole(soldierRole, 1);
         assertEquals("Soldier (Free Colonist)",
             unit.getDescription());
         assertEquals("Dutch Soldier (Free Colonist)",
             unit.getDescription(UnitLabelType.NATIONAL));
-        assertEquals("Dutch Soldier (Free Colonist/50 Muskets)",
+        
+        assertEquals("Dutch Soldier (Free Colonist/50 Muskets 5 Ammunition)",
             unit.getDescription(UnitLabelType.FULL));
 
         unit.setName("John Doe");
@@ -588,7 +600,7 @@ public class MessagesTest extends FreeColTestCase {
             unit.getDescription());
         assertEquals("John Doe (Dutch Soldier/Free Colonist)",
             unit.getDescription(UnitLabelType.NATIONAL));
-        assertEquals("John Doe (Dutch Soldier/Free Colonist/50 Muskets)",
+        assertEquals("John Doe (Dutch Soldier/Free Colonist/50 Muskets 5 Ammunition)",
             unit.getDescription(UnitLabelType.FULL));
 
         // Expert
@@ -600,7 +612,7 @@ public class MessagesTest extends FreeColTestCase {
         assertEquals("Dutch Master Carpenter",
             unit.getDescription(UnitLabelType.FULL));
 
-        unit.setRole(missionaryRole);
+        unit.changeRole(missionaryRole, 1);
         assertEquals("Missionary (Master Carpenter)",
             unit.getDescription());
         assertEquals("Dutch Missionary (Master Carpenter)",
