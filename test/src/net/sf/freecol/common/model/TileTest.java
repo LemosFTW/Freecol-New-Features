@@ -762,7 +762,8 @@ public class TileTest extends FreeColTestCase {
                 || "model.tile.hills".equals(tileType.getId())
                 || "model.tile.marsh".equals(tileType.getId())
                 || "model.tile.mountains".equals(tileType.getId())
-                || "model.tile.swamp".equals(tileType.getId());
+                || "model.tile.swamp".equals(tileType.getId())
+                || "model.tile.caves".equals(tileType.getId());
             assertEquals("Defence for " + tileType.getId(), present,
                 count(tileType.getDefenceModifiers()) != 0);
         }

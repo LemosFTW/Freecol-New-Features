@@ -362,8 +362,11 @@ public class ColonyTest extends FreeColTestCase {
 
         Tile landTile = map.getTile(1, 1);
         Tile lcrTile = map.getTile(2, 2);
+        Tile caveTileE = map.getTile(3,3);
         lcrTile.add(new LostCityRumour(game, lcrTile,
                 LostCityRumour.RumourType.NO_SUCH_RUMOUR, "fake"));
+        caveTileE.add(new CaveExploration(game, caveTileE,
+                CaveExploration.CaveType.NOTHING, "fake"));
         Tile waterTile = map.getTile(12, 12);
         assertTrue(!waterTile.isLand());
 
@@ -371,6 +374,8 @@ public class ColonyTest extends FreeColTestCase {
                    dutch.canOwnTile(landTile));
         assertFalse("Europeans can not own tile with an LCR on it",
                     dutch.canOwnTile(lcrTile));
+        assertFalse("Europeans can not own tile with a CaveE on it",
+                dutch.canOwnTile(caveTileE));
         assertTrue("Natives can own tile with an LCR on it",
                    indianPlayer.canOwnTile(campTile));
         assertTrue("Europeans can own water tile",
@@ -387,6 +392,9 @@ public class ColonyTest extends FreeColTestCase {
         assertEquals("Can not found on LCR",
                      NoClaimReason.RUMOUR,
                      dutch.canClaimToFoundSettlementReason(lcrTile));
+        assertEquals("Can not found on CaveE",
+                     NoClaimReason.CAVE,
+                     dutch.canClaimToFoundSettlementReason(caveTileE));
         assertEquals("Can not found on water",
                      NoClaimReason.TERRAIN,
                      indianPlayer.canClaimToFoundSettlementReason(waterTile));
@@ -420,6 +428,12 @@ public class ColonyTest extends FreeColTestCase {
         assertEquals("Natives can use LCR",
                      NoClaimReason.NONE,
                      indianPlayer.canClaimForSettlementReason(lcrTile));
+        assertEquals("Europeans can not use CaveE",
+                NoClaimReason.CAVE,
+                dutch.canClaimForSettlementReason(caveTileE));
+        assertEquals("Natives can use CaveE",
+                NoClaimReason.NONE,
+                indianPlayer.canClaimForSettlementReason(caveTileE));
         assertEquals("Europeans can use water",
                      NoClaimReason.NONE,
                      dutch.canClaimForSettlementReason(waterTile));
