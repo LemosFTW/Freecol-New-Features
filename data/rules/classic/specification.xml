@@ -568,7 +568,7 @@
                can-settle="false" is-cave="true">
       <gen humidity-minimum="50" humidity-maximum="100"
            temperature-minimum="5" temperature-maximum="40"
-           altitude-minimum="20" altitude-maximum="30"/>
+           altitude-minimum="30" altitude-maximum="30"/>
       <modifier id="model.modifier.defence" index="50"
                 type="percentage" value="150"/>
       <production>
