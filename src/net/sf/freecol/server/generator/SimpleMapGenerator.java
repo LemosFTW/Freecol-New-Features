@@ -226,7 +226,7 @@ public class SimpleMapGenerator implements MapGenerator {
             for (int tries = 0; tries < 100; tries++) {
                 Tile t = map.getRandomLandTile(random);
                 if (t.isPolar()) continue; // No polar lost cities TODO: onde ficam as caves?
-                if (t.isLand() && t.isForested() && !t.hasLostCityRumour() && !t.hasCaveExploration()
+                if (t.isLand() && t.isCave() && !t.hasLostCityRumour() && !t.hasCaveExploration()
                         && !t.hasSettlement() && t.getUnitCount() == 0) {
                     CaveExploration c = new CaveExploration(t.getGame(), t);
                     t.add(c);

@@ -331,6 +331,15 @@ public final class Tile extends UnitLocation implements Named, Ownable {
     }
 
     /**
+     * Is this a cave tile?
+     *
+     * @return True if this is a cave {@code Tile}.
+     */
+    public boolean isCave() {
+        return type != null && type.isCave();
+    }
+
+    /**
      * Gets the x-coordinate of this tile.
      *
      * @return The x-coordinate of this {@code Tile}.
