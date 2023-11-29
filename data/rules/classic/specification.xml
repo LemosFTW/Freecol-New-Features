@@ -1636,6 +1636,9 @@
       <unit-type-change id="model.unitChange.clearSkill.masterGunsmith"
                         from="model.unit.masterGunsmith"
                         to="model.unit.freeColonist" probability="100"/>
+      <unit-type-change id="model.unitChange.clearSkill.masterArmourer"
+                        from="model.unit.masterArmourer"
+                        to="model.unit.freeColonist" probability="100"/>
       <unit-type-change id="model.unitChange.clearSkill.seasonedScout"
                         from="model.unit.seasonedScout"
                         to="model.unit.freeColonist" probability="100"/>
@@ -1753,6 +1756,10 @@
       <unit-type-change id="model.unitChange.education.masterGunsmith"
                         from="model.unit.freeColonist"
                         to="model.unit.masterGunsmith"
+                        probability="100" turns="6"/>
+      <unit-type-change id="model.unitChange.education.masterArmourer"
+                        from="model.unit.freeColonist"
+                        to="model.unit.masterArmourer"
                         probability="100" turns="6"/>
       <unit-type-change id="model.unitChange.education.seasonedScout"
                         from="model.unit.freeColonist"
@@ -1998,6 +2005,9 @@
       <unit-type-change id="model.unitChange.undead.masterGunsmith"
                         from="model.unit.masterGunsmith"
                         to="model.unit.undead" probability="100"/>
+      <unit-type-change id="model.unitChange.undead.masterArmourer"
+                        from="model.unit.masterArmourer"
+                        to="model.unit.undead" probability="100"/>
       <unit-type-change id="model.unitChange.undead.seasonedScout"
                         from="model.unit.seasonedScout"
                         to="model.unit.undead" probability="100"/>
@@ -2175,6 +2185,12 @@
       <modifier id="model.goods.muskets" index="30"
                 type="multiplicative" value="2"/>
     </unit-type>
+    <unit-type id="model.unit.masterArmourer" extends="colonist"
+               price="850" skill="2" expert-production="model.goods.ammunition"
+               recruit-probability="1" score-value="5">
+      <modifier id="model.goods.ammunition" index="30"
+                type="multiplicative" value="2"/>
+    </unit-type>
     <unit-type id="model.unit.seasonedScout" extends="colonist"
                skill="1"
                recruit-probability="1" score-value="4">
@@ -2195,8 +2211,7 @@
     </unit-type>
     <unit-type id="model.unit.veteranSoldier" extends="colonist"
                price="2000" skill="2"
-               recruit-probability="1" score-value="5"
-               expert-production="model.goods.ammunition">
+               recruit-probability="1" score-value="5">
       <default-role id="model.role.soldier"/>
       <ability id="model.ability.mercenaryUnit"
                value="true"/>
@@ -2208,8 +2223,6 @@
                 type="percentage" value="50"/>
       <modifier id="model.modifier.defence"
                 type="percentage" value="50" index="40"/>
-      <modifier id="model.goods.ammunition" index="30"
-                type="multiplicative" value="2"/>
     </unit-type>
     <unit-type id="model.unit.jesuitMissionary" extends="colonist"
                price="1400" skill="3"
