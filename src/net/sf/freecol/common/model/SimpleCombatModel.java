@@ -40,7 +40,6 @@ import net.sf.freecol.FreeCol;
 import net.sf.freecol.client.gui.GUI;
 import net.sf.freecol.client.gui.SwingGUI;
 import net.sf.freecol.client.gui.action.ActionManager;
-import net.sf.freecol.client.gui.action.AutoGetShip;
 import net.sf.freecol.client.gui.panel.FreeColPanel;
 import net.sf.freecol.client.gui.panel.NewPanel;
 import net.sf.freecol.common.model.Modifier.ModifierType;
@@ -72,27 +71,6 @@ public class SimpleCombatModel extends CombatModel {
 
     public static final Modifier UNKNOWN_DEFENCE_MODIFIER
         = new Modifier("bogus", Modifier.UNKNOWN, ModifierType.ADDITIVE);
-
-
-    /**
-     * Used to know if the player choose in preferences to capture enemy ships
-     */
-    private static boolean getShipActivated = false;
-
-    /**
-     * Changes value of {@code getShipActivated} for true, or false
-     */
-    public static void autoGetShipSwitchMode() {
-        getShipActivated = !getShipActivated;
-    }
-
-    /**
-     *
-     * @return true if Auto Get Ship option in preferences menu is activated, false otherwise
-     */
-    public static boolean isAutoGetShipActivated() {
-        return getShipActivated;
-    }
 
 
     /**
@@ -743,7 +721,7 @@ public class SimpleCombatModel extends CombatModel {
         boolean loserMustDie = loser.hasAbility(Ability.DISPOSE_ON_COMBAT_LOSS);
         UnitTypeChange uc;
 
-
+    //
 
         if (loser.isNaval()) {
             // Naval victors get to loot the defenders hold.  Sink the
@@ -751,7 +729,7 @@ public class SimpleCombatModel extends CombatModel {
             // beached.
 
             // Only frigates, man-o-war and privateer can capture enemy ships
-            if(winner.isNaval() && isAutoGetShipActivated() && winner.canCaptureGoods())
+            if(winner.isNaval() && winner.canCaptureGoods())
                 crs.add(CombatEffectType.CAPTURE_SHIP);
 
             if (winner.isNaval() && winner.canCaptureGoods()

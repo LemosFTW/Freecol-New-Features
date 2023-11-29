@@ -63,10 +63,6 @@ import javax.xml.stream.XMLStreamException;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.sf.freecol.FreeCol;
-import net.sf.freecol.client.ClientOptions;
-import net.sf.freecol.client.FreeColClient;
-import net.sf.freecol.client.gui.action.ActionManager;
-import net.sf.freecol.client.gui.action.AutoGetShip;
 import net.sf.freecol.common.FreeColException;
 import net.sf.freecol.common.debug.FreeColDebugger;
 import net.sf.freecol.common.i18n.Messages;
@@ -3554,11 +3550,11 @@ public class ServerPlayer extends Player implements TurnTaker {
      * @param cs A {@code ChangeSet} to update.
      */
     private void csCaptureShip(Unit winner, Unit loser, ChangeSet cs) {
-
         final Player winnerPlayer = winner.getOwner();
         ServerUnit ship = new ServerUnit(loser.getGame(), loser.getLocation(), winnerPlayer, loser.getType(), loser.getRole());
         winnerPlayer.addUnit(ship);
-        cs.add(See.only(winnerPlayer), new AttackMessage(winner, null));
+        cs.addMessage(winnerPlayer, new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
+                "combat.capture.ship", loser).addName("%ship%", loser.getDescription()));
     }
 
     /**

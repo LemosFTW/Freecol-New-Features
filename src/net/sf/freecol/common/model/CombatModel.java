@@ -43,6 +43,7 @@ public abstract class CombatModel {
         CAPTURE_COLONY,       // Winning Europeans capture a colony
         CAPTURE_CONVERT,      // Winning Europeans cause native to convert
         CAPTURE_EQUIP,        // Winner captures loser equipment
+        CAPTURE_SHIP,         //Losing ship is captured
         CAPTURE_UNIT,         // Losing unit is captured
         DAMAGE_COLONY_SHIPS,  // Ships in losing colony are damaged
         DAMAGE_SHIP_ATTACK,   // Losing ship is damaged by normal attack
@@ -53,7 +54,6 @@ public abstract class CombatModel {
         EVADE_ATTACK,         // Defending ship evades normal attack
         EVADE_BOMBARD,        // Defending ship evades bombardment
         LOOT_SHIP,            // Losing ship is looted
-        CAPTURE_SHIP,         //Losing ship is captured
         LOSE_AUTOEQUIP,       // Losing unit auto-arms and loses the arms
         LOSE_EQUIP,           // Losing unit loses some equipment
         PILLAGE_COLONY,       // Winning natives pillage an undefended colony
