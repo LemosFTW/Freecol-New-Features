@@ -3345,6 +3345,7 @@ public class Player extends FreeColGameObject implements Nameable {
         NONE,            // Actually, tile can be claimed
         TERRAIN,         // Not on settleable terrain
         RUMOUR,          // Europeans can not claim tiles with LCR
+        CAVE,            //Europenas can not claim tile caves
         WATER,           // Natives do not claim water
         OCCUPIED,        // Hostile unit present.
         SETTLEMENT,      // Settlement present
@@ -3400,7 +3401,9 @@ public class Player extends FreeColGameObject implements Nameable {
             : (isEuropean())
             ? ((tile.hasLostCityRumour())
                 ? NoClaimReason.RUMOUR
-                : NoClaimReason.NONE)
+                : ((tile.hasCaveExploration())
+                    ? NoClaimReason.CAVE
+                    : NoClaimReason.NONE))
             : ((tile.isLand())
                 ? NoClaimReason.NONE
                 : NoClaimReason.WATER);

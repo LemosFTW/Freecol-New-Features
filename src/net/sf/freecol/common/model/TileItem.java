@@ -185,7 +185,7 @@ public abstract class TileItem extends FreeColGameObject
      * {@inheritDoc}
      */
     @Override
-    public Tile getTile() {
+    public Tile  getTile() {
         return tile;
     }
 

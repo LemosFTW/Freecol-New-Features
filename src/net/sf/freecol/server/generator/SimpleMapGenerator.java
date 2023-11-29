@@ -35,35 +35,11 @@ import java.util.stream.Collectors;
 
 import net.sf.freecol.common.debug.FreeColDebugger;
 import net.sf.freecol.common.i18n.Messages;
-import net.sf.freecol.common.model.Ability;
-import net.sf.freecol.common.model.AbstractUnit;
-import net.sf.freecol.common.model.Building;
-import net.sf.freecol.common.model.BuildingType;
-import net.sf.freecol.common.model.Colony;
+import net.sf.freecol.common.model.*;
+
 import static net.sf.freecol.common.model.Constants.*;
-import net.sf.freecol.common.model.Europe;
-import net.sf.freecol.common.model.EuropeanNationType;
-import net.sf.freecol.common.model.Game;
-import net.sf.freecol.common.model.Goods;
-import net.sf.freecol.common.model.GoodsType;
-import net.sf.freecol.common.model.IndianNationType;
-import net.sf.freecol.common.model.IndianSettlement;
-import net.sf.freecol.common.model.LandMap;
-import net.sf.freecol.common.model.LostCityRumour;
-import net.sf.freecol.common.model.Map;
-import net.sf.freecol.common.model.Direction;
+
 import net.sf.freecol.common.model.Map.Position;
-import net.sf.freecol.common.model.Nation;
-import net.sf.freecol.common.model.NationType;
-import net.sf.freecol.common.model.Player;
-import net.sf.freecol.common.model.Role;
-import net.sf.freecol.common.model.Specification;
-import net.sf.freecol.common.model.Tile;
-import net.sf.freecol.common.model.TileImprovement;
-import net.sf.freecol.common.model.TileImprovementType;
-import net.sf.freecol.common.model.TileType;
-import net.sf.freecol.common.model.Unit;
-import net.sf.freecol.common.model.UnitType;
 import net.sf.freecol.common.option.GameOptions;
 import net.sf.freecol.common.option.MapGeneratorOptions;
 import net.sf.freecol.common.option.OptionGroup;
@@ -213,6 +189,56 @@ public class SimpleMapGenerator implements MapGenerator {
         lb.add("Created ", counter,
             " lost city rumours of maximum ", number, ".\n");
     }
+
+    //TODO add creation of caves
+
+    /**
+     * Make caves on the given map.
+     *
+     * The number of caves depends on the map size.
+     *
+     * @param map The {@code Map} to use.
+     * @param importMap An optional {@code Map} to import from.
+     * @param lb A {@code LogBuilder} to log to.
+     */
+    private void makeCaveExploration(Map map, Map importMap, LogBuilder lb) {
+        final Game game = map.getGame();
+
+        final boolean importCaves = game.getMapGeneratorOptions()
+                .getBoolean(MapGeneratorOptions.IMPORT_CAVES);
+        if (importMap != null && importCaves) {
+            // Caves were read from the import game, no need to do more
+            //TODO: check if this comment is true
+            return;
+        }
+
+        final int caveNumber = game.getMapGeneratorOptions()
+                .getRange(MapGeneratorOptions.CAVE_NUMBER);
+        int number = getApproximateLandCount(game) / caveNumber;
+        int counter = 0;
+
+        // FIXME: Remove temporary fix:
+        if (importMap != null) {
+            number = map.getWidth() * map.getHeight() * 25 / (100 * 35);
+        }
+
+        for (int i = 0; i < number; i++) {
+            for (int tries = 0; tries < 100; tries++) {
+                Tile t = map.getRandomLandTile(random);
+                if (t.isPolar()) continue; // No polar lost cities TODO: onde ficam as caves?
+                if (t.isLand() && t.isCave() && !t.hasLostCityRumour() && !t.hasCaveExploration()
+                        && !t.hasSettlement() && t.getUnitCount() == 0) {
+                    CaveExploration c = new CaveExploration(t.getGame(), t);
+                    t.add(c);
+                    counter++;
+                    break;
+                }
+            }
+        }
+        lb.add("Created ", counter,
+                " caves of maximum ", number, ".\n");
+    }
+
 
     /**
      * Import the native settlements from a game.
@@ -1036,6 +1062,7 @@ public class SimpleMapGenerator implements MapGenerator {
                     && (t.getOwner() == null || !t.getOwner().isEuropean())))) {
             tile.changeOwnership(player, colony);
             if (tile.hasLostCityRumour()) tile.removeLostCityRumour();
+            //TODO: possible cave Removal too
         }
         buildColonyUnit.setLocation(colony);
         Tile ct = buildColonyUnit.getWorkTile();
@@ -1136,6 +1163,7 @@ public class SimpleMapGenerator implements MapGenerator {
         // Decorate the map.
         makeNativeSettlements(map, importMap, lb);
         makeLostCityRumours(map, importMap, lb);
+        makeCaveExploration(map,importMap,lb);
         if (generateEuropeanPlayerUnits) {
             createEuropeanUnits(map, game.getLiveEuropeanPlayerList(), lb);
         }

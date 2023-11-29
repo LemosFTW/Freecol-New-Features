@@ -86,6 +86,10 @@ public class UnitChangeType extends FreeColSpecObjectType {
     public static final String LOST_CITY
         = "model.unitChange.lostCity";
 
+    /** Changes from exploring a cave. */
+    public static final String CAVE_EXPLORATION
+            = "model.unitChange.caveExploration";
+
     /** Changes from living with the natives. */
     public static final String NATIVES
         = "model.unitChange.natives";

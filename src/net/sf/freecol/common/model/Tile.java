@@ -331,6 +331,15 @@ public final class Tile extends UnitLocation implements Named, Ownable {
     }
 
     /**
+     * Is this a cave tile?
+     *
+     * @return True if this is a cave {@code Tile}.
+     */
+    public boolean isCave() {
+        return type != null && type.isCave();
+    }
+
+    /**
      * Gets the x-coordinate of this tile.
      *
      * @return The x-coordinate of this {@code Tile}.
@@ -764,6 +773,28 @@ public final class Tile extends UnitLocation implements Named, Ownable {
     }
 
     /**
+     * Does this tile have a cave?
+     *
+     * @return True if this {@code Tile} has a
+     *     {@code CaveExploration} on it.
+     */
+    public boolean hasCaveExploration() {
+        return tileItemContainer != null
+                && tileItemContainer.getCaveExploration() != null;
+    }
+
+    /**
+     * Gets a cave on this tile.
+     *
+     * @return The {@code CaveExploration} on this
+     *     {@code Tile}, or null if none found.
+     */
+    public CaveExploration getCaveExploration() {
+        return (tileItemContainer == null) ? null
+                : tileItemContainer.getCaveExploration();
+    }
+
+    /**
      * Does this tile have a resource?
      *
      * @return True if this is a resource {@code Tile}.
@@ -865,6 +896,17 @@ public final class Tile extends UnitLocation implements Named, Ownable {
     }
 
     /**
+     * Adds a lost cave to this tile.
+     *
+     * -til: Changes appearance.
+     *
+     * @param cave The {@code CaveExploration} to add.
+     */
+    public void  addCaveExploration(CaveExploration cave){
+        addTileItem(cave);
+    }
+
+    /**
      * Removes the lost city rumour from this {@code Tile} if there
      * is one.
      *
@@ -874,6 +916,18 @@ public final class Tile extends UnitLocation implements Named, Ownable {
      */
     public LostCityRumour removeLostCityRumour() {
         return removeTileItem(getLostCityRumour());
+    }
+
+    /**
+     * Removes the cave from this {@code Tile} if there
+     * is one
+     *
+     * -til changes appearence.
+     *
+     * @return The removed {@code CaveExploration}.
+     */
+    public CaveExploration removeCaveExploration() {
+        return removeTileItem(getCaveExploration());
     }
 
     /**

@@ -58,6 +58,7 @@ public class ModelMessage extends StringTemplate {
         GOODS_MOVEMENT("model.option.guiShowGoodsMovement"),
         GOVERNMENT_EFFICIENCY("model.option.guiShowGovernmentEfficiency"),
         LOST_CITY_RUMOUR(null), // Displayed during the turn
+        CAVE_EXPLORATION(null),
         MARKET_PRICES("model.option.guiShowMarketPrices"),
         MISSING_GOODS("model.option.guiShowMissingGoods"),
         SONS_OF_LIBERTY("model.option.guiShowSonsOfLiberty"),
@@ -297,6 +298,7 @@ public class ModelMessage extends StringTemplate {
         case UNIT_LOST:
         case UNIT_ADDED:
         case LOST_CITY_RUMOUR:
+        case CAVE_EXPLORATION:
         case COMBAT_RESULT:
         case DEMANDS:
         case GOODS_MOVEMENT:

@@ -300,6 +300,16 @@ public class TileItemContainer extends FreeColGameObject {
     }
 
     /**
+     * Gets a cave in this container.
+     *
+     * @return A {@code CaveExploration} item if any, or null if
+     *     not found.
+     */
+    public final CaveExploration getCaveExploration() {
+        return (CaveExploration) findTileItem(ti -> ti instanceof CaveExploration);
+    }
+
+    /**
      * Gets any resource item.
      *
      * @return A {@code Resource} item, or null is none found.
@@ -460,14 +470,18 @@ public class TileItemContainer extends FreeColGameObject {
         for (TileItem item : transform(otherItems, ti ->
                                        layer.compareTo(ti.getLayer()) >= 0)) {
             if (item instanceof Resource) {
-                Resource resource = (Resource)item;
+                Resource resource = (Resource) item;
                 ResourceType type
-                    = spec.getResourceType(resource.getType().getId());
+                        = spec.getResourceType(resource.getType().getId());
                 result.add(new Resource(game, tile, type, resource.getQuantity()));
             } else if (item instanceof LostCityRumour) {
-                LostCityRumour rumour = (LostCityRumour)item;
+                LostCityRumour rumour = (LostCityRumour) item;
                 result.add(new LostCityRumour(game, tile,
                         rumour.getType(), rumour.getName()));
+            } else if (item instanceof CaveExploration){
+                CaveExploration cave = (CaveExploration) item;
+                result.add(new CaveExploration(game, tile,
+                        cave.getType(), cave.getName()));
             } else if (item instanceof TileImprovement) {
                 TileImprovement improvement = (TileImprovement)item;
                 if (layer.compareTo(Map.Layer.ALL) >= 0
@@ -649,6 +663,9 @@ public class TileItemContainer extends FreeColGameObject {
             LostCityRumour lcr = xr.readFreeColObject(game, LostCityRumour.class);
             if (lcr != null) addTileItem(lcr);
 
+        } else if (CaveExploration.TAG.equals(tag)) {
+            CaveExploration cave = xr.readFreeColObject(game, CaveExploration.class);
+            if(cave!= null) addTileItem(cave);
         } else if (Resource.TAG.equals(tag)) {
             addTileItem(xr.readFreeColObject(game, Resource.class));
 

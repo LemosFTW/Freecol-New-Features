@@ -125,6 +125,7 @@ public final class MapGeneratorOptionsDialog extends OptionsDialog {
         mgoUI.getOptionUI(MapGeneratorOptions.IMPORT_TERRAIN, BooleanOptionUI.class).setValue(true);
         mgoUI.getOptionUI(MapGeneratorOptions.IMPORT_BONUSES, BooleanOptionUI.class).setValue(false);
         mgoUI.getOptionUI(MapGeneratorOptions.IMPORT_RUMOURS, BooleanOptionUI.class).setValue(false);
+        mgoUI.getOptionUI(MapGeneratorOptions.IMPORT_CAVES, BooleanOptionUI.class).setValue(false);
         mgoUI.getOptionUI(MapGeneratorOptions.IMPORT_SETTLEMENTS, BooleanOptionUI.class).setValue(false);
         
         if (file == null) {
