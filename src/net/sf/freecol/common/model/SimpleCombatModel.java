@@ -736,7 +736,7 @@ public class SimpleCombatModel extends CombatModel {
         boolean attackerWon = crs.get(0) == CombatEffectType.WIN;
         boolean loserMustDie = loser.hasAbility(Ability.DISPOSE_ON_COMBAT_LOSS);
         UnitTypeChange uc;
-        double captureShipProbability = 0.4;
+        double captureShipProbability = 0.35;
 
 
         if (loser.isNaval()) {
@@ -744,9 +744,6 @@ public class SimpleCombatModel extends CombatModel {
             // loser on great win/loss, lack of repair location, or
             // beached.
 
-            // Only frigates, man-o-war and privateers can capture enemy ships
-            if (winner.isNaval() && calculateCaptureShipProbability(captureShipProbability) && winner.canCaptureGoods())
-                crs.add(CombatEffectType.CAPTURE_SHIP);
 
             if (winner.isNaval() && winner.canCaptureGoods()
                     && !loser.getGoodsList().isEmpty()) {
@@ -756,6 +753,10 @@ public class SimpleCombatModel extends CombatModel {
                     || loser.getRepairLocation() == null
                     || loser.isBeached()) {
                 crs.add(CombatEffectType.SINK_SHIP_ATTACK);
+                // Only frigates, man-o-war and privateers can capture enemy ships
+            } else if (winner.isNaval() && calculateCaptureShipProbability(captureShipProbability) && winner.canCaptureGoods()) {
+                crs.add(CombatEffectType.CAPTURE_SHIP);
+                crs.add(CombatEffectType.SINK_SHIP); // sink enemy ship so he can't use it anymore
             } else {
                 crs.add(CombatEffectType.DAMAGE_SHIP_ATTACK);
             }

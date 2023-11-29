@@ -2608,6 +2608,20 @@ public class ServerPlayer extends Player implements TurnTaker {
                         defenderTileDirty = true;
                     }
                     break;
+                case SINK_SHIP:
+                    ok = isAttack && result != CombatEffectType.NO_RESULT
+                            && ((result == CombatEffectType.WIN) ? defenderUnit
+                            : attackerUnit).isNaval();
+                    if (ok) {
+                        if (result == CombatEffectType.WIN) {
+                            csSinkShip(defenderUnit, attackerUnit.getOwner(), cs);
+                            defenderTileDirty = true;
+                        } else {
+                            csSinkShip(attackerUnit, defenderUnit.getOwner(), cs);
+                            attackerTileDirty = true;
+                        }
+                    }
+                    break;
                 case SINK_SHIP_ATTACK:
                     ok = isAttack && result != CombatEffectType.NO_RESULT
                             && ((result == CombatEffectType.WIN) ? defenderUnit
@@ -3554,7 +3568,7 @@ public class ServerPlayer extends Player implements TurnTaker {
         ServerUnit ship = new ServerUnit(loser.getGame(), loser.getLocation(), winnerPlayer, loser.getType(), loser.getRole());
         winnerPlayer.addUnit(ship);
         cs.addMessage(winnerPlayer, new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
-                "combat.capture.ship", loser).addName("%ship%", loser.getDescription()));
+                "combat.capture.ship", ship).addName("%ship%", loser.getDescription()));
     }
 
     /**
