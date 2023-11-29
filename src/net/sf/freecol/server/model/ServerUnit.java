@@ -868,12 +868,14 @@ public class ServerUnit extends Unit implements TurnTaker {
                 oldLocation, cs);//-vis(serverPlayer)
         }
 
-        //TODO:Aqui.Fazer o check pela cave
-
-        if(newTile.hasCaveExploration() && owner.isEuropean()
-            && !csExploreCave(random, cs)) {
-            this.csRemove(See.perhaps().always(owner),
-                    oldLocation, cs);
+        if(!this.hasAbility(Ability.BOMBARD)
+                && !this.type.equals(getGame().getSpecification().getUnitType("model.unit.wagonTrain"))
+                && !this.hasAbility(Ability.CARRY_TREASURE)) {
+            if (newTile.hasCaveExploration() && owner.isEuropean()
+                    && !csExploreCave(random, cs)) {
+                this.csRemove(See.perhaps().always(owner),
+                        oldLocation, cs);
+            }
         }
         owner.invalidateCanSeeTiles();//+vis(serverPlayer)
 
