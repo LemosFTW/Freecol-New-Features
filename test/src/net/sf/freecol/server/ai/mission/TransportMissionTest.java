@@ -102,8 +102,11 @@ public class TransportMissionTest extends FreeColTestCase {
         Tile tile2 = map.getTile(11, 9);
         Unit privateer = new ServerUnit(game, tile2, french, privateerType);
 
-        // assign transport mission to the ship
+        // Assign transport mission to the ship
         new TransportMission(aiMain, aiUnit);
+
+        // Guarantee that the ship isn't captured
+        igc.changeCaptureShipOdds(0.0);
 
         // Simulate the combat
         igc.combat(dutch, privateer, galleon,
