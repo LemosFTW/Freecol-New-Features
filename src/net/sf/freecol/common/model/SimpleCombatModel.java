@@ -74,6 +74,10 @@ public class SimpleCombatModel extends CombatModel {
     public static final Modifier UNKNOWN_DEFENCE_MODIFIER
             = new Modifier("bogus", Modifier.UNKNOWN, ModifierType.ADDITIVE);
 
+    /**
+     * The odds of capturing an enemy ship.
+     */
+    private static double captureShipOdd = 0.35;
 
     /**
      * Deliberately empty constructor.
@@ -138,16 +142,14 @@ public class SimpleCombatModel extends CombatModel {
     }
 
     /**
-     * Calculates the probability of a winning ship unit, capturing the enemy ship.
+     * Calculates the probability of a winning ship unit capturing the enemy ship.
      *
-     * @param probability the probability, must be between 0 and 1.
      * @return {@code true} if the random value generated falls in the probability, {@code false} otherwise.
      */
-    private boolean calculateCaptureShipProbability(double probability) {
+    private boolean calculateCaptureShipProbability() {
         Random random = new Random();
         double randomValue = random.nextDouble();
-
-        return randomValue < probability;
+        return randomValue < captureShipOdd;
     }
 
     /**
@@ -720,6 +722,14 @@ public class SimpleCombatModel extends CombatModel {
     }
 
     /**
+     * Changes the default odd for capturing enemy ships.
+     * @param odd is the new odd.
+     */
+    public static void setCaptureShipOdds(double odd) {
+           captureShipOdd = odd;
+    }
+
+    /**
      * Resolve all the consequences of a normal attack.
      *
      * @param winner The winning {@code Unit}.
@@ -736,15 +746,12 @@ public class SimpleCombatModel extends CombatModel {
         boolean attackerWon = crs.get(0) == CombatEffectType.WIN;
         boolean loserMustDie = loser.hasAbility(Ability.DISPOSE_ON_COMBAT_LOSS);
         UnitTypeChange uc;
-        double captureShipProbability = 0.35;
 
 
         if (loser.isNaval()) {
             // Naval victors get to loot the defenders hold.  Sink the
             // loser on great win/loss, lack of repair location, or
-            // beached.
-
-
+            // beached, or capture enemy ship.
             if (winner.isNaval() && winner.canCaptureGoods()
                     && !loser.getGoodsList().isEmpty()) {
                 crs.add(CombatEffectType.LOOT_SHIP);
@@ -754,7 +761,7 @@ public class SimpleCombatModel extends CombatModel {
                     || loser.isBeached()) {
                 crs.add(CombatEffectType.SINK_SHIP_ATTACK);
                 // Only frigates, man-o-war and privateers can capture enemy ships
-            } else if (winner.isNaval() && calculateCaptureShipProbability(captureShipProbability) && winner.canCaptureGoods()) {
+            } else if (winner.isNaval() && calculateCaptureShipProbability() && winner.canCaptureGoods()) {
                 crs.add(CombatEffectType.CAPTURE_SHIP);
                 crs.add(CombatEffectType.SINK_SHIP); // sink enemy ship so he can't use it anymore
             } else {

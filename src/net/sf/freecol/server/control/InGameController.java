@@ -85,6 +85,7 @@ import net.sf.freecol.common.model.RandomRange;
 import net.sf.freecol.common.model.Region;
 import net.sf.freecol.common.model.Role;
 import net.sf.freecol.common.model.Settlement;
+import net.sf.freecol.common.model.SimpleCombatModel;
 import net.sf.freecol.common.model.Specification;
 import net.sf.freecol.common.model.StringTemplate;
 import net.sf.freecol.common.model.Tension;
@@ -3939,5 +3940,15 @@ public final class InGameController extends Controller {
         // Others can see colony change size
         getGame().sendToOthers(serverPlayer, cs);
         return cs;
+    }
+
+    /**
+     * Exclusively used for testing.
+     * Changes the odds for capturing the enemy ship.
+     *
+     * @param odd to update.
+     */
+    public void changeCaptureShipOdds(double odd) {
+        SimpleCombatModel.setCaptureShipOdds(odd);
     }
 }
