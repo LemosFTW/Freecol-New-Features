@@ -1043,7 +1043,7 @@
       <required-goods id="model.goods.muskets"
                       value="50"/>
       <required-goods id="model.goods.ammunition"
-                      value="1"/>
+                      value="5"/>
 
       <ability id="model.ability.armed"
                value="true"/>
@@ -1365,8 +1365,8 @@
                value="true"/>
       <modifier id="model.modifier.defence" index="30"
                 type="additive" value="1"/>
-      <role-change from="model.role.default" capture="model.role.soldier"/>
-      <role-change from="model.role.default" capture="model.role.infantry"/>
+      <role-change from="model.role.default" capture="model.role.soldierNoAmmo"/>
+      <role-change from="model.role.default" capture="model.role.infantryNoAmmo"/>
     </role>
 
     <role id="model.role.nativeDragoon" downgrade="model.role.armedBrave">
@@ -1422,12 +1422,12 @@
       <modifier id="model.modifier.movementBonus"
                 type="additive" value="9"/>
       <role-change from="model.role.mountedBrave"
-                   capture="model.role.soldier"/>
+                   capture="model.role.soldierNoAmmo"/>
       <role-change from="model.role.mountedBrave"
-                   capture="model.role.infantry"/>
-      <role-change from="model.role.armedBrave" capture="model.role.scout"/>
-      <role-change from="model.role.armedBrave" capture="model.role.dragoon"/>
-      <role-change from="model.role.armedBrave" capture="model.role.cavalry"/>
+                   capture="model.role.infantryNoAmmo"/>
+      <role-change from="model.role.armedBraveNoAmmo" capture="model.role.scout"/>
+      <role-change from="model.role.armedBraveNoAmmo" capture="model.role.dragoon"/>
+      <role-change from="model.role.armedBraveNoAmmo" capture="model.role.cavalry"/>
     </role>
   </roles>
 
