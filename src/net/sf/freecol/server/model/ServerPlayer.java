@@ -1,20 +1,20 @@
 /**
- *  Copyright (C) 2002-2022   The FreeCol Team
- *
- *  This file is part of FreeCol.
- *
- *  FreeCol is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  FreeCol is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with FreeCol.  If not, see <http://www.gnu.org/licenses/>.
+ * Copyright (C) 2002-2022   The FreeCol Team
+ * <p>
+ * This file is part of FreeCol.
+ * <p>
+ * FreeCol is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * FreeCol is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with FreeCol.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package net.sf.freecol.server.model;
@@ -63,7 +63,6 @@ import javax.xml.stream.XMLStreamException;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.sf.freecol.FreeCol;
-import net.sf.freecol.client.ClientOptions;
 import net.sf.freecol.common.FreeColException;
 import net.sf.freecol.common.debug.FreeColDebugger;
 import net.sf.freecol.common.i18n.Messages;
@@ -118,15 +117,8 @@ import net.sf.freecol.common.model.UnitType;
 import net.sf.freecol.common.model.UnitTypeChange;
 import net.sf.freecol.common.model.WorkLocation;
 import net.sf.freecol.common.model.pathfinding.GoalDeciders;
-import net.sf.freecol.common.networking.ChangeSet;
+import net.sf.freecol.common.networking.*;
 import net.sf.freecol.common.networking.ChangeSet.See;
-import net.sf.freecol.common.networking.ChooseFoundingFatherMessage;
-import net.sf.freecol.common.networking.Connection;
-import net.sf.freecol.common.networking.FirstContactMessage;
-import net.sf.freecol.common.networking.IndianDemandMessage;
-import net.sf.freecol.common.networking.LootCargoMessage;
-import net.sf.freecol.common.networking.MonarchActionMessage;
-import net.sf.freecol.common.networking.SetDeadMessage;
 import net.sf.freecol.common.option.GameOptions;
 import net.sf.freecol.common.option.IntegerOption;
 import net.sf.freecol.common.util.LogBuilder;
@@ -151,7 +143,9 @@ public class ServerPlayer extends Player implements TurnTaker {
         IS_DEFEATED,
         IS_AUTORECRUIT,
         IS_ALIVE
-    };
+    }
+
+    ;
 
     // Penalty for destroying a settlement (Col1)
     public static final int SCORE_SETTLEMENT_DESTROYED = -5;
@@ -185,7 +179,6 @@ public class ServerPlayer extends Player implements TurnTaker {
     /** Accumulate extra trades here. */
     private final List<AbstractGoods> extraTrades = new ArrayList<>();
 
-
     /**
      * Trivial constructor for Game.newInstance.
      *
@@ -205,7 +198,7 @@ public class ServerPlayer extends Player implements TurnTaker {
      */
     public ServerPlayer(Game game, Connection connection) {
         super(game);
-        
+
         setConnection(connection);
     }
 
@@ -261,7 +254,7 @@ public class ServerPlayer extends Player implements TurnTaker {
                  * "net.sf.freecol.server.control.PreGameController".
                  */
                 this.playerType = (nationType.isREF()) ? PlayerType.ROYAL
-                    : PlayerType.COLONIAL;
+                        : PlayerType.COLONIAL;
                 this.europe = new ServerEurope(game, this);
                 initializeHighSeas();
                 if (this.playerType == PlayerType.COLONIAL) {
@@ -314,7 +307,7 @@ public class ServerPlayer extends Player implements TurnTaker {
         if (!isConnected()) return false;
         try {
             this.connection.request(cs.build(this));
-        } catch (FreeColException|IOException|XMLStreamException ex) {
+        } catch (FreeColException | IOException | XMLStreamException ex) {
             logger.log(Level.WARNING, "send fail", ex);
             return false;
         }
@@ -323,7 +316,7 @@ public class ServerPlayer extends Player implements TurnTaker {
 
 
     // Extra server side routines
-    
+
     /**
      * Update the current father.
      *
@@ -334,7 +327,7 @@ public class ServerPlayer extends Player implements TurnTaker {
         clearOfferedFathers();
         if (ff != null) {
             logger.finest(getId() + " is recruiting " + ff.getId()
-                + " in " + getGame().getTurn());
+                    + " in " + getGame().getTurn());
         }
     }
 
@@ -345,7 +338,7 @@ public class ServerPlayer extends Player implements TurnTaker {
      */
     public TradeRoute newTradeRoute() {
         TradeRoute route = new TradeRoute(getGame(), getNameForTradeRoute(),
-                                          this);
+                this);
         addTradeRoute(route);
         return route;
     }
@@ -382,14 +375,14 @@ public class ServerPlayer extends Player implements TurnTaker {
 
         // Set initial immigration target
         int i0 = spec.getInteger(GameOptions.INITIAL_IMMIGRATION);
-        immigrationRequired = (int)apply((float)i0, null,
-            Modifier.RELIGIOUS_UNREST_BONUS);
+        immigrationRequired = (int) apply((float) i0, null,
+                Modifier.RELIGIOUS_UNREST_BONUS);
 
         // Add initial gold
         modifyGold(spec.getInteger(GameOptions.STARTING_MONEY));
 
         // Choose starting immigrants
-        ((ServerEurope)getEurope()).initializeMigration(random);
+        ((ServerEurope) getEurope()).initializeMigration(random);
 
         // Randomize the initial market prices
         Market market = getMarket();
@@ -397,11 +390,11 @@ public class ServerPlayer extends Player implements TurnTaker {
         boolean changed = false;
         for (GoodsType type : spec.getGoodsTypeList()) {
             String prefix = "model.option."
-                + type.getSuffix("model.goods.");
+                    + type.getSuffix("model.goods.");
             // these options are not available for all goods types
             if (spec.hasOption(prefix + ".minimumPrice", IntegerOption.class)
-                && spec.hasOption(prefix + ".maximumPrice",
-                                  IntegerOption.class)) {
+                    && spec.hasOption(prefix + ".maximumPrice",
+                    IntegerOption.class)) {
                 int min = spec.getInteger(prefix + ".minimumPrice");
                 int max = spec.getInteger(prefix + ".maximumPrice");
                 if (max < min) { // User error
@@ -410,20 +403,20 @@ public class ServerPlayer extends Player implements TurnTaker {
                     max = bad;
                 } else if (max == min) continue;
                 int add = randomInt(logger, type.getId() + " initial price",
-                                    random, max - min);
+                        random, max - min);
                 if (add > 0) {
                     market.setInitialPrice(type, min + add);
                     market.update(type);
                     market.flushPriceChange(type);
                     sb.append(", ").append(type.getId())
-                        .append(" -> ").append(min + add);
+                            .append(" -> ").append(min + add);
                     changed = true;
                 }
             }
         }
         if (changed) {
             logger.finest("randomizeGame(" + getId() + ") initial prices: "
-                + sb.toString().substring(2));
+                    + sb.toString().substring(2));
         }
     }
 
@@ -445,26 +438,28 @@ public class ServerPlayer extends Player implements TurnTaker {
          *         && ((year > 1600) || (cannot get a unit from Europe)))
          */
         switch (getPlayerType()) {
-        case NATIVE: case UNDEAD: // All native and undead units are viable
-            return (getUnitCount() == 0) ? DeadCheck.IS_DEAD
-                : DeadCheck.IS_ALIVE;
+            case NATIVE:
+            case UNDEAD: // All native and undead units are viable
+                return (getUnitCount() == 0) ? DeadCheck.IS_DEAD
+                        : DeadCheck.IS_ALIVE;
 
-        case COLONIAL: // Handle the hard case below
-            break;
+            case COLONIAL: // Handle the hard case below
+                break;
 
-        case REBEL: case INDEPENDENT:
-            // Post-declaration European player needs a coastal colony
-            // and can not hope for resupply from Europe.
-            return (getNumberOfPorts() > 0) ? DeadCheck.IS_ALIVE
-                : DeadCheck.IS_DEAD;
+            case REBEL:
+            case INDEPENDENT:
+                // Post-declaration European player needs a coastal colony
+                // and can not hope for resupply from Europe.
+                return (getNumberOfPorts() > 0) ? DeadCheck.IS_ALIVE
+                        : DeadCheck.IS_DEAD;
 
-        case ROYAL:
-            return (checkForREFDefeat()) ? DeadCheck.IS_DEFEATED
-                : DeadCheck.IS_ALIVE;
+            case ROYAL:
+                return (checkForREFDefeat()) ? DeadCheck.IS_DEFEATED
+                        : DeadCheck.IS_ALIVE;
 
-        default:
-            throw new RuntimeException("Bogus player type: "
-                + getPlayerType());
+            default:
+                throw new RuntimeException("Bogus player type: "
+                        + getPlayerType());
         }
 
         // Quick check for a colony.  Do not log, this is the common case.
@@ -477,7 +472,7 @@ public class ServerPlayer extends Player implements TurnTaker {
         // Traverse player units, look for valid carriers, colonists,
         // carriers with units, carriers with goods.
         boolean hasCarrier = false, hasColonist = false, hasEmbarked = false,
-            hasGoods = false;
+                hasGoods = false;
         for (Unit unit : getUnitSet()) {
             if (unit.isCarrier()) {
                 if (unit.hasGoodsCargo()) hasGoods = true;
@@ -494,14 +489,14 @@ public class ServerPlayer extends Player implements TurnTaker {
             if ((carrier = unit.getCarrier()) != null) {
                 if (carrier.hasTile()) {
                     logger.info(getName() + " alive, unit " + unit.getId()
-                        + " (embarked) on map.");
+                            + " (embarked) on map.");
                     return DeadCheck.IS_ALIVE;
                 }
                 hasEmbarked = true;
             }
             if (unit.hasTile() && !unit.isInMission()) {
                 logger.info(getName() + " alive, unit " + unit.getId()
-                    + " on map.");
+                        + " on map.");
                 return DeadCheck.IS_ALIVE;
             }
         }
@@ -534,8 +529,8 @@ public class ServerPlayer extends Player implements TurnTaker {
         int goldNeeded = 0;
         if (!hasCarrier) {
             int price = (europe == null) ? Integer.MAX_VALUE
-                : min(spec.getUnitTypesWithAbility(Ability.NAVAL_UNIT),
-                      unitPricer);
+                    : min(spec.getUnitTypesWithAbility(Ability.NAVAL_UNIT),
+                    unitPricer);
             if (price == Integer.MAX_VALUE || !checkGold(price)) {
                 logger.info(getName() + " dead, can not buy carrier.");
                 return DeadCheck.IS_DEAD;
@@ -552,8 +547,8 @@ public class ServerPlayer extends Player implements TurnTaker {
             return DeadCheck.IS_DEAD;
         }
         int price = Math.min(europe.getCurrentRecruitPrice(),
-                             min(spec.getUnitTypesWithAbility(Ability.FOUND_COLONY),
-                                 unitPricer));
+                min(spec.getUnitTypesWithAbility(Ability.FOUND_COLONY),
+                        unitPricer));
         goldNeeded += price;
         if (checkGold(goldNeeded)) {
             logger.info(getName() + " alive, can buy colonist.");
@@ -585,7 +580,8 @@ public class ServerPlayer extends Player implements TurnTaker {
         int naval = 0;
         int land = 0, landOnMap = 0;
         for (Unit u : getUnitSet()) {
-            if (u.isNaval()) naval++; else {
+            if (u.isNaval()) naval++;
+            else {
                 land++;
                 if (u.isOnTile()) landOnMap++;
             }
@@ -598,7 +594,7 @@ public class ServerPlayer extends Player implements TurnTaker {
             double rebelLandPower = r.calculateStrength(false);
             if (rebelLandPower < refLandPower) return false;
             logger.fine("REF in trouble wrt " + r.getName() + " ("
-                + refLandPower + " <= " + rebelLandPower + ")");
+                    + refLandPower + " <= " + rebelLandPower + ")");
         }
 
         // OK, the situation is poor, but the REF hangs on if it has
@@ -606,13 +602,13 @@ public class ServerPlayer extends Player implements TurnTaker {
         final int landREFUnitsRequired = 7; // FIXME: magic number
         if (land < landREFUnitsRequired) {
             logger.info("REF surrenders due to land army collapse ("
-                + land + " < " + landREFUnitsRequired + ")");
+                    + land + " < " + landREFUnitsRequired + ")");
             return true;
         }
         final int navalREFUnitsRequired = 2; // FIXME: magic number
         if (naval < navalREFUnitsRequired) {
             logger.info("REF surrenders due to lack of naval support ("
-                + naval + " < " + navalREFUnitsRequired + ")");
+                    + naval + " < " + navalREFUnitsRequired + ")");
             return true;
         }
         return false;
@@ -637,7 +633,7 @@ public class ServerPlayer extends Player implements TurnTaker {
         for (Player other : game.getLivePlayerList(this)) {
             if (isEuropean() && other.isIndian()) {
                 for (IndianSettlement is : other.getIndianSettlementList()) {
-                    ServerIndianSettlement sis = (ServerIndianSettlement)is;
+                    ServerIndianSettlement sis = (ServerIndianSettlement) is;
                     if (is.hasMissionary(this)) sis.csKillMissionary(null, cs);
                     is.getTile().cacheUnseen();//+til
                     sis.removeAlarm(this);//-til
@@ -651,7 +647,7 @@ public class ServerPlayer extends Player implements TurnTaker {
         Set<Tile> tiles = new HashSet<>(64);
         for (FreeColGameObject fcgo : game.getFreeColGameObjectList()) {
             if (fcgo instanceof Unit) {
-                Unit u = (Unit)fcgo;
+                Unit u = (Unit) fcgo;
                 if (u.hasTile() && !this.owns(u)) {
                     Tile t = u.getTile();
                     cs.addRemove(See.only(this), t, u);
@@ -678,8 +674,8 @@ public class ServerPlayer extends Player implements TurnTaker {
         // Remove units
         for (Unit u : getUnitSet()) {
             if (u.hasTile()) tiles.add(u.getTile());
-            ((ServerUnit)u).csRemove(See.perhaps().always(this),
-                                     u.getLocation(), cs);//-vis(this)
+            ((ServerUnit) u).csRemove(See.perhaps().always(this),
+                    u.getLocation(), cs);//-vis(this)
         }
         cs.add(See.perhaps().always(this), tiles);
 
@@ -725,14 +721,14 @@ public class ServerPlayer extends Player implements TurnTaker {
         final Game game = getGame();
         if (mm == null) {
             final String key = (isEuropean())
-                ? "model.player.dead.european"
-                : "model.player.dead.native";
+                    ? "model.player.dead.european"
+                    : "model.player.dead.native";
             mm = new ModelMessage(MessageType.FOREIGN_DIPLOMACY, key, this)
-                .addStringTemplate("%nation%", getNationLabel());
+                    .addStringTemplate("%nation%", getNationLabel());
         }
         if (he == null) {
             he = new HistoryEvent(game.getTurn(), HistoryEvent.HistoryEventType.NATION_DESTROYED, null)
-                .addStringTemplate("%nation%", getNationLabel());
+                    .addStringTemplate("%nation%", getNationLabel());
         }
         cs.addGlobalMessage(game, null, mm);
         cs.addGlobalHistory(game, he);
@@ -759,7 +755,7 @@ public class ServerPlayer extends Player implements TurnTaker {
             int extraLiberty = getRemainingFoundingFatherCost();
             if (extraLiberty <= 0) {
                 boolean overflow = getSpecification()
-                    .getBoolean(GameOptions.SAVE_PRODUCTION_OVERFLOW);
+                        .getBoolean(GameOptions.SAVE_PRODUCTION_OVERFLOW);
                 setLiberty((overflow) ? -extraLiberty : 0);
                 father = currentFather;
                 currentFather = null;
@@ -776,18 +772,19 @@ public class ServerPlayer extends Player implements TurnTaker {
     public boolean canRecruitFoundingFather() {
         Specification spec = getGame().getSpecification();
         switch (getPlayerType()) {
-        case COLONIAL:
-            break;
-        case REBEL: case INDEPENDENT:
-            if (!spec.getBoolean(GameOptions.CONTINUE_FOUNDING_FATHER_RECRUITMENT)) return false;
-            break;
-        default:
-            return false;
+            case COLONIAL:
+                break;
+            case REBEL:
+            case INDEPENDENT:
+                if (!spec.getBoolean(GameOptions.CONTINUE_FOUNDING_FATHER_RECRUITMENT)) return false;
+                break;
+            default:
+                return false;
         }
         return currentFather == null
-            && hasSettlements()
-            && getFatherCount() < spec.getFoundingFathers().size()
-            && canHaveFoundingFathers();
+                && hasSettlements()
+                && getFatherCount() < spec.getFoundingFathers().size()
+                && canHaveFoundingFathers();
     }
 
     /**
@@ -803,7 +800,7 @@ public class ServerPlayer extends Player implements TurnTaker {
         final Specification spec = game.getSpecification();
         final int age = game.getAge();
         EnumMap<FoundingFatherType, List<RandomChoice<FoundingFather>>> choices
-            = new EnumMap<>(FoundingFatherType.class);
+                = new EnumMap<>(FoundingFatherType.class);
         for (FoundingFather father : transform(spec.getFoundingFathers(),
                 ff -> !hasFather(ff) && ff.isAvailableTo(this))) {
             FoundingFatherType type = father.getType();
@@ -818,11 +815,11 @@ public class ServerPlayer extends Player implements TurnTaker {
         final Function<FoundingFatherType, FoundingFather> mapper = ft -> {
             List<RandomChoice<FoundingFather>> rc = choices.get(ft);
             return (rc == null) ? null
-                : RandomChoice.getWeightedRandom(logger,
+                    : RandomChoice.getWeightedRandom(logger,
                     "Choose founding father", rc, random);
         };
         List<FoundingFather> fathers = transform(FoundingFatherType.values(),
-            alwaysTrue(), mapper, toListNoNulls());
+                alwaysTrue(), mapper, toListNoNulls());
         LogBuilder lb = new LogBuilder(64);
         lb.add("Random fathers for ", getDebugName(), ":");
         for (FoundingFather f : fathers) lb.add(" ", f.getSuffix());
@@ -860,28 +857,36 @@ public class ServerPlayer extends Player implements TurnTaker {
     private boolean updateScore() {
         int oldScore = this.score;
         this.score = sum(getUnits(), Unit::getScoreValue)
-            + sum(getColonies(), Colony::getLiberty)
-            + SCORE_FOUNDING_FATHER * count(getFoundingFathers());
+                + sum(getColonies(), Colony::getLiberty)
+                + SCORE_FOUNDING_FATHER * count(getFoundingFathers());
         int gold = getGold();
         if (gold != GOLD_NOT_ACCOUNTED) {
-            this.score += (int)Math.floor(SCORE_GOLD * gold);
+            this.score += (int) Math.floor(SCORE_GOLD * gold);
         }
-        
+
         int bonus = 0;
         for (HistoryEvent h : transform(getHistory(),
                 matchKeyEquals(getId(), HistoryEvent::getPlayerId))) {
             switch (h.getEventType()) {
-            case INDEPENDENCE:
-                switch (h.getScore()) {
-                case 0: bonus = SCORE_INDEPENDENCE_BONUS_FIRST; break;
-                case 1: bonus = SCORE_INDEPENDENCE_BONUS_SECOND; break;
-                case 2: bonus = SCORE_INDEPENDENCE_BONUS_THIRD; break;
-                default: bonus = 0; break;
-                }
-                break;
-            default:
-                this.score += h.getScore();
-                break;
+                case INDEPENDENCE:
+                    switch (h.getScore()) {
+                        case 0:
+                            bonus = SCORE_INDEPENDENCE_BONUS_FIRST;
+                            break;
+                        case 1:
+                            bonus = SCORE_INDEPENDENCE_BONUS_SECOND;
+                            break;
+                        case 2:
+                            bonus = SCORE_INDEPENDENCE_BONUS_THIRD;
+                            break;
+                        default:
+                            bonus = 0;
+                            break;
+                    }
+                    break;
+                default:
+                    this.score += h.getScore();
+                    break;
             }
         }
         this.score += (this.score * bonus) / 100;
@@ -927,7 +932,7 @@ public class ServerPlayer extends Player implements TurnTaker {
      */
     public Set<Tile> exploreTiles(Collection<? extends Tile> tiles) {
         return transform(tiles, t -> exploreTile(t), Function.<Tile>identity(),
-                         Collectors.toSet());
+                Collectors.toSet());
     }
 
     /**
@@ -956,9 +961,9 @@ public class ServerPlayer extends Player implements TurnTaker {
      */
     public Set<Tile> exploreForUnit(Unit unit) {
         return (unit == null || !unit.isOnTile()
-            || getGame() == null || getGame().getMap() == null)
-            ? Collections.<Tile>emptySet()
-            : exploreTiles(unit.getVisibleTileSet());
+                || getGame() == null || getGame().getMap() == null)
+                ? Collections.<Tile>emptySet()
+                : exploreTiles(unit.getVisibleTileSet());
     }
 
     /**
@@ -969,7 +974,7 @@ public class ServerPlayer extends Player implements TurnTaker {
      */
     public Set<Tile> exploreMap(final boolean reveal) {
         Set<Tile> tiles = getGame().getMap()
-            .getTileSet(t -> this.hasExplored(t) != reveal);
+                .getTileSet(t -> this.hasExplored(t) != reveal);
         for (Tile t : tiles) {
             t.setExplored(this, reveal);//-vis(this)
         }
@@ -1002,7 +1007,7 @@ public class ServerPlayer extends Player implements TurnTaker {
      */
     public Set<Tile> collectNewTiles(Collection<Tile> collection) {
         return (collection == null) ? Collections.<Tile>emptySet()
-            : collectNewTiles(collection.stream());
+                : collectNewTiles(collection.stream());
     }
 
     /**
@@ -1014,9 +1019,9 @@ public class ServerPlayer extends Player implements TurnTaker {
      */
     public Set<Tile> collectNewTiles(Stream<Tile> tiles) {
         return transform(tiles, t -> exploreTile(t) || !canSee(t),
-                         Function.<Tile>identity(), Collectors.toSet());
+                Function.<Tile>identity(), Collectors.toSet());
     }
-        
+
     /**
      * Try to reassign the ownership of a collection of tiles,
      * preferring this player.
@@ -1034,31 +1039,31 @@ public class ServerPlayer extends Player implements TurnTaker {
         Settlement claimant;
         for (Tile tile : tiles) {
             final Player occupier = (tile.getFirstUnit() == null) ? null
-                : tile.getFirstUnit().getOwner();
+                    : tile.getFirstUnit().getOwner();
             claims.put(tile, null);
             votes.clear();
             for (Tile t : tile.getSurroundingTiles(1)) {
                 claimant = t.getOwningSettlement();
                 if (claimant != null
-                    // BR#3375773 found a case where tiles were
-                    // still owned by a settlement that had been
-                    // previously destroyed.  These should be gone, but...
-                    && !claimant.isDisposed()
-                    && claimant.getOwner() != null
-                    && claimant.getOwner().canOwnTile(tile)
-                    // If there is an occupying unit, only its owner may vote
-                    && (occupier == null || claimant.getOwner() == occupier)
-                    // Claim must be within radius
-                    && (claimant.getTile().getDistanceTo(tile)
+                        // BR#3375773 found a case where tiles were
+                        // still owned by a settlement that had been
+                        // previously destroyed.  These should be gone, but...
+                        && !claimant.isDisposed()
+                        && claimant.getOwner() != null
+                        && claimant.getOwner().canOwnTile(tile)
+                        // If there is an occupying unit, only its owner may vote
+                        && (occupier == null || claimant.getOwner() == occupier)
+                        // Claim must be within radius
+                        && (claimant.getTile().getDistanceTo(tile)
                         <= claimant.getRadius())) {
                     // Weight claimant settlements:
                     //   settlements owned by the same player
                     //     > settlements owned by same type of player
                     //     > other settlements
                     int value = (claimant.getOwner() == this) ? 3
-                        : (claimant.getOwner().isEuropean()
+                            : (claimant.getOwner().isEuropean()
                             == this.isEuropean()) ? 2
-                        : 1;
+                            : 1;
                     if (votes.get(claimant) != null) {
                         value += votes.get(claimant);
                     }
@@ -1124,7 +1129,7 @@ public class ServerPlayer extends Player implements TurnTaker {
             }
             for (int i = 0; i < au.getNumber(); i++) {
                 ServerUnit su = new ServerUnit(game, location, this, type,
-                                               role);//-vis(this)
+                        role);//-vis(this)
                 su.setName(this.getNameForUnit(type, random));
                 units.add(su);
                 lb.add(' ', su);
@@ -1162,7 +1167,7 @@ public class ServerPlayer extends Player implements TurnTaker {
         }
         LogBuilder lb = new LogBuilder(256);
         lb.add("Load ", navalUnits.size(), " ships with ", landUnits.size(),
-            " land units: ");
+                " land units: ");
         for (Unit unit : landUnits) {
             Unit carrier = find(navalUnits, u -> u.canAdd(unit));
             if (carrier != null) {
@@ -1176,7 +1181,7 @@ public class ServerPlayer extends Player implements TurnTaker {
             lb.add("no leftovers.");
         } else {
             lb.add("leftover");
-            for (Unit u: leftOver) lb.add(" ", u);
+            for (Unit u : leftOver) lb.add(" ", u);
             lb.add(".");
         }
         lb.log(logger, Level.FINEST);
@@ -1197,7 +1202,7 @@ public class ServerPlayer extends Player implements TurnTaker {
         StringBuilder sb = new StringBuilder(32);
         sb.append("Flush market for ").append(getId()).append(':');
         for (GoodsType goodsType : transform(spec.getGoodsTypeList(),
-                                             gt -> csFlushMarket(gt, cs))) {
+                gt -> csFlushMarket(gt, cs))) {
             sb.append(' ').append(goodsType.getId());
             ret = true;
         }
@@ -1219,7 +1224,7 @@ public class ServerPlayer extends Player implements TurnTaker {
             // This type of goods has changed price, so we will update
             // the market and send a message as well.
             cs.addMessage(this,
-                          market.makePriceChangeMessage(type));
+                    market.makePriceChangeMessage(type));
             market.flushPriceChange(type);
             cs.add(See.only(this), market.getMarketData(type));
         }
@@ -1245,7 +1250,7 @@ public class ServerPlayer extends Player implements TurnTaker {
             // dynamically during large transactions, avoiding
             // exploitable market manipulation.
             int a = (amount <= GoodsContainer.CARGO_SIZE) ? amount
-                : GoodsContainer.CARGO_SIZE;
+                    : GoodsContainer.CARGO_SIZE;
             int price = market.getBidPrice(type, a);
             if (!checkGold(price)) {
                 if (marketAmount == 0) return -1;
@@ -1256,8 +1261,8 @@ public class ServerPlayer extends Player implements TurnTaker {
             if (container != null) container.addGoods(type, a);
             market.modifyIncomeBeforeTaxes(type, -price);
             market.modifyIncomeAfterTaxes(type, -price);
-            int ma = (int)apply((float)a, getGame().getTurn(),
-                                Modifier.TRADE_BONUS, type);
+            int ma = (int) apply((float) a, getGame().getTurn(),
+                    Modifier.TRADE_BONUS, type);
             market.addGoodsToMarket(type, -ma);
             marketAmount += ma;
             propagateToEuropeanMarkets(type, -a, random);
@@ -1286,44 +1291,44 @@ public class ServerPlayer extends Player implements TurnTaker {
             // dynamically during large transactions, avoiding
             // exploitable market manipulation.
             int a = (amount <= GoodsContainer.CARGO_SIZE) ? amount
-                : GoodsContainer.CARGO_SIZE;
+                    : GoodsContainer.CARGO_SIZE;
             int incomeBeforeTaxes = market.getSalePrice(type, a);
             int incomeAfterTaxes = ((100 - tax) * incomeBeforeTaxes) / 100;
-            
+
             if (isAI()) {
                 /*
                  * TODO: The multiplier here should be a part of the difficulty setting.
-                 * 
+                 *
                  * Having a multiplier for the income is a great way of doing AI
                  * cheating, since it feels natural and often not like cheating at
                  * all.
-                 * 
+                 *
                  * For example, the human player can still actively reduce the amount of
                  * money the AI gets by stopping cargo / capture colonies with custom houses.
                  */
-                
+
                 final int tradeProfitMultiplierCheat = getSpecification().getInteger(GameOptions.TRADE_PROFIT_MULTIPLIER_CHEAT);
                 final int tradeProfitMultiplierCheatTurns = getSpecification().getInteger(GameOptions.TRADE_PROFIT_MULTIPLIER_CHEAT_TURNS);
-                
+
                 /*
                  * Linear reduction of the tradeProfitMultiplierCheat from the first year
                  * until turn number tradeProfitMultiplierCheatTurns.
                  */
                 final double currentMultiplier = Math.max(1.0D,
                         tradeProfitMultiplierCheat * ((double) tradeProfitMultiplierCheatTurns - getGame().getTurn().getNumber()) / tradeProfitMultiplierCheatTurns);
-                
+
                 final int adjustedGoldAfterCheating = (int) (incomeAfterTaxes * currentMultiplier);
                 modifyGold(adjustedGoldAfterCheating);
             } else {
                 modifyGold(incomeAfterTaxes);
             }
-            
+
             market.modifySales(type, a);
             if (container != null) container.addGoods(type, -a);
             market.modifyIncomeBeforeTaxes(type, incomeBeforeTaxes);
             market.modifyIncomeAfterTaxes(type, incomeAfterTaxes);
-            int ma = (int)apply((float)a, getGame().getTurn(),
-                                Modifier.TRADE_BONUS, type);
+            int ma = (int) apply((float) a, getGame().getTurn(),
+                    Modifier.TRADE_BONUS, type);
             market.addGoodsToMarket(type, ma);
             marketAmount += ma;
             propagateToEuropeanMarkets(type, a, random);
@@ -1363,15 +1368,15 @@ public class ServerPlayer extends Player implements TurnTaker {
             }
             cs.addHistory(this, new HistoryEvent(getGame().getTurn(),
                     HistoryEvent.getEventTypeFromStance(stance), otherPlayer)
-                .addStringTemplate("%nation%", otherPlayer.getNationLabel()));
+                    .addStringTemplate("%nation%", otherPlayer.getNationLabel()));
             logger.info("Stance modification " + getName()
-                + " " + old + " -> " + stance + " wrt " + otherPlayer.getName());
+                    + " " + old + " -> " + stance + " wrt " + otherPlayer.getName());
             this.addStanceChange(otherPlayer);
             if (old != Stance.UNCONTACTED) {
                 cs.addMessage(otherPlayer,
-                    new ModelMessage(MessageType.FOREIGN_DIPLOMACY,
-                                     stance.getStanceChangeKey(), this)
-                        .addStringTemplate("%nation%", getNationLabel()));
+                        new ModelMessage(MessageType.FOREIGN_DIPLOMACY,
+                                stance.getStanceChangeKey(), this)
+                                .addStringTemplate("%nation%", getNationLabel()));
             }
             cs.addStance(See.only(this), this, stance, otherPlayer);
             cs.addStance(See.only(otherPlayer), this, stance, otherPlayer);
@@ -1381,21 +1386,21 @@ public class ServerPlayer extends Player implements TurnTaker {
             int modifier = old.getTensionModifier(stance);
             otherPlayer.setStance(this, stance);
             if (modifier != 0) {
-                ((ServerPlayer)otherPlayer).csModifyTension(this, modifier, cs);//+til
+                ((ServerPlayer) otherPlayer).csModifyTension(this, modifier, cs);//+til
             }
             cs.addHistory(otherPlayer, new HistoryEvent(getGame().getTurn(),
                     HistoryEvent.getEventTypeFromStance(stance), this)
-                .addStringTemplate("%nation%", this.getNationLabel()));
+                    .addStringTemplate("%nation%", this.getNationLabel()));
             logger.info("Stance modification " + otherPlayer.getName()
-                + " " + old + " -> " + stance
-                + " wrt " + getName() + " (symmetric)");
-            ((ServerPlayer)otherPlayer).addStanceChange(this);
+                    + " " + old + " -> " + stance
+                    + " wrt " + getName() + " (symmetric)");
+            ((ServerPlayer) otherPlayer).addStanceChange(this);
             if (old != Stance.UNCONTACTED) {
                 cs.addMessage(this,
-                    new ModelMessage(MessageType.FOREIGN_DIPLOMACY,
-                                     stance.getStanceChangeKey(), otherPlayer)
-                        .addStringTemplate("%nation%",
-                            otherPlayer.getNationLabel()));
+                        new ModelMessage(MessageType.FOREIGN_DIPLOMACY,
+                                stance.getStanceChangeKey(), otherPlayer)
+                                .addStringTemplate("%nation%",
+                                        otherPlayer.getNationLabel()));
             }
             cs.addStance(See.only(this), otherPlayer, stance, this);
             cs.addStance(See.only(otherPlayer), otherPlayer, stance, this);
@@ -1442,8 +1447,8 @@ public class ServerPlayer extends Player implements TurnTaker {
         if (isIndian()) {
             for (IndianSettlement is : transform(getIndianSettlements(),
                     i -> i != origin && i.hasContacted(player))) {
-                ((ServerIndianSettlement)is).csModifyAlarm(player, add,
-                                                           false, cs);//+til
+                ((ServerIndianSettlement) is).csModifyAlarm(player, add,
+                        false, cs);//+til
             }
         }
     }
@@ -1469,11 +1474,11 @@ public class ServerPlayer extends Player implements TurnTaker {
                 // are the modifiers
                 forEach(flatten(bankruptcy.getEffects(),
                                 e -> e.getObject().getModifiers()),
-                    m -> cs.addModifier(this, this, m, false));
+                        m -> cs.addModifier(this, this, m, false));
                 cs.addMessage(this,
-                    new ModelMessage(MessageType.GOVERNMENT_EFFICIENCY,
-                                     "model.player.disaster.bankruptcy.stop",
-                                     this));
+                        new ModelMessage(MessageType.GOVERNMENT_EFFICIENCY,
+                                "model.player.disaster.bankruptcy.stop",
+                                this));
             }
         } else {
             modifyGold(-getGold());
@@ -1482,18 +1487,18 @@ public class ServerPlayer extends Player implements TurnTaker {
                 changed = true;
                 csApplyDisaster(random, null, bankruptcy, cs);
                 cs.addMessage(this,
-                    new ModelMessage(MessageType.GOVERNMENT_EFFICIENCY,
-                                     "model.player.disaster.bankruptcy.start",
-                                     this));
+                        new ModelMessage(MessageType.GOVERNMENT_EFFICIENCY,
+                                "model.player.disaster.bankruptcy.start",
+                                this));
             }
         }
         if (upkeep > 0) {
             cs.addPartial(See.only(this), this,
-                "gold", String.valueOf(this.getGold()));
+                    "gold", String.valueOf(this.getGold()));
         }
         if (changed) {
             cs.addPartial(See.only(this), this,
-                "bankrupt", String.valueOf(this.getBankrupt()));
+                    "bankrupt", String.valueOf(this.getBankrupt()));
         }
     }
 
@@ -1517,16 +1522,16 @@ public class ServerPlayer extends Player implements TurnTaker {
             for (int i = 0; i < size; i++) {
                 Colony colony = colonies.get((start + i) % size);
                 Disaster disaster = RandomChoice.getWeightedRandom(logger,
-                    "select disaster", colony.getDisasterChoices(), random);
+                        "select disaster", colony.getDisasterChoices(), random);
                 List<ModelMessage> messages = csApplyDisaster(random,
-                    colony, disaster, cs);
+                        colony, disaster, cs);
                 if (!messages.isEmpty()) {
                     cs.addMessage(this,
-                        new ModelMessage(MessageType.DISASTERS,
-                                         "model.player.disaster.strikes",
-                                         colony)
-                            .addName("%colony%", colony.getName())
-                            .addName("%disaster%", disaster));
+                            new ModelMessage(MessageType.DISASTERS,
+                                    "model.player.disaster.strikes",
+                                    colony)
+                                    .addName("%colony%", colony.getName())
+                                    .addName("%disaster%", disaster));
                     for (ModelMessage message : messages) {
                         cs.addMessage(this, message);
                     }
@@ -1554,31 +1559,31 @@ public class ServerPlayer extends Player implements TurnTaker {
                                               Disaster disaster, ChangeSet cs) {
         StringBuilder sb = new StringBuilder(64);
         sb.append("Applying ").append(disaster.getNumberOfEffects())
-            .append(" effect/s of disaster ")
-            .append(Messages.getName(disaster));
+                .append(" effect/s of disaster ")
+                .append(Messages.getName(disaster));
         if (colony != null) sb.append(" to ").append(colony.getName());
         sb.append(':');
         List<Effect> effects = new ArrayList<>();
         switch (disaster.getNumberOfEffects()) {
-        case ONE:
-            effects.add(RandomChoice.getWeightedRandom(logger,
-                    "Get effect of disaster", disaster.getEffects(), random));
-            sb.append(' ').append(Messages.getName(effects.get(0)));
-            break;
-        case SEVERAL:
-            for (RandomChoice<Effect> effect : disaster.getEffects()) {
-                if (randomInt(logger, "Get effects of disaster", random, 100)
-                    < effect.getProbability()) {
+            case ONE:
+                effects.add(RandomChoice.getWeightedRandom(logger,
+                        "Get effect of disaster", disaster.getEffects(), random));
+                sb.append(' ').append(Messages.getName(effects.get(0)));
+                break;
+            case SEVERAL:
+                for (RandomChoice<Effect> effect : disaster.getEffects()) {
+                    if (randomInt(logger, "Get effects of disaster", random, 100)
+                            < effect.getProbability()) {
+                        effects.add(effect.getObject());
+                        sb.append(' ').append(Messages.getName(effect.getObject()));
+                    }
+                }
+                break;
+            case ALL:
+                for (RandomChoice<Effect> effect : disaster.getEffects()) {
                     effects.add(effect.getObject());
                     sb.append(' ').append(Messages.getName(effect.getObject()));
                 }
-            }
-            break;
-        case ALL:
-            for (RandomChoice<Effect> effect : disaster.getEffects()) {
-                effects.add(effect.getObject());
-                sb.append(' ').append(Messages.getName(effect.getObject()));
-            }
         }
         if (effects.isEmpty()) sb.append(" All avoided");
         logger.fine(sb.toString());
@@ -1586,119 +1591,118 @@ public class ServerPlayer extends Player implements TurnTaker {
         boolean colonyDirty = false;
         List<ModelMessage> messages = new ArrayList<>();
         ModelMessage mm;
-outer:  for (Effect effect : effects) {
+        outer:
+        for (Effect effect : effects) {
             mm = null;
             if (colony == null) {
                 forEach(effect.getModifiers(), modifier -> {
-                        if (modifier.getDuration() > 0) {
-                            Modifier timedModifier = Modifier
+                    if (modifier.getDuration() > 0) {
+                        Modifier timedModifier = Modifier
                                 .makeTimedModifier(modifier.getId(), modifier, getGame().getTurn());
-                            modifier.setModifierIndex(Modifier.DISASTER_PRODUCTION_INDEX);
-                            cs.addModifier(this, this, timedModifier, true);
-                        } else {
-                            cs.addModifier(this, this, modifier, true);
-                        }
-                    });
+                        modifier.setModifierIndex(Modifier.DISASTER_PRODUCTION_INDEX);
+                        cs.addModifier(this, this, timedModifier, true);
+                    } else {
+                        cs.addModifier(this, this, modifier, true);
+                    }
+                });
             } else {
                 if (null != effect.getId()) {
                     switch (effect.getId()) {
-                    case Effect.LOSS_OF_MONEY:
-                        int plunder = Math.max(1, colony.getPlunder(null, random) / 5);
-                        modifyGold(-plunder);
-                        cs.addPartial(See.only(this), this,
-                            "gold", String.valueOf(this.getGold()));
-                        mm = new ModelMessage(MessageType.DISASTERS,
-                                              effect.getId(), this)
-                            .addAmount("%amount%", plunder);
-                        break;
-                    case Effect.LOSS_OF_BUILDING:
-                        Building building = getBuildingForEffect(colony, effect, random);
-                        if (building != null) {
-                            // Add message before damaging building
+                        case Effect.LOSS_OF_MONEY:
+                            int plunder = Math.max(1, colony.getPlunder(null, random) / 5);
+                            modifyGold(-plunder);
+                            cs.addPartial(See.only(this), this,
+                                    "gold", String.valueOf(this.getGold()));
                             mm = new ModelMessage(MessageType.DISASTERS,
-                                                  effect.getId(), colony)
-                                .addNamed("%building%", building.getType());
-                            csDamageBuilding(building, cs);
-                            colonyDirty = true;
-                        }
-                        break;
-                    case Effect.LOSS_OF_GOODS:
-                        Goods goods = getRandomMember(logger, "select goods",
-                            colony.getLootableGoodsList(),
-                            random);
-                        if (goods != null) {
-                            goods.setAmount(Math.min(goods.getAmount() / 2, 50));
-                            colony.removeGoods(goods);
-                            mm = new ModelMessage(MessageType.DISASTERS,
-                                                  effect.getId(), colony)
-                                .addStringTemplate("%goods%", goods.getLabel(true));
-                            colonyDirty = true;
-                        }
-                        break;
-                    case Effect.LOSS_OF_UNIT:
-                        {
+                                    effect.getId(), this)
+                                    .addAmount("%amount%", plunder);
+                            break;
+                        case Effect.LOSS_OF_BUILDING:
+                            Building building = getBuildingForEffect(colony, effect, random);
+                            if (building != null) {
+                                // Add message before damaging building
+                                mm = new ModelMessage(MessageType.DISASTERS,
+                                        effect.getId(), colony)
+                                        .addNamed("%building%", building.getType());
+                                csDamageBuilding(building, cs);
+                                colonyDirty = true;
+                            }
+                            break;
+                        case Effect.LOSS_OF_GOODS:
+                            Goods goods = getRandomMember(logger, "select goods",
+                                    colony.getLootableGoodsList(),
+                                    random);
+                            if (goods != null) {
+                                goods.setAmount(Math.min(goods.getAmount() / 2, 50));
+                                colony.removeGoods(goods);
+                                mm = new ModelMessage(MessageType.DISASTERS,
+                                        effect.getId(), colony)
+                                        .addStringTemplate("%goods%", goods.getLabel(true));
+                                colonyDirty = true;
+                            }
+                            break;
+                        case Effect.LOSS_OF_UNIT: {
                             Unit unit = getUnitForEffect(colony, effect, random);
                             if (unit != null) {
                                 if (colony.getUnitCount() == 1) {
                                     messages.clear();
                                     mm = new ModelMessage(MessageType.DISASTERS,
-                                        "model.player.disaster.effect.colonyDestroyed",
-                                        this)
-                                        .addName("%colony%", colony.getName());
+                                            "model.player.disaster.effect.colonyDestroyed",
+                                            this)
+                                            .addName("%colony%", colony.getName());
                                     messages.add(mm);
                                     csDisposeSettlement(colony, cs);
                                     colonyDirty = false;
                                     break outer; // No point proceeding
                                 }
                                 mm = new ModelMessage(MessageType.DISASTERS,
-                                                      effect.getId(), colony)
-                                    .addStringTemplate("%unit%",
-                                        unit.getLabel());
-                                ((ServerUnit)unit).csRemove(See.only(this),
-                                    null, cs);//-vis: Safe, entirely within colony
+                                        effect.getId(), colony)
+                                        .addStringTemplate("%unit%",
+                                                unit.getLabel());
+                                ((ServerUnit) unit).csRemove(See.only(this),
+                                        null, cs);//-vis: Safe, entirely within colony
                                 colonyDirty = true;
                             }
                             break;
                         }
-                    case Effect.DAMAGED_UNIT:
-                        {
+                        case Effect.DAMAGED_UNIT: {
                             Unit unit = getUnitForEffect(colony, effect, random);
                             if (unit != null && unit.isNaval()) {
                                 Location repairLocation = unit.getRepairLocation();
                                 if (repairLocation == null) {
                                     mm = new ModelMessage(MessageType.DISASTERS,
-                                                          effect.getId(),
-                                                          colony)
-                                        .addStringTemplate("%unit%",
-                                            unit.getLabel());
+                                            effect.getId(),
+                                            colony)
+                                            .addStringTemplate("%unit%",
+                                                    unit.getLabel());
                                     csSinkShip(unit, null, cs);
                                 } else {
                                     mm = new ModelMessage(MessageType.DISASTERS,
-                                                          effect.getId(),
-                                                          colony)
-                                        .addStringTemplate("%unit%",
-                                            unit.getLabel());
+                                            effect.getId(),
+                                            colony)
+                                            .addStringTemplate("%unit%",
+                                                    unit.getLabel());
                                     csDamageShip(unit, repairLocation, cs);
                                 }
                                 colonyDirty = true;
                             }
                             break;
                         }
-                    default:
-                        mm = new ModelMessage(MessageType.DISASTERS,
-                                              effect.getId(), colony);
-                        forEach(effect.getModifiers(), m -> {
+                        default:
+                            mm = new ModelMessage(MessageType.DISASTERS,
+                                    effect.getId(), colony);
+                            forEach(effect.getModifiers(), m -> {
                                 if (m.getDuration() > 0) {
                                     Modifier timedModifier = Modifier
-                                        .makeTimedModifier(m.getId(), m, getGame().getTurn());
+                                            .makeTimedModifier(m.getId(), m, getGame().getTurn());
                                     timedModifier.setModifierIndex(Modifier.DISASTER_PRODUCTION_INDEX);
                                     cs.addModifier(this, colony, timedModifier, true);
                                 } else {
                                     cs.addModifier(this, colony, m, true);
                                 }
                             });
-                        colonyDirty |= first(effect.getModifiers()) != null;
-                        break;
+                            colonyDirty |= first(effect.getModifiers()) != null;
+                            break;
                     }
                 }
             }
@@ -1713,16 +1717,16 @@ outer:  for (Effect effect : effects) {
                                           Random random) {
         List<Building> buildings = colony.getBurnableBuildings();
         return (buildings.isEmpty()) ? null
-            : getRandomMember(logger, "Select building for effect",
-                              buildings, random);
+                : getRandomMember(logger, "Select building for effect",
+                buildings, random);
     }
 
     private Unit getUnitForEffect(Colony colony, Effect effect,
                                   Random random) {
         List<Unit> units = transform(colony.getAllUnitsList(),
-                                     u -> effect.appliesTo(u.getType()));
+                u -> effect.appliesTo(u.getType()));
         return (units.isEmpty()) ? null
-            : getRandomMember(logger, "Select unit for effect", units, random);
+                : getRandomMember(logger, "Select unit for effect", units, random);
     }
 
     /**
@@ -1741,9 +1745,9 @@ outer:  for (Effect effect : effects) {
         // Use average if no PRNG available.
         final int lowerBound = 5; // FIXME: to spec
         final int upperBound = 30;// FIXME: to spec
-        int r = (random == null) ? (lowerBound + upperBound)/2
-            : randomInt(logger, "Propagate goods", random,
-                        upperBound - lowerBound + 1) + lowerBound;
+        int r = (random == null) ? (lowerBound + upperBound) / 2
+                : randomInt(logger, "Propagate goods", random,
+                upperBound - lowerBound + 1) + lowerBound;
         amount *= r;
         amount /= 100;
         if (amount == 0) return;
@@ -1769,7 +1773,7 @@ outer:  for (Effect effect : effects) {
     public void csYearlyGoodsAdjust(Random random, ChangeSet cs) {
         final Game game = getGame();
         final List<GoodsType> goodsTypes = game.getSpecification()
-            .getStorableGoodsTypeList();
+                .getStorableGoodsTypeList();
         final Market market = getMarket();
         if (market == null) return;
 
@@ -1777,13 +1781,13 @@ outer:  for (Effect effect : effects) {
         // amount of.
         GoodsType extraType;
         while (!(extraType = getRandomMember(logger, "Choose goods type",
-                                             goodsTypes, random)).isStorable());
+                goodsTypes, random)).isStorable()) ;
 
         // Remove standard amount, and the extra amount.
         for (GoodsType type : transform(goodsTypes,
-                                        gt -> market.hasBeenTraded(gt))) {
+                gt -> market.hasBeenTraded(gt))) {
             boolean add = market.getAmountInMarket(type)
-                < type.getInitialAmount();
+                    < type.getInitialAmount();
             int amount = game.getTurn().getNumber() / 10;
             if (type == extraType) amount = 2 * amount + 1;
             if (amount <= 0) continue;
@@ -1791,9 +1795,9 @@ outer:  for (Effect effect : effects) {
             if (!add) amount = -amount;
             market.addGoodsToMarket(type, amount);
             logger.finest(getName() + " adjust of " + amount
-                + " " + type
-                + ", total: " + market.getAmountInMarket(type)
-                + ", initial: " + type.getInitialAmount());
+                    + " " + type
+                    + ", total: " + market.getAmountInMarket(type)
+                    + ", initial: " + type.getInitialAmount());
             addExtraTrade(new AbstractGoods(type, amount));
         }
         flushExtraTrades(random);
@@ -1827,12 +1831,12 @@ outer:  for (Effect effect : effects) {
             }
             if (!ffs.isEmpty()) {
                 cs.add(See.only(this),
-                    new ChooseFoundingFatherMessage(ffs, null));
+                        new ChooseFoundingFatherMessage(ffs, null));
             }
 
             if (updateScore()) {
                 cs.addPartial(See.only(this), this,
-                    "score", String.valueOf(this.getScore()));
+                        "score", String.valueOf(this.getScore()));
             }
 
         } else if (isIndian()) {
@@ -1847,14 +1851,14 @@ outer:  for (Effect effect : effects) {
             // all the changes.
             List<IndianSettlement> allSettlements = getIndianSettlementList();
             java.util.Map<IndianSettlement,
-                java.util.Map<Player, Tension.Level>> oldLevels = new HashMap<>(allSettlements.size());
+                    java.util.Map<Player, Tension.Level>> oldLevels = new HashMap<>(allSettlements.size());
             for (IndianSettlement is : allSettlements) {
                 java.util.Map<Player, Tension.Level> oldLevel = new HashMap<>();
                 oldLevels.put(is, oldLevel);
                 for (Player enemy : game.getLiveEuropeanPlayerList(this)) {
                     Tension alarm = is.getAlarm(enemy);
                     oldLevel.put(enemy,
-                        (alarm == null) ? null : alarm.getLevel());
+                            (alarm == null) ? null : alarm.getLevel());
                 }
             }
 
@@ -1862,7 +1866,7 @@ outer:  for (Effect effect : effects) {
             for (IndianSettlement is : allSettlements) {
                 List<Player> enemies = game.getLiveEuropeanPlayerList(this);
                 java.util.Map<Player, Integer> extra
-                    = new HashMap<>(enemies.size());
+                        = new HashMap<>(enemies.size());
                 for (Player enemy : enemies) {
                     extra.put(enemy, 0);
                 }
@@ -1872,25 +1876,25 @@ outer:  for (Effect effect : effects) {
                 for (Tile tile : is.getTile().getSurroundingTiles(alarmRadius)) {
                     Colony colony = tile.getColony();
                     if (tile.getFirstUnit() != null) { // Military units
-                        Player enemy =  tile.getFirstUnit().getOwner();
+                        Player enemy = tile.getFirstUnit().getOwner();
                         if (enemy.isEuropean()) {
                             Integer alarm = extra.get(enemy);
                             if (alarm == null) continue;
-                            alarm += (int)sumDouble(tile.getUnits(),
-                                u -> u.isOffensiveUnit() && !u.isNaval(),
-                                u -> u.getType().getOffence());
+                            alarm += (int) sumDouble(tile.getUnits(),
+                                    u -> u.isOffensiveUnit() && !u.isNaval(),
+                                    u -> u.getType().getOffence());
                             extra.put(enemy, alarm);
                         }
                     } else if (colony != null) { // Colonies
                         Player enemy = colony.getOwner();
                         extra.put(enemy, extra.get(enemy)
-                                  + ALARM_TILE_IN_USE
-                                  + colony.getUnitCount());
+                                + ALARM_TILE_IN_USE
+                                + colony.getUnitCount());
                     } else if (tile.getOwningSettlement() != null) { // Control
                         Player enemy = tile.getOwningSettlement().getOwner();
                         if (enemy != null && enemy.isEuropean()) {
                             extra.put(enemy, extra.get(enemy)
-                                      + ALARM_TILE_IN_USE);
+                                    + ALARM_TILE_IN_USE);
                         }
                     }
                 }
@@ -1898,28 +1902,28 @@ outer:  for (Effect effect : effects) {
                 if (is.hasMissionary()) {
                     Unit missionary = is.getMissionary();
                     int missionAlarm = getGame().getSpecification()
-                        .getInteger(GameOptions.MISSION_INFLUENCE);
+                            .getInteger(GameOptions.MISSION_INFLUENCE);
                     if (missionary.hasAbility(Ability.EXPERT_MISSIONARY)) {
                         missionAlarm *= 2;
                     }
                     Player enemy = missionary.getOwner();
                     extra.put(enemy,
-                              extra.get(enemy) + missionAlarm);
+                            extra.get(enemy) + missionAlarm);
                 }
                 // Apply modifiers, and commit the total change.
                 forEachMapEntry(extra, e -> e.getValue() != 0, e -> {
-                        final Player player = e.getKey();
-                        int change = (int)player.apply((float)e.getValue(),
+                    final Player player = e.getKey();
+                    int change = (int) player.apply((float) e.getValue(),
                             game.getTurn(), Modifier.NATIVE_ALARM_MODIFIER);
-                        ((ServerIndianSettlement)is)
+                    ((ServerIndianSettlement) is)
                             .csModifyAlarm(player, change, true, cs);//+til
-                    });
+                });
             }
 
             // Calm down a bit at the whole-tribe level.
             for (Player enemy : transform(game.getLiveEuropeanPlayers(this),
-                                          p -> getTension(p).getValue() > 0)) {
-                int change = -getTension(enemy).getValue()/100 - 4;
+                    p -> getTension(p).getValue() > 0)) {
+                int change = -getTension(enemy).getValue() / 100 - 4;
                 csModifyTension(enemy, change, cs);//+til
             }
 
@@ -1928,13 +1932,13 @@ outer:  for (Effect effect : effects) {
             // worsening relation transitions.
             for (IndianSettlement is : allSettlements) {
                 forEachMapEntry(oldLevels.get(is), e ->
-                    ((ServerIndianSettlement)is)
-                        .csCheckTension(e.getKey(), e.getValue(), cs));
+                        ((ServerIndianSettlement) is)
+                                .csCheckTension(e.getKey(), e.getValue(), cs));
             }
 
             // All updated, start the turn for the settlements.
             for (IndianSettlement is : allSettlements) {
-                ((ServerIndianSettlement)is).csStartTurn(random, cs);
+                ((ServerIndianSettlement) is).csStartTurn(random, cs);
             }
         }
     }
@@ -1950,17 +1954,17 @@ outer:  for (Effect effect : effects) {
         //     - not one of ours
         //     - a naval unit at sea
         //     - either we are at war with them or they are pirates
-        final Predicate<Unit> bombardUnit = u -> 
-            (u.getOwner() != this
-                && u.isNaval() && !u.getTile().isLand()
-                && (atWarWith(u.getOwner()) || u.hasAbility(Ability.PIRACY)));
+        final Predicate<Unit> bombardUnit = u ->
+                (u.getOwner() != this
+                        && u.isNaval() && !u.getTile().isLand()
+                        && (atWarWith(u.getOwner()) || u.hasAbility(Ability.PIRACY)));
         // For all colonies that are able to bombard, search neighbouring
         // tiles for targets, and fire!
         for (Colony c : transform(getColonies(), Colony::canBombardEnemyShip)) {
             Tile tile = c.getTile();
             for (Unit u : transform(flatten(tile.getSurroundingTiles(1, 1),
-                                            Tile::getUnits),
-                                    bombardUnit)) {
+                            Tile::getUnits),
+                    bombardUnit)) {
                 csCombat(c, u, null, random, cs);
             }
         }
@@ -1977,24 +1981,24 @@ outer:  for (Effect effect : effects) {
                                     ChangeSet cs) {
         final Game game = getGame();
         final Specification spec = game.getSpecification();
-        final ServerEurope europe = (ServerEurope)getEurope();
+        final ServerEurope europe = (ServerEurope) getEurope();
         final Turn turn = game.getTurn();
         boolean europeDirty = false, visibilityChange = false;
 
         addFather(father);
         addHistory(new HistoryEvent(turn,
                 HistoryEvent.HistoryEventType.FOUNDING_FATHER, this)
-                    .addNamed("%father%", father));
+                .addNamed("%father%", father));
         // FIXME: We do not want to have to update the whole player
         // just to get the FF into the client, but for now if there
         // are modifiers that is the only way to do it.
         cs.add(See.only(this), this);
         cs.addMessage(this,
-            new ModelMessage(ModelMessage.MessageType.SONS_OF_LIBERTY,
-                             "model.player.foundingFatherJoinedCongress",
-                             this)
-                      .addNamed("%foundingFather%", father)
-                      .add("%description%", father.getDescriptionKey()));
+                new ModelMessage(ModelMessage.MessageType.SONS_OF_LIBERTY,
+                        "model.player.foundingFatherJoinedCongress",
+                        this)
+                        .addNamed("%foundingFather%", father)
+                        .add("%description%", father.getDescriptionKey()));
 
         List<AbstractUnit> units = father.getUnitList();
         if (europe != null && units != null && !units.isEmpty()) {
@@ -2003,7 +2007,7 @@ outer:  for (Effect effect : effects) {
         }
 
         UnitChangeType uct
-            = spec.getUnitChangeType(UnitChangeType.FOUNDING_FATHER);
+                = spec.getUnitChangeType(UnitChangeType.FOUNDING_FATHER);
         if (uct != null && uct.appliesTo(this)) {
             for (Unit u : getUnitSet()) {
                 for (UnitTypeChange uc : uct.getUnitChanges(u.getType())) {
@@ -2037,88 +2041,88 @@ outer:  for (Effect effect : effects) {
         for (Event event : father.getEvents()) {
             String eventId = event.getId();
             switch (eventId) {
-            case "model.event.resetBannedMissions":
-                for (Player p : game.getLiveNativePlayerList()) {
-                    if (p.missionsBanned(this)) {
-                        p.removeMissionBan(this);
-                        cs.add(See.only(this), p);
-                    }
-                }
-                break;
-
-            case "model.event.resetNativeAlarm":
-                for (Player p : transform(game.getLiveNativePlayers(),
-                                          p -> p.hasContacted(this))) {
-                    p.setTension(this, new Tension(Tension.TENSION_MIN));
-                    for (IndianSettlement is : transform(p.getIndianSettlements(),
-                                                         is -> is.hasContacted(this))) {
-                        is.getTile().cacheUnseen();//+til
-                        is.setAlarm(this, new Tension(Tension.TENSION_MIN));//-til
-                        cs.add(See.only(this), is);
-                    }
-                    csChangeStance(Stance.PEACE, p, true, cs);
-                }
-                break;
-
-            case "model.event.boycottsLifted":
-                Market market = getMarket();
-                for (GoodsType goodsType : spec.getGoodsTypeList()) {
-                    if (market.getArrears(goodsType) > 0) {
-                        market.setArrears(goodsType, 0);
-                        cs.add(See.only(this), market.getMarketData(goodsType));
-                    }
-                }
-                break;
-
-            case "model.event.freeBuilding":
-                BuildingType type = spec.getBuildingType(event.getValue());
-                for (Colony c : getColonyList()) {
-                    ((ServerColony)c).csFreeBuilding(type, cs);
-                }
-                break;
-
-            case "model.event.seeAllColonies":
-                visibilityChange = true;//-vis(this), can now see other colonies
-                for (Colony colony : game.getAllColoniesList(null)) {
-                    final Tile t = colony.getTile();
-                    Set<Tile> tiles = new HashSet<>();
-                    if (exploreTile(t)) {
-                        if (!hasAbility(Ability.SEE_ALL_COLONIES)) {
-                            // FreeCol ruleset adds this ability
-                            // allowing full visibility of colony,
-                            // whereas Col1 showed colonies as size 1.
-                            Tile c = t.copy(game);
-                            c.getColony().setDisplayUnitCount(1);
-                            t.setCachedTile(this, c);
+                case "model.event.resetBannedMissions":
+                    for (Player p : game.getLiveNativePlayerList()) {
+                        if (p.missionsBanned(this)) {
+                            p.removeMissionBan(this);
+                            cs.add(See.only(this), p);
                         }
-                        tiles.add(t);
                     }
-                    // Revealed tiles in 11x11 block in Col1
-                    final int fullRadius = (int)father
-                        .apply((float)colony.getLineOfSight(),
-                            turn, Modifier.EXPOSED_TILES_RADIUS);
-                    tiles.addAll(exploreTiles(t.getSurroundingTiles(1,
+                    break;
+
+                case "model.event.resetNativeAlarm":
+                    for (Player p : transform(game.getLiveNativePlayers(),
+                            p -> p.hasContacted(this))) {
+                        p.setTension(this, new Tension(Tension.TENSION_MIN));
+                        for (IndianSettlement is : transform(p.getIndianSettlements(),
+                                is -> is.hasContacted(this))) {
+                            is.getTile().cacheUnseen();//+til
+                            is.setAlarm(this, new Tension(Tension.TENSION_MIN));//-til
+                            cs.add(See.only(this), is);
+                        }
+                        csChangeStance(Stance.PEACE, p, true, cs);
+                    }
+                    break;
+
+                case "model.event.boycottsLifted":
+                    Market market = getMarket();
+                    for (GoodsType goodsType : spec.getGoodsTypeList()) {
+                        if (market.getArrears(goodsType) > 0) {
+                            market.setArrears(goodsType, 0);
+                            cs.add(See.only(this), market.getMarketData(goodsType));
+                        }
+                    }
+                    break;
+
+                case "model.event.freeBuilding":
+                    BuildingType type = spec.getBuildingType(event.getValue());
+                    for (Colony c : getColonyList()) {
+                        ((ServerColony) c).csFreeBuilding(type, cs);
+                    }
+                    break;
+
+                case "model.event.seeAllColonies":
+                    visibilityChange = true;//-vis(this), can now see other colonies
+                    for (Colony colony : game.getAllColoniesList(null)) {
+                        final Tile t = colony.getTile();
+                        Set<Tile> tiles = new HashSet<>();
+                        if (exploreTile(t)) {
+                            if (!hasAbility(Ability.SEE_ALL_COLONIES)) {
+                                // FreeCol ruleset adds this ability
+                                // allowing full visibility of colony,
+                                // whereas Col1 showed colonies as size 1.
+                                Tile c = t.copy(game);
+                                c.getColony().setDisplayUnitCount(1);
+                                t.setCachedTile(this, c);
+                            }
+                            tiles.add(t);
+                        }
+                        // Revealed tiles in 11x11 block in Col1
+                        final int fullRadius = (int) father
+                                .apply((float) colony.getLineOfSight(),
+                                        turn, Modifier.EXPOSED_TILES_RADIUS);
+                        tiles.addAll(exploreTiles(t.getSurroundingTiles(1,
                                 fullRadius)));
-                    cs.add(See.only(this), tiles);
-                }
-                break;
-                
-            case "model.event.newRecruits":
-                if (europe != null) {
-                    europeDirty = europe.replaceRecruits(random);
-                }
-                break;
+                        cs.add(See.only(this), tiles);
+                    }
+                    break;
 
-            case "model.event.movementChange":
-                for (Unit u : transform(getUnits(), u -> u.getMovesLeft() > 0)) {
-                    u.setMovesLeft(u.getInitialMovesLeft());
-                    cs.addPartial(See.only(this), u,
-                        "movesLeft", String.valueOf(u.getMovesLeft()));
-                }
-                break;
+                case "model.event.newRecruits":
+                    if (europe != null) {
+                        europeDirty = europe.replaceRecruits(random);
+                    }
+                    break;
 
-            default:
-                break;
+                case "model.event.movementChange":
+                    for (Unit u : transform(getUnits(), u -> u.getMovesLeft() > 0)) {
+                        u.setMovesLeft(u.getInitialMovesLeft());
+                        cs.addPartial(See.only(this), u,
+                                "movesLeft", String.valueOf(u.getMovesLeft()));
+                    }
+                    break;
+
+                default:
+                    break;
             }
         }
 
@@ -2136,9 +2140,9 @@ outer:  for (Effect effect : effects) {
     public List<BuildingType> getFreeBuildingTypes() {
         final Specification spec = getGame().getSpecification();
         return transform(flatten(getFoundingFathers(),
-                         ff -> ff.getEvents().stream()),
-                         matchKeyEquals("model.event.freeBuilding", Event::getId),
-                         ev -> spec.getBuildingType(ev.getValue()));
+                        ff -> ff.getEvents().stream()),
+                matchKeyEquals("model.event.freeBuilding", Event::getId),
+                ev -> spec.getBuildingType(ev.getValue()));
     }
 
     /**
@@ -2164,20 +2168,20 @@ outer:  for (Effect effect : effects) {
             modifyGold(-price);
             owner.modifyGold(price);
             cs.addPartial(See.only(this), this,
-                "gold", String.valueOf(this.getGold()));
+                    "gold", String.valueOf(this.getGold()));
         } else if (price < 0 && owner.isIndian()) {
-            ServerIndianSettlement sis = (ServerIndianSettlement)ownerSettlement;
+            ServerIndianSettlement sis = (ServerIndianSettlement) ownerSettlement;
             if (sis == null) {
-                ((ServerPlayer)owner).csModifyTension(this,
-                    Tension.TENSION_ADD_LAND_TAKEN, cs);
+                ((ServerPlayer) owner).csModifyTension(this,
+                        Tension.TENSION_ADD_LAND_TAKEN, cs);
             } else {
                 sis.csModifyAlarm(this, Tension.TENSION_ADD_LAND_TAKEN,
-                                  true, cs);
+                        true, cs);
             }
         }
         logger.finest(this.getName() + " claimed " + tile
-            + " from " + ((owner == null) ? "no-one" : owner.getName())
-            + ", price: " + ((price == 0) ? "free" : (price < 0) ? "stolen"
+                + " from " + ((owner == null) ? "no-one" : owner.getName())
+                + ", price: " + ((price == 0) ? "free" : (price < 0) ? "stolen"
                 : price));
     }
 
@@ -2190,52 +2194,52 @@ outer:  for (Effect effect : effects) {
      * @param random A pseudo-random number source.
      * @param cs A {@code ChangeSet} to update.
      */
-    @SuppressFBWarnings(value="SF_SWITCH_FALLTHROUGH")
+    @SuppressFBWarnings(value = "SF_SWITCH_FALLTHROUGH")
     public void csEmigrate(int slot, MigrationType type, Random random,
                            ChangeSet cs) {
         // Create the recruit, move it to the docks.
-        ServerEurope europe = (ServerEurope)getEurope();
+        ServerEurope europe = (ServerEurope) getEurope();
         AbstractUnit recruit = europe.extractRecruitable(slot, random);
         final Game game = getGame();
         final Specification spec = game.getSpecification();
         Role role = (spec.getBoolean(GameOptions.EQUIP_EUROPEAN_RECRUITS))
-            ? recruit.getRole(spec)
-            : spec.getDefaultRole();
+                ? recruit.getRole(spec)
+                : spec.getDefaultRole();
         Unit unit = new ServerUnit(game, europe, this, recruit.getType(spec),
-                                   role);//-vis: safe/Europe
+                role);//-vis: safe/Europe
 
         // Handle migration type specific changes.
         switch (type) {
-        case FOUNTAIN:
-            setRemainingEmigrants(getRemainingEmigrants() - 1);
-            break;
-        case RECRUIT:
-            modifyGold(-europe.getCurrentRecruitPrice());
-            cs.addPartial(See.only(this), this,
-                "gold", String.valueOf(this.getGold()));
-            europe.increaseRecruitmentDifficulty();
-            // Fall through
-        case NORMAL:
-            reduceImmigration();
-            updateImmigrationRequired();
-            cs.addPartial(See.only(this), this,
-                "immigration", String.valueOf(this.getImmigration()),
-                "immigrationRequired", String.valueOf(this.getImmigrationRequired()));
-            if (!MigrationType.specificMigrantSlot(slot)) {
-                cs.addMessage(this, getEmigrationMessage(unit));
-            }
-            break;
-        case SURVIVAL:
-            // Add an informative message if this was a survival recruitment,
-            cs.addMessage(this,
-                new ModelMessage(ModelMessage.MessageType.UNIT_ADDED,
-                                 "model.player.autoRecruit",
-                                 this, unit)
-                    .addNamed("%europe%", europe)
-                    .addStringTemplate("%unit%", unit.getLabel()));
-            break;
-        default:
-            throw new RuntimeException("Bogus migration type: " + type);
+            case FOUNTAIN:
+                setRemainingEmigrants(getRemainingEmigrants() - 1);
+                break;
+            case RECRUIT:
+                modifyGold(-europe.getCurrentRecruitPrice());
+                cs.addPartial(See.only(this), this,
+                        "gold", String.valueOf(this.getGold()));
+                europe.increaseRecruitmentDifficulty();
+                // Fall through
+            case NORMAL:
+                reduceImmigration();
+                updateImmigrationRequired();
+                cs.addPartial(See.only(this), this,
+                        "immigration", String.valueOf(this.getImmigration()),
+                        "immigrationRequired", String.valueOf(this.getImmigrationRequired()));
+                if (!MigrationType.specificMigrantSlot(slot)) {
+                    cs.addMessage(this, getEmigrationMessage(unit));
+                }
+                break;
+            case SURVIVAL:
+                // Add an informative message if this was a survival recruitment,
+                cs.addMessage(this,
+                        new ModelMessage(ModelMessage.MessageType.UNIT_ADDED,
+                                "model.player.autoRecruit",
+                                this, unit)
+                                .addNamed("%europe%", europe)
+                                .addStringTemplate("%unit%", unit.getLabel()));
+                break;
+            default:
+                throw new RuntimeException("Bogus migration type: " + type);
         }
         cs.add(See.only(this), europe);
     }
@@ -2264,41 +2268,41 @@ outer:  for (Effect effect : effects) {
         Player defenderPlayer = null;
         Tile defenderTile = null;
         if (isAttack) {
-            attackerUnit = (Unit)attacker;
+            attackerUnit = (Unit) attacker;
             //attackerPlayer = attackerUnit.getOwner();
             attackerTile = attackerUnit.getTile();
-            defenderUnit = (Unit)defender;
+            defenderUnit = (Unit) defender;
             defenderPlayer = defenderUnit.getOwner();
             defenderTile = defenderUnit.getTile();
             boolean bombard = attackerUnit.hasAbility(Ability.BOMBARD);
             cs.addAttribute(See.only(this), "sound",
-                (attackerUnit.isNaval()) ? "sound.attack.naval"
-                : (bombard) ? "sound.attack.artillery"
-                : (attackerUnit.isMounted()) ? "sound.attack.mounted"
-                : "sound.attack.foot");
+                    (attackerUnit.isNaval()) ? "sound.attack.naval"
+                            : (bombard) ? "sound.attack.artillery"
+                            : (attackerUnit.isMounted()) ? "sound.attack.mounted"
+                            : "sound.attack.foot");
             if (attackerUnit.getOwner().isIndian()
-                && defenderPlayer.isEuropean()
-                && defenderUnit.getLocation().getColony() != null
-                && !defenderPlayer.atWarWith(attackerUnit.getOwner())) {
+                    && defenderPlayer.isEuropean()
+                    && defenderUnit.getLocation().getColony() != null
+                    && !defenderPlayer.atWarWith(attackerUnit.getOwner())) {
                 StringTemplate attackerNation
-                    = attackerUnit.getApparentOwnerName();
+                        = attackerUnit.getApparentOwnerName();
                 Colony colony = defenderUnit.getLocation().getColony();
                 cs.addMessage(defenderPlayer,
-                    new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
-                                     "combat.raid.ours", colony)
-                        .addName("%colony%", colony.getName())
-                        .addStringTemplate("%nation%", attackerNation));
+                        new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
+                                "combat.raid.ours", colony)
+                                .addName("%colony%", colony.getName())
+                                .addStringTemplate("%nation%", attackerNation));
             }
         } else if (isBombard) {
-            attackerSettlement = (Settlement)attacker;
+            attackerSettlement = (Settlement) attacker;
             attackerTile = attackerSettlement.getTile();
-            defenderUnit = (Unit)defender;
+            defenderUnit = (Unit) defender;
             defenderPlayer = defenderUnit.getOwner();
             defenderTile = defenderUnit.getTile();
             cs.addAttribute(See.only(this), "sound", "sound.attack.bombard");
         } else {
             throw new RuntimeException("Bogus combat: " + attacker
-                + " v " + defender);
+                    + " v " + defender);
         }
         assert defenderTile != null;
 
@@ -2312,7 +2316,7 @@ outer:  for (Effect effect : effects) {
         if (crs.isEmpty()) {
             throw new RuntimeException("empty attack result: " + this);
         }
-        
+
         // Extract main result, insisting it is one of the fundamental cases,
         // and add the animation.
         // Set vis so that loser always sees things.
@@ -2320,40 +2324,40 @@ outer:  for (Effect effect : effects) {
         See vis; // Visibility that insists on the loser seeing the result.
         CombatEffectType result = crs.remove(0);
         switch (result) {
-        case NO_RESULT:
-            vis = See.perhaps();
-            break; // Do not animate if there is no result.
-        case WIN:
-            vis = See.perhaps().always(defenderPlayer);
-            if (isAttack) {
-                if (attackerTile == null
-                    || attackerTile == defenderTile
-                    || !attackerTile.isAdjacent(defenderTile)) {
-                    logger.warning("Bogus attack from " + attackerTile
-                        + " to " + defenderTile);
-                } else {
-                    cs.addAttack(vis, attackerUnit, defenderUnit, true);
+            case NO_RESULT:
+                vis = See.perhaps();
+                break; // Do not animate if there is no result.
+            case WIN:
+                vis = See.perhaps().always(defenderPlayer);
+                if (isAttack) {
+                    if (attackerTile == null
+                            || attackerTile == defenderTile
+                            || !attackerTile.isAdjacent(defenderTile)) {
+                        logger.warning("Bogus attack from " + attackerTile
+                                + " to " + defenderTile);
+                    } else {
+                        cs.addAttack(vis, attackerUnit, defenderUnit, true);
+                    }
                 }
-            }
-            break;
-        case LOSE:
-            vis = See.perhaps().always(this);
-            if (isAttack) {
-                if (attackerTile == null
-                    || attackerTile == defenderTile
-                    || !attackerTile.isAdjacent(defenderTile)) {
-                    logger.warning("Bogus attack from " + attackerTile
-                        + " to " + defenderTile);
-                } else {
-                    cs.addAttack(vis, attackerUnit, defenderUnit, false);
+                break;
+            case LOSE:
+                vis = See.perhaps().always(this);
+                if (isAttack) {
+                    if (attackerTile == null
+                            || attackerTile == defenderTile
+                            || !attackerTile.isAdjacent(defenderTile)) {
+                        logger.warning("Bogus attack from " + attackerTile
+                                + " to " + defenderTile);
+                    } else {
+                        cs.addAttack(vis, attackerUnit, defenderUnit, false);
+                    }
                 }
-            }
-            break;
-        default:
-            throw new IllegalStateException("generateAttackResult returned: "
-                                            + result);
+                break;
+            default:
+                throw new IllegalStateException("generateAttackResult returned: "
+                        + result);
         }
-        
+
         // Now process the details.
         boolean attackerTileDirty = false;
         boolean defenderTileDirty = false;
@@ -2362,281 +2366,308 @@ outer:  for (Effect effect : effects) {
         Settlement settlement = defenderTile.getSettlement();
         Colony colony = defenderTile.getColony();
         IndianSettlement natives = (settlement instanceof IndianSettlement)
-            ? (IndianSettlement) settlement
-            : null;
+                ? (IndianSettlement) settlement
+                : null;
         int attackerTension = 0;
         int defenderTension = 0;
-        
+
         if (combatResult != null && combatResult.isAttackerHitpointsAffected()) {
             attackerUnit.setHitPoints(combatResult.getAttackerHitpointsAfter());
             attackerTileDirty = true;
         }
-        
+
         if (combatResult != null && combatResult.isDefenderHitpointsAffected()) {
             defenderUnit.setHitPoints(combatResult.getDefenderHitpointsAfter());
             defenderTileDirty = true;
         }
-        
+
         for (CombatEffectType cr : crs) {
             boolean ok;
             switch (cr) {
-            case AUTOEQUIP_UNIT:
-                ok = isAttack && settlement != null;
-                if (ok) {
-                    csAutoequipUnit(defenderUnit, settlement, cs);
-                }
-                break;
-            case BURN_MISSIONS:
-                ok = isAttack && result == CombatEffectType.WIN
-                    && natives != null
-                    && isEuropean() && defenderPlayer.isIndian();
-                if (ok) {
-                    defenderTileDirty |= natives.hasMissionary(this);
-                    csBurnMissions(attackerUnit, natives, cs);
-                }
-                break;
-            case CAPTURE_AUTOEQUIP:
-                ok = isAttack && result == CombatEffectType.WIN
-                    && settlement != null;
-                if (ok) {
-                    csCaptureAutoEquip(attackerUnit, defenderUnit, cs);
-                    attackerTileDirty = defenderTileDirty = true;
-                }
-                break;
-            case CAPTURE_COLONY:
-                ok = isAttack && result == CombatEffectType.WIN
-                    && colony != null
-                    && (isEuropean() || isUndead()) && (defenderPlayer.isEuropean() || defenderPlayer.isUndead());
-                if (ok) {
-                    csCaptureColony(attackerUnit, (ServerColony)colony,
-                                    random, cs);
-                    attackerTileDirty = defenderTileDirty = false;
-                    moveAttacker = true;
-                    defenderTension += Tension.TENSION_ADD_MAJOR;
-                }
-                break;
-            case CAPTURE_CONVERT:
-                ok = isAttack && result == CombatEffectType.WIN
-                    && natives != null
-                    && isEuropean() && defenderPlayer.isIndian();
-                if (ok) {
-                    csCaptureConvert(attackerUnit, natives, random, cs);
-                    attackerTileDirty = true;
-                }
-                break;
-            case CAPTURE_EQUIP:
-                ok = isAttack && result != CombatEffectType.NO_RESULT;
-                if (ok) {
-                    if (result == CombatEffectType.WIN) {
-                        csCaptureEquip(attackerUnit, defenderUnit, cs);
-                    } else {
-                        csCaptureEquip(defenderUnit, attackerUnit, cs);
+                case AUTOEQUIP_UNIT:
+                    ok = isAttack && settlement != null;
+                    if (ok) {
+                        csAutoequipUnit(defenderUnit, settlement, cs);
                     }
-                    attackerTileDirty = defenderTileDirty = true;
-                }
-                break;
-            case CAPTURE_UNIT:
-                ok = isAttack && result != CombatEffectType.NO_RESULT;
-                if (ok) {
-                    if (result == CombatEffectType.WIN) {
-                        csCaptureUnit(attackerUnit, defenderUnit, cs);
-                    } else {
-                        csCaptureUnit(defenderUnit, attackerUnit, cs);
+                    break;
+                case BURN_MISSIONS:
+                    ok = isAttack && result == CombatEffectType.WIN
+                            && natives != null
+                            && isEuropean() && defenderPlayer.isIndian();
+                    if (ok) {
+                        defenderTileDirty |= natives.hasMissionary(this);
+                        csBurnMissions(attackerUnit, natives, cs);
                     }
-                    attackerTileDirty = true;
-                    defenderTileDirty = false; // Added in csCaptureUnit
-                }
-                break;
-            case DAMAGE_COLONY_SHIPS:
-                ok = isAttack && result == CombatEffectType.WIN
-                    && colony != null;
-                if (ok) {
-                    csDamageColonyShips(attackerUnit, colony, cs);
-                    defenderTileDirty = true;
-                }
-                break;
-            case DAMAGE_SHIP_ATTACK:
-                ok = isAttack && result != CombatEffectType.NO_RESULT
-                    && ((result == CombatEffectType.WIN) ? defenderUnit
-                        : attackerUnit).isNaval();
-                if (ok) {
-                    if (result == CombatEffectType.WIN) {
-                        csDamageShipAttack(attackerUnit, defenderUnit, cs);
-                        defenderTileDirty = true;
-                    } else {
-                        csDamageShipAttack(defenderUnit, attackerUnit, cs);
-                        attackerTileDirty = true;
+                    break;
+                case CAPTURE_AUTOEQUIP:
+                    ok = isAttack && result == CombatEffectType.WIN
+                            && settlement != null;
+                    if (ok) {
+                        csCaptureAutoEquip(attackerUnit, defenderUnit, cs);
+                        attackerTileDirty = defenderTileDirty = true;
                     }
-                }
-                break;
-            case DAMAGE_SHIP_BOMBARD:
-                ok = isBombard && result == CombatEffectType.WIN
-                    && defenderUnit.isNaval();
-                if (ok) {
-                    csDamageShipBombard(attackerSettlement, defenderUnit, cs);
-                    defenderTileDirty = true;
-                }
-                break;
-            case DEMOTE_UNIT:
-                ok = isAttack && result != CombatEffectType.NO_RESULT;
-                if (ok) {
-                    if (result == CombatEffectType.WIN) {
-                        csDemoteUnit(attackerUnit, defenderUnit, cs);
-                        defenderTileDirty = true;
-                    } else {
-                        csDemoteUnit(defenderUnit, attackerUnit, cs);
-                        attackerTileDirty = true;
-                    }
-                }
-                break;
-            case DESTROY_COLONY:
-                ok = isAttack && result == CombatEffectType.WIN
-                    && colony != null
-                    && isIndian() && defenderPlayer.isEuropean();
-                if (ok) {
-                    csDestroyColony(attackerUnit, colony, random, cs);
-                    attackerTileDirty = defenderTileDirty = true;
-                    moveAttacker = true;
-                    attackerTension -= Tension.TENSION_ADD_NORMAL;
-                    defenderTension += Tension.TENSION_ADD_MAJOR;
-                }
-                break;
-            case DESTROY_SETTLEMENT:
-                ok = isAttack && result == CombatEffectType.WIN
-                    && natives != null
-                    && defenderPlayer.isIndian();
-                if (ok) {
-                    burnedNativeCapital = settlement.isCapital();
-                    csDestroySettlement(attackerUnit, natives, random, cs);
-                    attackerTileDirty = defenderTileDirty = true;
-                    moveAttacker = true;
-                    attackerTension -= Tension.TENSION_ADD_NORMAL;
-                    if (!burnedNativeCapital) {
+                    break;
+                case CAPTURE_COLONY:
+                    ok = isAttack && result == CombatEffectType.WIN
+                            && colony != null
+                            && (isEuropean() || isUndead()) && (defenderPlayer.isEuropean() || defenderPlayer.isUndead());
+                    if (ok) {
+                        csCaptureColony(attackerUnit, (ServerColony) colony,
+                                random, cs);
+                        attackerTileDirty = defenderTileDirty = false;
+                        moveAttacker = true;
                         defenderTension += Tension.TENSION_ADD_MAJOR;
                     }
-                }
-                break;
-            case EVADE_ATTACK:
-                ok = isAttack && result == CombatEffectType.NO_RESULT
-                    && defenderUnit.isNaval();
-                if (ok) {
-                    csEvadeAttack(attackerUnit, defenderUnit, cs);
-                }
-                break;
-            case EVADE_BOMBARD:
-                ok = isBombard && result == CombatEffectType.NO_RESULT
-                    && defenderUnit.isNaval();
-                if (ok) {
-                    csEvadeBombard(attackerSettlement, defenderUnit, cs);
-                }
-                break;
-            case LOOT_SHIP:
-                ok = isAttack && result != CombatEffectType.NO_RESULT
-                    && attackerUnit.isNaval() && defenderUnit.isNaval();
-                if (ok) {
-                    if (result == CombatEffectType.WIN) {
-                        csLootShip(attackerUnit, defenderUnit, cs);
-                    } else {
-                        csLootShip(defenderUnit, attackerUnit, cs);
-                    }
-                }
-                break;
-            case LOSE_AUTOEQUIP:
-                ok = isAttack && result == CombatEffectType.WIN
-                    && settlement != null;
-                if (ok) {
-                    csLoseAutoEquip(attackerUnit, defenderUnit, cs);
-                    defenderTileDirty = true;
-                }
-                break;
-            case LOSE_EQUIP:
-                ok = isAttack && result != CombatEffectType.NO_RESULT;
-                if (ok) {
-                    if (result == CombatEffectType.WIN) {
-                        csLoseEquip(attackerUnit, defenderUnit, cs);
-                        defenderTileDirty = true;
-                    } else {
-                        csLoseEquip(defenderUnit, attackerUnit, cs);
+                    break;
+                case CAPTURE_CONVERT:
+                    ok = isAttack && result == CombatEffectType.WIN
+                            && natives != null
+                            && isEuropean() && defenderPlayer.isIndian();
+                    if (ok) {
+                        csCaptureConvert(attackerUnit, natives, random, cs);
                         attackerTileDirty = true;
                     }
-                }
-                break;
-            case PILLAGE_COLONY:
-                ok = isAttack && result == CombatEffectType.WIN
-                    && colony != null
-                    && isIndian() && defenderPlayer.isEuropean();
-                if (ok) {
-                    csPillageColony(attackerUnit, colony, random, cs);
-                    defenderTileDirty = true;
-                    attackerTension -= Tension.TENSION_ADD_NORMAL;
-                }
-                break;
-            case PROMOTE_UNIT:
-                ok = isAttack && result != CombatEffectType.NO_RESULT;
-                if (ok) {
-                    if (result == CombatEffectType.WIN) {
-                        csPromoteUnit(attackerUnit, cs);
+                    break;
+                case CAPTURE_EQUIP:
+                    ok = isAttack && result != CombatEffectType.NO_RESULT;
+                    if (ok) {
+                        if (result == CombatEffectType.WIN) {
+                            csCaptureEquip(attackerUnit, defenderUnit, cs);
+                        } else {
+                            csCaptureEquip(defenderUnit, attackerUnit, cs);
+                        }
+                        attackerTileDirty = defenderTileDirty = true;
+                    }
+                    break;
+                case CAPTURE_UNIT:
+                    ok = isAttack && result != CombatEffectType.NO_RESULT;
+                    if (ok) {
+                        if (result == CombatEffectType.WIN) {
+                            csCaptureUnit(attackerUnit, defenderUnit, cs);
+                        } else {
+                            csCaptureUnit(defenderUnit, attackerUnit, cs);
+                        }
                         attackerTileDirty = true;
-                    } else {
-                        csPromoteUnit(defenderUnit, cs);
+                        defenderTileDirty = false; // Added in csCaptureUnit
+                    }
+                    break;
+                case DAMAGE_COLONY_SHIPS:
+                    ok = isAttack && result == CombatEffectType.WIN
+                            && colony != null;
+                    if (ok) {
+                        csDamageColonyShips(attackerUnit, colony, cs);
                         defenderTileDirty = true;
                     }
-                }
-                break;
-            case SINK_COLONY_SHIPS:
-                ok = isAttack && result == CombatEffectType.WIN
-                    && colony != null;
-                if (ok) {
-                    csSinkColonyShips(attackerUnit, colony, cs);
-                    defenderTileDirty = true;
-                }
-                break;
-            case SINK_SHIP_ATTACK:
-                ok = isAttack && result != CombatEffectType.NO_RESULT
-                    && ((result == CombatEffectType.WIN) ? defenderUnit
-                        : attackerUnit).isNaval();
-                if (ok) {
-                    if (result == CombatEffectType.WIN) {
-                        csSinkShipAttack(attackerUnit, defenderUnit, cs);
-                        defenderTileDirty = true;
-                    } else {
-                        csSinkShipAttack(defenderUnit, attackerUnit, cs);
-                        attackerTileDirty = true;
+                    break;
+                case DAMAGE_SHIP_ATTACK:
+                    ok = isAttack && result != CombatEffectType.NO_RESULT
+                            && ((result == CombatEffectType.WIN) ? defenderUnit
+                            : attackerUnit).isNaval();
+                    if (ok) {
+                        if (result == CombatEffectType.WIN) {
+                            csDamageShipAttack(attackerUnit, defenderUnit, cs);
+                            defenderTileDirty = true;
+                        } else {
+                            csDamageShipAttack(defenderUnit, attackerUnit, cs);
+                            attackerTileDirty = true;
+                        }
                     }
-                }
-                break;
-            case SINK_SHIP_BOMBARD:
-                ok = isBombard && result == CombatEffectType.WIN
-                    && defenderUnit.isNaval();
-                if (ok) {
-                    csSinkShipBombard(attackerSettlement, defenderUnit, cs);
-                    defenderTileDirty = true;
-                }
-                break;
-            case SLAUGHTER_UNIT:
-                ok = isAttack && result != CombatEffectType.NO_RESULT;
-                if (ok) {
-                    if (result == CombatEffectType.WIN) {
-                        csSlaughterUnit(attackerUnit, defenderUnit, cs);
+                    break;
+                case DAMAGE_SHIP_BOMBARD:
+                    ok = isBombard && result == CombatEffectType.WIN
+                            && defenderUnit.isNaval();
+                    if (ok) {
+                        csDamageShipBombard(attackerSettlement, defenderUnit, cs);
+                        defenderTileDirty = true;
+                    }
+                    break;
+                case DEMOTE_UNIT:
+                    ok = isAttack && result != CombatEffectType.NO_RESULT;
+                    if (ok) {
+                        if (result == CombatEffectType.WIN) {
+                            csDemoteUnit(attackerUnit, defenderUnit, cs);
+                            defenderTileDirty = true;
+                        } else {
+                            csDemoteUnit(defenderUnit, attackerUnit, cs);
+                            attackerTileDirty = true;
+                        }
+                    }
+                    break;
+                case DESTROY_COLONY:
+                    ok = isAttack && result == CombatEffectType.WIN
+                            && colony != null
+                            && isIndian() && defenderPlayer.isEuropean();
+                    if (ok) {
+                        csDestroyColony(attackerUnit, colony, random, cs);
+                        attackerTileDirty = defenderTileDirty = true;
+                        moveAttacker = true;
+                        attackerTension -= Tension.TENSION_ADD_NORMAL;
+                        defenderTension += Tension.TENSION_ADD_MAJOR;
+                    }
+                    break;
+                case DESTROY_SETTLEMENT:
+                    ok = isAttack && result == CombatEffectType.WIN
+                            && natives != null
+                            && defenderPlayer.isIndian();
+                    if (ok) {
+                        burnedNativeCapital = settlement.isCapital();
+                        csDestroySettlement(attackerUnit, natives, random, cs);
+                        attackerTileDirty = defenderTileDirty = true;
+                        moveAttacker = true;
+                        attackerTension -= Tension.TENSION_ADD_NORMAL;
+                        if (!burnedNativeCapital) {
+                            defenderTension += Tension.TENSION_ADD_MAJOR;
+                        }
+                    }
+                    break;
+                case EVADE_ATTACK:
+                    ok = isAttack && result == CombatEffectType.NO_RESULT
+                            && defenderUnit.isNaval();
+                    if (ok) {
+                        csEvadeAttack(attackerUnit, defenderUnit, cs);
+                    }
+                    break;
+                case EVADE_BOMBARD:
+                    ok = isBombard && result == CombatEffectType.NO_RESULT
+                            && defenderUnit.isNaval();
+                    if (ok) {
+                        csEvadeBombard(attackerSettlement, defenderUnit, cs);
+                    }
+                    break;
+                case LOOT_SHIP:
+                    ok = isAttack && result != CombatEffectType.NO_RESULT
+                            && attackerUnit.isNaval() && defenderUnit.isNaval();
+                    if (ok) {
+                        if (result == CombatEffectType.WIN) {
+                            csLootShip(attackerUnit, defenderUnit, cs);
+                        } else {
+                            csLootShip(defenderUnit, attackerUnit, cs);
+                        }
+                    }
+                    break;
+
+                case CAPTURE_SHIP:
+                    ok = isAttack && result != CombatEffectType.NO_RESULT
+                            && attackerUnit.isNaval() && defenderUnit.isNaval();
+                    if (ok) {
+                        if (result == CombatEffectType.WIN) {
+                            csCaptureShip(attackerUnit, defenderUnit, cs);
+                        } else {
+                            csCaptureShip(defenderUnit, attackerUnit, cs);
+                        }
+                    }
+                    break;
+
+                case LOSE_AUTOEQUIP:
+                    ok = isAttack && result == CombatEffectType.WIN
+                            && settlement != null;
+                    if (ok) {
+                        csLoseAutoEquip(attackerUnit, defenderUnit, cs);
+                        defenderTileDirty = true;
+                    }
+                    break;
+                case LOSE_EQUIP:
+                    ok = isAttack && result != CombatEffectType.NO_RESULT;
+                    if (ok) {
+                        if (result == CombatEffectType.WIN) {
+                            csLoseEquip(attackerUnit, defenderUnit, cs);
+                            defenderTileDirty = true;
+                        } else {
+                            csLoseEquip(defenderUnit, attackerUnit, cs);
+                            attackerTileDirty = true;
+                        }
+                    }
+                    break;
+                case PILLAGE_COLONY:
+                    ok = isAttack && result == CombatEffectType.WIN
+                            && colony != null
+                            && isIndian() && defenderPlayer.isEuropean();
+                    if (ok) {
+                        csPillageColony(attackerUnit, colony, random, cs);
                         defenderTileDirty = true;
                         attackerTension -= Tension.TENSION_ADD_NORMAL;
-                        defenderTension += getSlaughterTension(defenderUnit);
-                    } else {
-                        csSlaughterUnit(defenderUnit, attackerUnit, cs);
-                        attackerTileDirty = true;
-                        attackerTension += getSlaughterTension(attackerUnit);
-                        defenderTension -= Tension.TENSION_ADD_NORMAL;
                     }
-                }
-                break;
-            default:
-                ok = false;
-                break;
+                    break;
+                case PROMOTE_UNIT:
+                    ok = isAttack && result != CombatEffectType.NO_RESULT;
+                    if (ok) {
+                        if (result == CombatEffectType.WIN) {
+                            csPromoteUnit(attackerUnit, cs);
+                            attackerTileDirty = true;
+                        } else {
+                            csPromoteUnit(defenderUnit, cs);
+                            defenderTileDirty = true;
+                        }
+                    }
+                    break;
+                case SINK_COLONY_SHIPS:
+                    ok = isAttack && result == CombatEffectType.WIN
+                            && colony != null;
+                    if (ok) {
+                        csSinkColonyShips(attackerUnit, colony, cs);
+                        defenderTileDirty = true;
+                    }
+                    break;
+                case SINK_SHIP:
+                    ok = isAttack && result != CombatEffectType.NO_RESULT
+                            && ((result == CombatEffectType.WIN) ? defenderUnit
+                            : attackerUnit).isNaval();
+                    if (ok) {
+                        if (result == CombatEffectType.WIN) {
+                            csSinkShip(defenderUnit, attackerUnit.getOwner(), cs);
+                            defenderTileDirty = true;
+                        } else {
+                            csSinkShip(attackerUnit, defenderUnit.getOwner(), cs);
+                            attackerTileDirty = true;
+                        }
+                    }
+                    break;
+                case SINK_SHIP_ATTACK:
+                    ok = isAttack && result != CombatEffectType.NO_RESULT
+                            && ((result == CombatEffectType.WIN) ? defenderUnit
+                            : attackerUnit).isNaval();
+                    if (ok) {
+                        if (result == CombatEffectType.WIN) {
+                            csSinkShipAttack(attackerUnit, defenderUnit, cs);
+                            defenderTileDirty = true;
+                        } else {
+                            csSinkShipAttack(defenderUnit, attackerUnit, cs);
+                            attackerTileDirty = true;
+                        }
+                    }
+                    break;
+                case SINK_SHIP_BOMBARD:
+                    ok = isBombard && result == CombatEffectType.WIN
+                            && defenderUnit.isNaval();
+                    if (ok) {
+                        csSinkShipBombard(attackerSettlement, defenderUnit, cs);
+                        defenderTileDirty = true;
+                    }
+                    break;
+                case SLAUGHTER_UNIT:
+                    ok = isAttack && result != CombatEffectType.NO_RESULT;
+                    if (ok) {
+                        if (result == CombatEffectType.WIN) {
+                            csSlaughterUnit(attackerUnit, defenderUnit, cs);
+                            defenderTileDirty = true;
+                            attackerTension -= Tension.TENSION_ADD_NORMAL;
+                            defenderTension += getSlaughterTension(defenderUnit);
+                        } else {
+                            csSlaughterUnit(defenderUnit, attackerUnit, cs);
+                            attackerTileDirty = true;
+                            attackerTension += getSlaughterTension(attackerUnit);
+                            defenderTension -= Tension.TENSION_ADD_NORMAL;
+                        }
+                    }
+                    break;
+                default:
+                    ok = false;
+                    break;
             }
             if (!ok) {
                 throw new IllegalStateException("Attack (result=" + result
-                                                + ") has bogus subresult: "
-                                                + cr);
+                        + ") has bogus subresult: "
+                        + cr);
             }
         }
 
@@ -2652,7 +2683,7 @@ outer:  for (Effect effect : effects) {
             if (!defenderPlayer.getAttackedByPrivateers()) {
                 defenderPlayer.setAttackedByPrivateers(true);
                 cs.addPartial(See.only(defenderPlayer), defenderPlayer,
-                    "attackedByPrivateers", Boolean.TRUE.toString());
+                        "attackedByPrivateers", Boolean.TRUE.toString());
             }
         } else if (defender.hasAbility(Ability.PIRACY)) {
             ; // do nothing
@@ -2662,7 +2693,7 @@ outer:  for (Effect effect : effects) {
             cs.add(See.perhaps().always(this), defenderPlayer);
             csChangeStance(Stance.PEACE, defenderPlayer, true, cs);
             for (IndianSettlement is : transform(defenderPlayer.getIndianSettlements(),
-                                                 is -> is.hasContacted(this))) {
+                    is -> is.hasContacted(this))) {
                 is.getAlarm(this).setValue(Tension.SURRENDERED);
                 // Only update attacker with settlements that have
                 // been seen, as contact can occur with its members.
@@ -2685,7 +2716,7 @@ outer:  for (Effect effect : effects) {
                 }
             }
             if (defenderPlayer.isEuropean()) {
-                ((ServerPlayer)defenderPlayer).csChangeStance(Stance.WAR, this, true, cs);
+                ((ServerPlayer) defenderPlayer).csChangeStance(Stance.WAR, this, true, cs);
             } else if (defenderPlayer.isIndian()) {
                 if (result == CombatEffectType.WIN) {
                     defenderTension += Tension.TENSION_ADD_MINOR;
@@ -2695,11 +2726,11 @@ outer:  for (Effect effect : effects) {
             }
             if (attackerTension != 0) {
                 this.csModifyTension(defenderPlayer,
-                                     attackerTension, cs);//+til
+                        attackerTension, cs);//+til
             }
             if (defenderTension != 0) {
-                ((ServerPlayer)defenderPlayer).csModifyTension(this,
-                    defenderTension, cs);//+til
+                ((ServerPlayer) defenderPlayer).csModifyTension(this,
+                        defenderTension, cs);//+til
             }
         }
 
@@ -2723,13 +2754,13 @@ outer:  for (Effect effect : effects) {
             if (attacker.hasAbility(Ability.MULTIPLE_ATTACKS)) {
                 int movecost = attackerUnit.getMoveCost(defenderTile);
                 attackerUnit.setMovesLeft(attackerUnit.getMovesLeft()
-                                          - movecost);
+                        - movecost);
             } else {
                 attackerUnit.setMovesLeft(0);
             }
             if (!attackerTileDirty) {
                 cs.addPartial(See.only(this), attacker,
-                    "movesLeft", String.valueOf(attackerUnit.getMovesLeft()));
+                        "movesLeft", String.valueOf(attackerUnit.getMovesLeft()));
             }
         }
 
@@ -2757,15 +2788,15 @@ outer:  for (Effect effect : effects) {
         if (settlement != null) {
             if (settlement instanceof IndianSettlement) {
                 return (settlement.isCapital())
-                    ? Tension.TENSION_ADD_CAPITAL_ATTACKED
-                    : Tension.TENSION_ADD_SETTLEMENT_ATTACKED;
+                        ? Tension.TENSION_ADD_CAPITAL_ATTACKED
+                        : Tension.TENSION_ADD_SETTLEMENT_ATTACKED;
             } else {
                 return Tension.TENSION_ADD_NORMAL;
             }
         } else { // attack in the open
             return (loser.getHomeIndianSettlement() != null)
-                ? Tension.TENSION_ADD_UNIT_DESTROYED
-                : Tension.TENSION_ADD_MINOR;
+                    ? Tension.TENSION_ADD_UNIT_DESTROYED
+                    : Tension.TENSION_ADD_MINOR;
         }
     }
 
@@ -2780,10 +2811,10 @@ outer:  for (Effect effect : effects) {
                                  ChangeSet cs) {
         final Player owner = unit.getOwner();
         cs.addMessage(owner,
-            new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
-                             "combat.automaticDefence", unit)
-                .addStringTemplate("%unit%", unit.getLabel())
-                .addName("%colony%", settlement.getName()));
+                new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
+                        "combat.automaticDefence", unit)
+                        .addStringTemplate("%unit%", unit.getLabel())
+                        .addName("%colony%", settlement.getName()));
     }
 
     /**
@@ -2802,15 +2833,15 @@ outer:  for (Effect effect : effects) {
 
         // Message only for the European player
         cs.addMessage(attackerPlayer,
-            new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
-                             "combat.burnMissions", attacker, is)
-                .addStringTemplate("%nation%", attackerNation)
-                .addStringTemplate("%enemyNation%", nativeNation));
+                new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
+                        "combat.burnMissions", attacker, is)
+                        .addStringTemplate("%nation%", attackerNation)
+                        .addStringTemplate("%enemyNation%", nativeNation));
 
         // Burn down the missions
         boolean here = is.hasMissionary(attackerPlayer);
         for (IndianSettlement s : nativePlayer.getIndianSettlementsWithMissionaryList(attackerPlayer)) {
-            ((ServerIndianSettlement)s).csKillMissionary(null, cs);
+            ((ServerIndianSettlement) s).csKillMissionary(null, cs);
         }
         // Backtrack on updating this tile, avoiding duplication in csCombat
         if (here) cs.remove(is.getTile());
@@ -2850,54 +2881,55 @@ outer:  for (Effect effect : effects) {
 
         // Handle history and messages before colony handover
         cs.addHistory(attackerPlayer,
-            new HistoryEvent(game.getTurn(),
-                HistoryEvent.HistoryEventType.CONQUER_COLONY, attackerPlayer)
-                .addStringTemplate("%nation%", colonyNation)
-                .addName("%colony%", colony.getName()));
+                new HistoryEvent(game.getTurn(),
+                        HistoryEvent.HistoryEventType.CONQUER_COLONY, attackerPlayer)
+                        .addStringTemplate("%nation%", colonyNation)
+                        .addName("%colony%", colony.getName()));
         cs.addHistory(colonyPlayer,
-            new HistoryEvent(game.getTurn(),
-                HistoryEvent.HistoryEventType.COLONY_CONQUERED, attackerPlayer)
-                      .addStringTemplate("%nation%", attackerNation)
-                      .addName("%colony%", colony.getName()));
+                new HistoryEvent(game.getTurn(),
+                        HistoryEvent.HistoryEventType.COLONY_CONQUERED, attackerPlayer)
+                        .addStringTemplate("%nation%", attackerNation)
+                        .addName("%colony%", colony.getName()));
         cs.addMessage(attackerPlayer,
-            new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
-                             "combat.colonyCaptured.enemy", colony)
-                .addName("%colony%", colony.getName())
-                .addStringTemplate("%unit%", attacker.getLabel())
-                .addStringTemplate("%enemyNation%", colonyNation)
-                .addAmount("%amount%", plunder));
+                new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
+                        "combat.colonyCaptured.enemy", colony)
+                        .addName("%colony%", colony.getName())
+                        .addStringTemplate("%unit%", attacker.getLabel())
+                        .addStringTemplate("%enemyNation%", colonyNation)
+                        .addAmount("%amount%", plunder));
         cs.addMessage(colonyPlayer,
-            new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
-                            "combat.colonyCaptured.ours", tile)
-                .addName("%colony%", colony.getName())
-                .addStringTemplate("%enemyUnit%", attacker.getLabel())
-                .addStringTemplate("%enemyNation%", attackerNation)
-                .addAmount("%amount%", plunder));
-        ((ServerPlayer)colonyPlayer).csLoseLocation(colony, cs);
+                new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
+                        "combat.colonyCaptured.ours", tile)
+                        .addName("%colony%", colony.getName())
+                        .addStringTemplate("%enemyUnit%", attacker.getLabel())
+                        .addStringTemplate("%enemyNation%", attackerNation)
+                        .addAmount("%amount%", plunder));
+        ((ServerPlayer) colonyPlayer).csLoseLocation(colony, cs);
 
         // Allocate some plunder
         if (plunder > 0) {
             attackerPlayer.modifyGold(plunder);
             colonyPlayer.modifyGold(-plunder);
             cs.addPartial(See.only(attackerPlayer), attackerPlayer,
-                "gold", String.valueOf(attackerPlayer.getGold()));
+                    "gold", String.valueOf(attackerPlayer.getGold()));
             cs.addPartial(See.only(colonyPlayer), colonyPlayer,
-                "gold", String.valueOf(colonyPlayer.getGold()));
+                    "gold", String.valueOf(colonyPlayer.getGold()));
         }
 
         // Remove goods party modifiers as they apply to a different monarch.
         for (Modifier m : transform(colony.getModifiers(),
                 matchKey(Specification.COLONY_GOODS_PARTY_SOURCE,
-                         Modifier::getSource))) colony.removeModifier(m);
+                        Modifier::getSource)))
+            colony.removeModifier(m);
 
         // Hand over the colony.  Inform former owner of loss of owned
         // tiles, and process possible increase in line of sight.
         // No need to display the colony tile or the attacker tile to
         // the attacking player as the unit is yet to move
         colony.csChangeOwner(attackerPlayer, true, UnitChangeType.CAPTURE,
-                             cs);//-til,-vis(attackerPlayer,colonyPlayer)
+                cs);//-til,-vis(attackerPlayer,colonyPlayer)
         cs.addAttribute(See.only(attackerPlayer), "sound",
-                        "sound.event.captureColony");
+                "sound.event.captureColony");
 
         // Ready to reset visibility
         attackerPlayer.invalidateCanSeeTiles();//+vis(attackerPlayer)
@@ -2919,9 +2951,9 @@ outer:  for (Effect effect : effects) {
         final Player nativePlayer = is.getOwner();
         final StringTemplate convertNation = nativePlayer.getNationLabel();
 
-        ServerUnit convert = (ServerUnit)getRandomMember(logger,
-            "Choose convert", is.getAllUnitsList(), random);
-        if (((ServerPlayer)nativePlayer).csChangeOwner(convert, attackerPlayer,
+        ServerUnit convert = (ServerUnit) getRandomMember(logger,
+                "Choose convert", is.getAllUnitsList(), random);
+        if (((ServerPlayer) nativePlayer).csChangeOwner(convert, attackerPlayer,
                 UnitChangeType.CONVERSION, attacker.getTile(),
                 cs)) { //-vis(attackerPlayer)
             convert.changeRole(spec.getDefaultRole(), 0);
@@ -2930,11 +2962,11 @@ outer:  for (Effect effect : effects) {
             convert.setState(Unit.UnitState.ACTIVE);
             cs.add(See.only(nativePlayer), is.getTile());
             cs.addMessage(attackerPlayer,
-                new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
-                                 "combat.newConvertFromAttack", convert)
-                    .addStringTemplate("%unit%", attacker.getLabel())
-                    .addStringTemplate("%enemyNation%", convertNation)
-                    .addStringTemplate("%enemyUnit%", convert.getLabel()));
+                    new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
+                            "combat.newConvertFromAttack", convert)
+                            .addStringTemplate("%unit%", attacker.getLabel())
+                            .addStringTemplate("%enemyNation%", convertNation)
+                            .addStringTemplate("%enemyUnit%", convert.getLabel()));
             attackerPlayer.invalidateCanSeeTiles();//+vis(attackerPlayer)
         }
     }
@@ -2968,7 +3000,7 @@ outer:  for (Effect effect : effects) {
         Role newRole = winner.canCaptureEquipment(role);
         if (newRole != null) {
             List<AbstractGoods> newGoods
-                = winner.getGoodsDifference(newRole, 1);
+                    = winner.getGoodsDifference(newRole, 1);
             GoodsType goodsType = newGoods.get(0).getType(); // FIXME: generalize
             winner.changeRole(newRole, 1);
 
@@ -2978,11 +3010,11 @@ outer:  for (Effect effect : effects) {
             if (winnerPlayer.isIndian()) {
                 StringTemplate winnerNation = winner.getApparentOwnerName();
                 cs.addMessage(loserPlayer,
-                              new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
-                                               "combat.equipmentCaptured",
-                                               winnerPlayer)
-                                  .addStringTemplate("%nation%", winnerNation)
-                                  .addNamed("%equipment%", goodsType));
+                        new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
+                                "combat.equipmentCaptured",
+                                winnerPlayer)
+                                .addStringTemplate("%nation%", winnerNation)
+                                .addNamed("%equipment%", goodsType));
 
                 // CHEAT: Immediately transferring the captured goods
                 // back to a potentially remote settlement is pretty
@@ -2993,7 +3025,7 @@ outer:  for (Effect effect : effects) {
                     for (AbstractGoods ag : newGoods) {
                         is.addGoods(ag);
                         winnerPlayer.logCheat("teleported " + ag
-                            + " back to " + is.getName());
+                                + " back to " + is.getName());
                     }
                     cs.add(See.only(winnerPlayer), is);
                 }
@@ -3012,13 +3044,13 @@ outer:  for (Effect effect : effects) {
         final Player loserPlayer = loser.getOwner();
         final StringTemplate loserNation = loserPlayer.getNationLabel();
         final StringTemplate loserLocation = loser.getLocation()
-            .getLocationLabelFor(loserPlayer);
+                .getLocationLabelFor(loserPlayer);
         final StringTemplate loserLabel = loser.getLabel();
         final Player winnerPlayer = winner.getOwner();
         final StringTemplate winnerNation = winner.getApparentOwnerName();
         final StringTemplate winnerLocation = winner.getLocation()
-            .getLocationLabelFor(winnerPlayer);
-        
+                .getLocationLabelFor(winnerPlayer);
+
         // Capture the unit.  There are visibility implications for
         // both players because the captured unit might be the only
         // one on its tile, and the winner might have captured a unit
@@ -3026,7 +3058,7 @@ outer:  for (Effect effect : effects) {
         // as it might be destroyed on capture.
         final Tile oldTile = loser.getTile();
         String key;
-        if (((ServerPlayer)loserPlayer).csChangeOwner(loser, winnerPlayer,
+        if (((ServerPlayer) loserPlayer).csChangeOwner(loser, winnerPlayer,
                 UnitChangeType.CAPTURE, winner.getTile(), cs)) {//-vis(both)
             loser.setMovesLeft(0);
             loser.setState(Unit.UnitState.ACTIVE);
@@ -3034,23 +3066,23 @@ outer:  for (Effect effect : effects) {
             // Winner message post-capture when it owns the loser
             key = "combat.unitCaptured.enemy." + loser.getType().getSuffix();
             cs.addMessage(winnerPlayer,
-                new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
-                                 key, loser)
-                    .addDefaultId("combat.unitCaptured.enemy")
-                    .addStringTemplate("%location%", winnerLocation)
-                    .addStringTemplate("%unit%", winner.getLabel())
-                    .addStringTemplate("%enemyNation%", loserNation)
-                    .addStringTemplate("%enemyUnit%", loserLabel));
+                    new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
+                            key, loser)
+                            .addDefaultId("combat.unitCaptured.enemy")
+                            .addStringTemplate("%location%", winnerLocation)
+                            .addStringTemplate("%unit%", winner.getLabel())
+                            .addStringTemplate("%enemyNation%", loserNation)
+                            .addStringTemplate("%enemyUnit%", loserLabel));
         }
         key = "combat.unitCaptured.ours." + loser.getType().getSuffix();
         cs.addMessage(loserPlayer,
-            new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
-                             key, oldTile)
-                .addDefaultId("combat.unitCaptured.ours")
-                .addStringTemplate("%location%", loserLocation)
-                .addStringTemplate("%unit%", loserLabel)
-                .addStringTemplate("%enemyNation%", winnerNation)
-                .addStringTemplate("%enemyUnit%", winner.getLabel()));
+                new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
+                        key, oldTile)
+                        .addDefaultId("combat.unitCaptured.ours")
+                        .addStringTemplate("%location%", loserLocation)
+                        .addStringTemplate("%unit%", loserLabel)
+                        .addStringTemplate("%enemyNation%", winnerNation)
+                        .addStringTemplate("%enemyUnit%", winner.getLabel()));
         winnerPlayer.invalidateCanSeeTiles();//+vis(winnerPlayer)
         loserPlayer.invalidateCanSeeTiles();//+vis(loserPlayer)
     }
@@ -3065,9 +3097,9 @@ outer:  for (Effect effect : effects) {
     private void csDamageColonyShips(@SuppressWarnings("unused") Unit attacker,
                                      Colony colony, ChangeSet cs) {
         boolean captureRepairing = getSpecification()
-            .getBoolean(GameOptions.CAPTURE_UNITS_UNDER_REPAIR);
+                .getBoolean(GameOptions.CAPTURE_UNITS_UNDER_REPAIR);
         List<Unit> units = transform(colony.getTile().getUnits(),
-            u -> u.isNaval() && !(captureRepairing && u.isDamaged()));
+                u -> u.isNaval() && !(captureRepairing && u.isDamaged()));
         if (!units.isEmpty()) {
             final Player shipPlayer = colony.getOwner();
             final Unit ship = units.get(0);
@@ -3078,12 +3110,12 @@ outer:  for (Effect effect : effects) {
                 t.addStringTemplate(u.getLabel());
             }
             cs.addMessage(shipPlayer,
-                new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
-                                 "combat.shipsDamaged", shipPlayer)
-                    .addStringTemplate("%ships%", t)
-                    .addAmount("%number%", units.size())
-                    .addStringTemplate("%repairLocation%",
-                        repairLocation.getLocationLabelFor(shipPlayer)));
+                    new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
+                            "combat.shipsDamaged", shipPlayer)
+                            .addStringTemplate("%ships%", t)
+                            .addAmount("%number%", units.size())
+                            .addStringTemplate("%repairLocation%",
+                                    repairLocation.getLocationLabelFor(shipPlayer)));
         }
     }
 
@@ -3104,22 +3136,22 @@ outer:  for (Effect effect : effects) {
         final StringTemplate shipNation = ship.getApparentOwnerName();
 
         cs.addMessage(attackerPlayer,
-            new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
-                             "combat.shipDamaged.enemy", attacker)
-                .addStringTemplate("%location%",
-                    shipLocation.getLocationLabelFor(attackerPlayer))
-                .addStringTemplate("%unit%", attacker.getLabel())
-                .addStringTemplate("%enemyNation%", shipNation)
-                .addStringTemplate("%enemyUnit%", ship.getLabel()));
+                new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
+                        "combat.shipDamaged.enemy", attacker)
+                        .addStringTemplate("%location%",
+                                shipLocation.getLocationLabelFor(attackerPlayer))
+                        .addStringTemplate("%unit%", attacker.getLabel())
+                        .addStringTemplate("%enemyNation%", shipNation)
+                        .addStringTemplate("%enemyUnit%", ship.getLabel()));
         cs.addMessage(shipPlayer,
-            new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
-                             "combat.shipDamaged.ours", ship)
-                .addStringTemplate("%location%",
-                    shipLocation.getLocationLabelFor(shipPlayer))
-                .addStringTemplate("%unit%", ship.getLabel())
-                .addStringTemplate("%enemyUnit%", attacker.getLabel())
-                .addStringTemplate("%enemyNation%", attackerNation)
-                .addStringTemplate("%repairLocation%", repairLoc));
+                new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
+                        "combat.shipDamaged.ours", ship)
+                        .addStringTemplate("%location%",
+                                shipLocation.getLocationLabelFor(shipPlayer))
+                        .addStringTemplate("%unit%", ship.getLabel())
+                        .addStringTemplate("%enemyUnit%", attacker.getLabel())
+                        .addStringTemplate("%enemyNation%", attackerNation)
+                        .addStringTemplate("%repairLocation%", repairLoc));
 
         csDamageShip(ship, repair, cs);
     }
@@ -3135,30 +3167,30 @@ outer:  for (Effect effect : effects) {
                                      ChangeSet cs) {
         final Player attackerPlayer = settlement.getOwner();
         final Player shipPlayer = ship.getOwner();
-        final Building building = ((Colony)settlement).getStockade();
+        final Building building = ((Colony) settlement).getStockade();
         final Location repair = ship.getRepairLocation();
         final StringTemplate repairLoc = repair.getLocationLabelFor(shipPlayer);
         final StringTemplate shipNation = ship.getApparentOwnerName();
 
         cs.addMessage(attackerPlayer,
-            new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
-                             "combat.shipDamagedByBombardment.enemy",
-                             settlement)
-                .addStringTemplate("%location%",
-                    settlement.getLocationLabelFor(attackerPlayer))
-                .addNamed("%building%", building)
-                .addStringTemplate("%enemyNation%", shipNation)
-                .addStringTemplate("%enemyUnit%", ship.getLabel()));
+                new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
+                        "combat.shipDamagedByBombardment.enemy",
+                        settlement)
+                        .addStringTemplate("%location%",
+                                settlement.getLocationLabelFor(attackerPlayer))
+                        .addNamed("%building%", building)
+                        .addStringTemplate("%enemyNation%", shipNation)
+                        .addStringTemplate("%enemyUnit%", ship.getLabel()));
         cs.addMessage(shipPlayer,
-            new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
-                             "combat.shipDamagedByBombardment.ours", ship)
-                .addStringTemplate("%location%",
-                    settlement.getLocationLabelFor(shipPlayer))
-                .addStringTemplate("%unit%", ship.getLabel())
-                .addNamed("%building%", building)
-                .addStringTemplate("%enemyNation%",
-                    attackerPlayer.getNationLabel())
-                .addStringTemplate("%repairLocation%", repairLoc));
+                new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
+                        "combat.shipDamagedByBombardment.ours", ship)
+                        .addStringTemplate("%location%",
+                                settlement.getLocationLabelFor(shipPlayer))
+                        .addStringTemplate("%unit%", ship.getLabel())
+                        .addNamed("%building%", building)
+                        .addStringTemplate("%enemyNation%",
+                                attackerPlayer.getNationLabel())
+                        .addStringTemplate("%repairLocation%", repairLoc));
 
         csDamageShip(ship, repair, cs);
     }
@@ -3179,15 +3211,15 @@ outer:  for (Effect effect : effects) {
         }
         for (Unit u : ship.getUnitList()) {
             ship.remove(u);
-            ((ServerUnit)u).csRemove(See.only(owner),
-                null, cs);//-vis: safe, within unit
+            ((ServerUnit) u).csRemove(See.only(owner),
+                    null, cs);//-vis: safe, within unit
         }
 
         // Damage the ship and send it off for repair
         Location shipLoc = (repair instanceof Colony) ? repair.getTile()
-            : repair;
+                : repair;
         ship.damageShip(shipLoc);//-vis(player)
-        cs.add(See.only(owner), (FreeColGameObject)shipLoc);
+        cs.add(See.only(owner), (FreeColGameObject) shipLoc);
         owner.invalidateCanSeeTiles();//+vis(player)
     }
 
@@ -3202,18 +3234,18 @@ outer:  for (Effect effect : effects) {
         final Player loserPlayer = loser.getOwner();
         final StringTemplate loserNation = loser.getApparentOwnerName();
         final StringTemplate loserLocation = loser.getLocation()
-            .getLocationLabelFor(loserPlayer);
+                .getLocationLabelFor(loserPlayer);
         final StringTemplate loserLabel = loser.getLabel();
         final Player winnerPlayer = winner.getOwner();
         final StringTemplate winnerNation = winner.getApparentOwnerName();
         final StringTemplate winnerLocation = winner.getLocation()
-            .getLocationLabelFor(winnerPlayer);
+                .getLocationLabelFor(winnerPlayer);
         final String suffix = loser.getType().getSuffix(); // pre-demotion value
-        
+
         UnitTypeChange uc = loser.getUnitChange(UnitChangeType.DEMOTION);
         if (uc == null || uc.to == loser.getType()) {
             logger.warning("Demotion failed, type="
-                + ((uc == null) ? "null" : "same type: " + uc.to));
+                    + ((uc == null) ? "null" : "same type: " + uc.to));
             return;
         }
         loser.changeType(uc.to);//-vis(loserPlayer)
@@ -3221,24 +3253,24 @@ outer:  for (Effect effect : effects) {
 
         String key = "combat.unitDemoted.enemy." + suffix;
         cs.addMessage(winnerPlayer,
-            new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
-                             key, winner)
-                .addDefaultId("combat.unitDemoted.enemy")
-                .addStringTemplate("%location%", winnerLocation)
-                .addStringTemplate("%unit%", winner.getLabel())
-                .addStringTemplate("%enemyNation%", loserNation)
-                .addStringTemplate("%oldName%", loserLabel)
-                .addStringTemplate("%enemyUnit%", loser.getLabel()));
+                new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
+                        key, winner)
+                        .addDefaultId("combat.unitDemoted.enemy")
+                        .addStringTemplate("%location%", winnerLocation)
+                        .addStringTemplate("%unit%", winner.getLabel())
+                        .addStringTemplate("%enemyNation%", loserNation)
+                        .addStringTemplate("%oldName%", loserLabel)
+                        .addStringTemplate("%enemyUnit%", loser.getLabel()));
         key = "combat.unitDemoted.ours." + suffix;
         cs.addMessage(loserPlayer,
-            new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
-                             key, loser)
-                .addDefaultId("combat.unitDemoted.ours")
-                .addStringTemplate("%location%", loserLocation)
-                .addStringTemplate("%oldName%", loserLabel)
-                .addStringTemplate("%unit%", loser.getLabel())
-                .addStringTemplate("%enemyNation%", winnerNation)
-                .addStringTemplate("%enemyUnit%", winner.getLabel()));
+                new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
+                        key, loser)
+                        .addDefaultId("combat.unitDemoted.ours")
+                        .addStringTemplate("%location%", loserLocation)
+                        .addStringTemplate("%oldName%", loserLabel)
+                        .addStringTemplate("%unit%", loser.getLabel())
+                        .addStringTemplate("%enemyNation%", winnerNation)
+                        .addStringTemplate("%enemyUnit%", winner.getLabel()));
     }
 
     /**
@@ -3260,33 +3292,33 @@ outer:  for (Effect effect : effects) {
 
         // Handle history and messages before colony destruction.
         cs.addHistory(colonyPlayer,
-            new HistoryEvent(game.getTurn(),
-                HistoryEvent.HistoryEventType.COLONY_DESTROYED, attackerPlayer)
-                .addStringTemplate("%nation%", attackerNation)
-                .addName("%colony%", colony.getName()));
+                new HistoryEvent(game.getTurn(),
+                        HistoryEvent.HistoryEventType.COLONY_DESTROYED, attackerPlayer)
+                        .addStringTemplate("%nation%", attackerNation)
+                        .addName("%colony%", colony.getName()));
         cs.addMessage(colonyPlayer,
-            new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
-                             "combat.colonyBurned.ours", colony.getTile())
-                .addName("%colony%", colony.getName())
-                .addStringTemplate("%enemyNation%", attackerNation)
-                .addStringTemplate("%enemyUnit%", attacker.getLabel())
-                .addAmount("%amount%", plunder));
+                new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
+                        "combat.colonyBurned.ours", colony.getTile())
+                        .addName("%colony%", colony.getName())
+                        .addStringTemplate("%enemyNation%", attackerNation)
+                        .addStringTemplate("%enemyUnit%", attacker.getLabel())
+                        .addAmount("%amount%", plunder));
         cs.addGlobalMessage(game, colonyPlayer,
-            new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
-                             "combat.colonyBurned.other", colonyPlayer)
-                .addName("%colony%", colony.getName())
-                .addStringTemplate("%nation%", colonyNation)
-                .addStringTemplate("%attackerNation%", attackerNation));
-        ((ServerPlayer)colonyPlayer).csLoseLocation(colony, cs);
+                new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
+                        "combat.colonyBurned.other", colonyPlayer)
+                        .addName("%colony%", colony.getName())
+                        .addStringTemplate("%nation%", colonyNation)
+                        .addStringTemplate("%attackerNation%", attackerNation));
+        ((ServerPlayer) colonyPlayer).csLoseLocation(colony, cs);
 
         // Allocate some plunder.
         if (plunder > 0) {
             attackerPlayer.modifyGold(plunder);
             colonyPlayer.modifyGold(-plunder);
             cs.addPartial(See.only(attackerPlayer), attackerPlayer,
-                "gold", String.valueOf(attackerPlayer.getGold()));
+                    "gold", String.valueOf(attackerPlayer.getGold()));
             cs.addPartial(See.only(colonyPlayer), colonyPlayer,
-                "gold", String.valueOf(colonyPlayer.getGold()));
+                    "gold", String.valueOf(colonyPlayer.getGold()));
         }
 
         // Dispose of the colony and its contents.
@@ -3319,25 +3351,25 @@ outer:  for (Effect effect : effects) {
             u.changeHomeIndianSettlement(null);
             cs.add(See.only(nativePlayer), u);
         }
-                
+
         // Destroy the settlement, update settlement tiles.
         csDisposeSettlement(is, cs);
 
         // Make the treasure train if there is treasure.
         if (plunder > 0) {
             List<UnitType> unitTypes
-                = spec.getUnitTypesWithAbility(Ability.CARRY_TREASURE);
+                    = spec.getUnitTypesWithAbility(Ability.CARRY_TREASURE);
             UnitType type = getRandomMember(logger, "Choose train",
-                                            unitTypes, random);
+                    unitTypes, random);
             Unit train = new ServerUnit(game, tile, attackerPlayer,
-                                        type);//-vis: safe, attacker on tile
+                    type);//-vis: safe, attacker on tile
             train.setTreasureAmount(plunder);
         }
 
         // This is an atrocity.
         int score = spec.getInteger(GameOptions.DESTROY_SETTLEMENT_SCORE);
         HistoryEvent h = new HistoryEvent(game.getTurn(),
-            HistoryEvent.HistoryEventType.DESTROY_SETTLEMENT, this)
+                HistoryEvent.HistoryEventType.DESTROY_SETTLEMENT, this)
                 .addStringTemplate("%nation%", nativeNation)
                 .addName("%settlement%", settlementName);
         h.setScore(score);
@@ -3345,29 +3377,29 @@ outer:  for (Effect effect : effects) {
 
         // Finish with messages and history.
         cs.addMessage(attackerPlayer,
-            new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
-                             "combat.destroySettlement.enemy", attacker)
-                .addName("%settlement%", settlementName)
-                .addStringTemplate("%unit%", attacker.getLabel())
-                .addStringTemplate("%nativeNation%", nativeNation)
-                .addAmount("%amount%", plunder));
+                new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
+                        "combat.destroySettlement.enemy", attacker)
+                        .addName("%settlement%", settlementName)
+                        .addStringTemplate("%unit%", attacker.getLabel())
+                        .addStringTemplate("%nativeNation%", nativeNation)
+                        .addAmount("%amount%", plunder));
         if (capital) {
             cs.addMessage(attackerPlayer,
-                new ModelMessage(ModelMessage.MessageType.FOREIGN_DIPLOMACY,
-                                 "combat.destroySettlement.enemy.capital",
-                                 attacker)
-                    .addStringTemplate("%nation%", nativeNation));
+                    new ModelMessage(ModelMessage.MessageType.FOREIGN_DIPLOMACY,
+                            "combat.destroySettlement.enemy.capital",
+                            attacker)
+                            .addStringTemplate("%nation%", nativeNation));
         }
-        if (((ServerPlayer)nativePlayer).checkForDeath() == DeadCheck.IS_DEAD) {
+        if (((ServerPlayer) nativePlayer).checkForDeath() == DeadCheck.IS_DEAD) {
             h = new HistoryEvent(game.getTurn(),
-                HistoryEvent.HistoryEventType.DESTROY_NATION, this)
+                    HistoryEvent.HistoryEventType.DESTROY_NATION, this)
                     .addStringTemplate("%nation%", attackerNation)
                     .addStringTemplate("%nativeNation%", nativeNation);
             h.setScore(SCORE_NATION_DESTROYED);
             cs.addGlobalHistory(game, h);
         }
         cs.addAttribute(See.only(attackerPlayer), "sound",
-            "sound.event.destroySettlement");
+                "sound.event.destroySettlement");
     }
 
     /**
@@ -3390,24 +3422,24 @@ outer:  for (Effect effect : effects) {
 
         // Get rid of the any missionary first.
         if (settlement instanceof ServerIndianSettlement) {
-            ServerIndianSettlement sis = (ServerIndianSettlement)settlement;
+            ServerIndianSettlement sis = (ServerIndianSettlement) settlement;
             if (sis.hasMissionary()) {
-                missionaryOwner = (ServerPlayer)sis.getMissionary().getOwner();
+                missionaryOwner = (ServerPlayer) sis.getMissionary().getOwner();
                 radius = sis.getMissionaryLineOfSight();
                 sis.csKillMissionary(Boolean.TRUE, cs);
             }
         }
-            
+
         // Get it off the map and off the owners list.
         settlement.exciseSettlement();//-vis(owner),-til
         owner.removeSettlement(settlement);
         if (owner.hasSettlement(settlement)) {
             throw new IllegalStateException("Still has settlement: "
-                + settlement);
+                    + settlement);
         }
 
         // Reassign the tiles owned by the settlement, if possible
-        ((ServerPlayer)owner).reassignTiles(owned, null);
+        ((ServerPlayer) owner).reassignTiles(owned, null);
 
         See vis = See.perhaps().always(owner);
         if (missionaryOwner != null) vis.except(missionaryOwner);
@@ -3419,7 +3451,7 @@ outer:  for (Effect effect : effects) {
         // Former missionary owner knows that the settlement fell.
         if (missionaryOwner != null) {
             List<Tile> surrounding = transform(centerTile.getSurroundingTiles(1, radius),
-                                               t -> !owned.contains(t));
+                    t -> !owned.contains(t));
             cs.add(See.only(missionaryOwner), owned);
             cs.add(See.only(missionaryOwner), surrounding);
             cs.addRemove(See.only(missionaryOwner), centerTile, settlement);
@@ -3453,21 +3485,21 @@ outer:  for (Effect effect : effects) {
         final Location defenderLocation = defender.getLocation();
 
         cs.addMessage(attackerPlayer,
-            new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
-                             "combat.shipEvaded.enemy", attacker)
-                .addStringTemplate("%location%",
-                    attackerLocation.getLocationLabelFor(attackerPlayer))
-                .addStringTemplate("%unit%", attacker.getLabel())
-                .addStringTemplate("%enemyNation%", defenderNation)
-                .addStringTemplate("%enemyUnit%", defender.getLabel()));
+                new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
+                        "combat.shipEvaded.enemy", attacker)
+                        .addStringTemplate("%location%",
+                                attackerLocation.getLocationLabelFor(attackerPlayer))
+                        .addStringTemplate("%unit%", attacker.getLabel())
+                        .addStringTemplate("%enemyNation%", defenderNation)
+                        .addStringTemplate("%enemyUnit%", defender.getLabel()));
         cs.addMessage(defenderPlayer,
-            new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
-                             "combat.shipEvaded.ours", defender)
-                .addStringTemplate("%location%",
-                    defenderLocation.getLocationLabelFor(defenderPlayer))
-                .addStringTemplate("%unit%", defender.getLabel())
-                .addStringTemplate("%enemyNation%", attackerNation)
-                .addStringTemplate("%enemyUnit%", attacker.getLabel()));
+                new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
+                        "combat.shipEvaded.ours", defender)
+                        .addStringTemplate("%location%",
+                                defenderLocation.getLocationLabelFor(defenderPlayer))
+                        .addStringTemplate("%unit%", defender.getLabel())
+                        .addStringTemplate("%enemyNation%", attackerNation)
+                        .addStringTemplate("%enemyUnit%", attacker.getLabel()));
     }
 
     /**
@@ -3482,25 +3514,25 @@ outer:  for (Effect effect : effects) {
         final Player attackerPlayer = settlement.getOwner();
         final Player defenderPlayer = defender.getOwner();
         final StringTemplate defenderNation = defender.getApparentOwnerName();
-        final Building building = ((Colony)settlement).getStockade();
+        final Building building = ((Colony) settlement).getStockade();
 
         cs.addMessage(attackerPlayer,
-            new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
-                             "combat.shipEvadedBombardment.enemy", settlement)
-                .addStringTemplate("%location%",
-                    settlement.getLocationLabelFor(attackerPlayer))
-                .addNamed("%building%", building)
-                .addStringTemplate("%enemyNation%", defenderNation)
-                .addStringTemplate("%enemyUnit%", defender.getLabel()));
+                new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
+                        "combat.shipEvadedBombardment.enemy", settlement)
+                        .addStringTemplate("%location%",
+                                settlement.getLocationLabelFor(attackerPlayer))
+                        .addNamed("%building%", building)
+                        .addStringTemplate("%enemyNation%", defenderNation)
+                        .addStringTemplate("%enemyUnit%", defender.getLabel()));
         cs.addMessage(defenderPlayer,
-            new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
-                             "combat.shipEvadedBombardment.ours", defender)
-                .addStringTemplate("%location%",
-                    settlement.getLocationLabelFor(defenderPlayer))
-                .addStringTemplate("%unit%", defender.getLabel())
-                .addNamed("%building%", building)
-                .addStringTemplate("%enemyNation%",
-                    attackerPlayer.getNationLabel()));
+                new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
+                        "combat.shipEvadedBombardment.ours", defender)
+                        .addStringTemplate("%location%",
+                                settlement.getLocationLabelFor(defenderPlayer))
+                        .addStringTemplate("%unit%", defender.getLabel())
+                        .addNamed("%building%", building)
+                        .addStringTemplate("%enemyNation%",
+                                attackerPlayer.getNationLabel()));
     }
 
     /**
@@ -3518,10 +3550,25 @@ outer:  for (Effect effect : effects) {
             for (Goods g : capture) g.setLocation(null);
             new LootSession(winner, loser, capture).register();
             cs.add(See.only(winnerPlayer),
-                   new LootCargoMessage(winner, loser.getId(), capture));
+                    new LootCargoMessage(winner, loser.getId(), capture));
         }
         loser.getGoodsContainer().removeAll();
         loser.setState(Unit.UnitState.ACTIVE);
+    }
+
+    /**
+     * Capture a ship
+     *
+     * @param winner The winning naval {@code Unit}.
+     * @param loser The losing naval {@code Unit}
+     * @param cs A {@code ChangeSet} to update.
+     */
+    private void csCaptureShip(Unit winner, Unit loser, ChangeSet cs) {
+        final Player winnerPlayer = winner.getOwner();
+        ServerUnit ship = new ServerUnit(loser.getGame(), loser.getLocation(), winnerPlayer, loser.getType(), loser.getRole());
+        winnerPlayer.addUnit(ship);
+        cs.addMessage(winnerPlayer, new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
+                "combat.capture.ship", ship).addName("%ship%", loser.getDescription()));
     }
 
     /**
@@ -3537,8 +3584,8 @@ outer:  for (Effect effect : effects) {
         final Settlement settlement = defender.getSettlement();
         final Role role = defender.getAutomaticRole();
         final StringTemplate defenderLabel = Messages.getUnitLabel(null,
-            defender.getType().getId(), 1, defenderPlayer.getNation().getId(),
-            role.getId(), null);
+                defender.getType().getId(), 1, defenderPlayer.getNation().getId(),
+                role.getId(), null);
         final Player attackerPlayer = attacker.getOwner();
         final StringTemplate attackerNation = attacker.getApparentOwnerName();
 
@@ -3551,22 +3598,22 @@ outer:  for (Effect effect : effects) {
         // No special message, attacker can not distinguish auto-armed
         // from actual-armed.
         cs.addMessage(attackerPlayer,
-            new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
-                             "combat.unitDemotedToUnarmed.enemy", attacker)
-                .addStringTemplate("%location%",
-                     settlement.getLocationLabelFor(attackerPlayer))
-                .addStringTemplate("%unit%", attacker.getLabel())
-                .addStringTemplate("%oldName%", defenderLabel)
-                .addStringTemplate("%enemyNation%", defenderNation)
-                .addStringTemplate("%enemyUnit%", defender.getLabel()));
+                new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
+                        "combat.unitDemotedToUnarmed.enemy", attacker)
+                        .addStringTemplate("%location%",
+                                settlement.getLocationLabelFor(attackerPlayer))
+                        .addStringTemplate("%unit%", attacker.getLabel())
+                        .addStringTemplate("%oldName%", defenderLabel)
+                        .addStringTemplate("%enemyNation%", defenderNation)
+                        .addStringTemplate("%enemyUnit%", defender.getLabel()));
         cs.addMessage(defenderPlayer,
-            new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
-                             "combat.unitLoseAutoEquip", defender)
-                .addStringTemplate("%location%",
-                    settlement.getLocationLabelFor(defenderPlayer))
-                .addStringTemplate("%unit%", defender.getLabel())
-                .addStringTemplate("%enemyNation%", attackerNation)
-                .addStringTemplate("%enemyUnit%", attacker.getLabel()));
+                new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
+                        "combat.unitLoseAutoEquip", defender)
+                        .addStringTemplate("%location%",
+                                settlement.getLocationLabelFor(defenderPlayer))
+                        .addStringTemplate("%unit%", defender.getLabel())
+                        .addStringTemplate("%enemyNation%", attackerNation)
+                        .addStringTemplate("%enemyUnit%", attacker.getLabel()));
     }
 
     /**
@@ -3581,12 +3628,12 @@ outer:  for (Effect effect : effects) {
         final Player loserPlayer = loser.getOwner();
         final StringTemplate loserNation = loserPlayer.getNationLabel();
         final StringTemplate loserLocation = loser.getLocation()
-            .getLocationLabelFor(loserPlayer);
+                .getLocationLabelFor(loserPlayer);
         final StringTemplate loserLabel = loser.getLabel();
         final Player winnerPlayer = winner.getOwner();
         final StringTemplate winnerNation = winner.getApparentOwnerName();
         final StringTemplate winnerLocation = winner.getLocation()
-            .getLocationLabelFor(winnerPlayer);
+                .getLocationLabelFor(winnerPlayer);
         final Role role = loser.getRole();
 
         Role downgrade = role.getDowngrade();
@@ -3598,48 +3645,48 @@ outer:  for (Effect effect : effects) {
 
         // Account for possible loss of mobility due to horses going away.
         loser.setMovesLeft(Math.min(loser.getMovesLeft(),
-                                    loser.getInitialMovesLeft()));
+                loser.getInitialMovesLeft()));
 
         if (!loser.isArmed()) {
             cs.addMessage(winnerPlayer,
-                new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
-                                 "combat.unitDemotedToUnarmed.enemy", winner)
-                    .addStringTemplate("%location%", winnerLocation)
-                    .addStringTemplate("%unit%", winner.getLabel())
-                    .addStringTemplate("%oldName%", loserLabel)
-                    .addStringTemplate("%enemyNation%", loserNation)
-                    .addStringTemplate("%enemyUnit%", loser.getLabel()));
+                    new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
+                            "combat.unitDemotedToUnarmed.enemy", winner)
+                            .addStringTemplate("%location%", winnerLocation)
+                            .addStringTemplate("%unit%", winner.getLabel())
+                            .addStringTemplate("%oldName%", loserLabel)
+                            .addStringTemplate("%enemyNation%", loserNation)
+                            .addStringTemplate("%enemyUnit%", loser.getLabel()));
             cs.addMessage(loserPlayer,
-                new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
-                                 "combat.unitDemotedToUnarmed.ours", loser)
-                    .addStringTemplate("%location%", loserLocation)
-                    .addStringTemplate("%oldName%", loserLabel)
-                    .addStringTemplate("%unit%", loser.getLabel())
-                    .addStringTemplate("%enemyNation%", winnerNation)
-                    .addStringTemplate("%enemyUnit%", winner.getLabel()));
+                    new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
+                            "combat.unitDemotedToUnarmed.ours", loser)
+                            .addStringTemplate("%location%", loserLocation)
+                            .addStringTemplate("%oldName%", loserLabel)
+                            .addStringTemplate("%unit%", loser.getLabel())
+                            .addStringTemplate("%enemyNation%", winnerNation)
+                            .addStringTemplate("%enemyUnit%", winner.getLabel()));
             loser.setState(Unit.UnitState.ACTIVE);
         } else {
             String key = "combat.unitDemoted.enemy."
-                + loser.getType().getSuffix();
+                    + loser.getType().getSuffix();
             cs.addMessage(winnerPlayer,
-                new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
-                                 key, winner)
-                    .addDefaultId("combat.unitDemoted.enemy")
-                    .addStringTemplate("%location%", winnerLocation)
-                    .addStringTemplate("%unit%", winner.getLabel())
-                    .addStringTemplate("%oldName%", loserLabel)
-                    .addStringTemplate("%enemyNation%", loserNation)
-                    .addStringTemplate("%enemyUnit%", loser.getLabel()));
+                    new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
+                            key, winner)
+                            .addDefaultId("combat.unitDemoted.enemy")
+                            .addStringTemplate("%location%", winnerLocation)
+                            .addStringTemplate("%unit%", winner.getLabel())
+                            .addStringTemplate("%oldName%", loserLabel)
+                            .addStringTemplate("%enemyNation%", loserNation)
+                            .addStringTemplate("%enemyUnit%", loser.getLabel()));
             key = "combat.unitDemoted.ours." + loser.getType().getSuffix();
             cs.addMessage(loserPlayer,
-                new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
-                                 key, loser)
-                    .addDefaultId("combat.unitDemoted.ours")
-                    .addStringTemplate("%location%", loserLocation)
-                    .addStringTemplate("%oldName%", loserLabel)
-                    .addStringTemplate("%unit%", loser.getLabel())
-                    .addStringTemplate("%enemyNation%", winnerNation)
-                    .addStringTemplate("%enemyUnit%", winner.getLabel()));
+                    new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
+                            key, loser)
+                            .addDefaultId("combat.unitDemoted.ours")
+                            .addStringTemplate("%location%", loserLocation)
+                            .addStringTemplate("%oldName%", loserLabel)
+                            .addStringTemplate("%unit%", loser.getLabel())
+                            .addStringTemplate("%enemyNation%", winnerNation)
+                            .addStringTemplate("%enemyUnit%", winner.getLabel()));
         }
     }
 
@@ -3652,16 +3699,16 @@ outer:  for (Effect effect : effects) {
      */
     public void csLoseLocation(Location loc, ChangeSet cs) {
         for (TradeRoute tr : transform(getTradeRoutes(),
-                                       r -> r.removeMatchingStops(loc))) {
+                r -> r.removeMatchingStops(loc))) {
             for (Unit u : tr.getAssignedUnits()) {
                 u.setTradeRoute(null);
                 cs.add(See.only(this), u);
             }
             cs.addMessage(this,
-                new ModelMessage(ModelMessage.MessageType.GOODS_MOVEMENT,
-                    "combat.tradeRouteSuspended", this)
-                    .addName("%route%", tr.getName())
-                    .addStringTemplate("%stop%", loc.getLocationLabel()));
+                    new ModelMessage(ModelMessage.MessageType.GOODS_MOVEMENT,
+                            "combat.tradeRouteSuspended", this)
+                            .addName("%route%", tr.getName())
+                            .addStringTemplate("%stop%", loc.getLocationLabel()));
             cs.add(See.only(this), tr);
         }
     }
@@ -3688,18 +3735,18 @@ outer:  for (Effect effect : effects) {
 
         // Pick one, with one extra choice for stealing gold.
         int pillage = randomInt(logger, "Pillage choice", random,
-            buildingList.size() + shipList.size() + goodsList.size()
-            + ((colony.canBePlundered()) ? 1 : 0));
+                buildingList.size() + shipList.size() + goodsList.size()
+                        + ((colony.canBePlundered()) ? 1 : 0));
         if (pillage < buildingList.size()) {
             Building building = buildingList.get(pillage);
             csDamageBuilding(building, cs);
             cs.addMessage(colonyPlayer,
-                new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
-                                 "combat.raid.building", colony)
-                    .addName("%colony%", colony.getName())
-                    .addNamed("%building%", building)
-                    .addStringTemplate("%enemyNation%", attackerNation)
-                    .addStringTemplate("%enemyUnit%", attacker.getLabel()));
+                    new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
+                            "combat.raid.building", colony)
+                            .addName("%colony%", colony.getName())
+                            .addNamed("%building%", building)
+                            .addStringTemplate("%enemyNation%", attackerNation)
+                            .addStringTemplate("%enemyUnit%", attacker.getLabel()));
         } else if (pillage < buildingList.size() + shipList.size()) {
             Unit ship = shipList.get(pillage - buildingList.size());
             if (ship.getRepairLocation() == null) {
@@ -3708,41 +3755,41 @@ outer:  for (Effect effect : effects) {
                 csDamageShipAttack(attacker, ship, cs);
             }
         } else if (pillage < buildingList.size() + shipList.size()
-                   + goodsList.size()) {
+                + goodsList.size()) {
             Goods goods = goodsList.get(pillage - buildingList.size()
-                - shipList.size());
+                    - shipList.size());
             goods.setAmount(Math.min(goods.getAmount() / 2, 50));
             colony.removeGoods(goods);
             if (attacker.canAdd(goods)) attacker.add(goods);
             cs.addMessage(colonyPlayer,
-                new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
-                                 "combat.raid.goods", colony, goods)
-                    .addName("%colony%", colony.getName())
-                    .addAmount("%amount%", goods.getAmount())
-                    .addNamed("%goods%", goods.getType())
-                    .addStringTemplate("%enemyNation%", attackerNation)
-                    .addStringTemplate("%enemyUnit%", attacker.getLabel()));
+                    new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
+                            "combat.raid.goods", colony, goods)
+                            .addName("%colony%", colony.getName())
+                            .addAmount("%amount%", goods.getAmount())
+                            .addNamed("%goods%", goods.getType())
+                            .addStringTemplate("%enemyNation%", attackerNation)
+                            .addStringTemplate("%enemyUnit%", attacker.getLabel()));
 
         } else {
             int plunder = Math.max(1, colony.getPlunder(attacker, random) / 5);
             colonyPlayer.modifyGold(-plunder);
             attackerPlayer.modifyGold(plunder);
             cs.addPartial(See.only(colonyPlayer), colonyPlayer,
-                "gold", String.valueOf(colonyPlayer.getGold()));
+                    "gold", String.valueOf(colonyPlayer.getGold()));
             cs.addMessage(colonyPlayer,
-                new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
-                                 "combat.raid.plunder", colony)
-                    .addAmount("%amount%", plunder)
-                    .addName("%colony%", colony.getName())
-                    .addStringTemplate("%enemyNation%", attackerNation)
-                    .addStringTemplate("%enemyUnit%", attacker.getLabel()));
+                    new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
+                            "combat.raid.plunder", colony)
+                            .addAmount("%amount%", plunder)
+                            .addName("%colony%", colony.getName())
+                            .addStringTemplate("%enemyNation%", attackerNation)
+                            .addStringTemplate("%enemyUnit%", attacker.getLabel()));
         }
         cs.addGlobalMessage(getGame(), colonyPlayer,
-            new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
-                             "combat.raid.other", colonyPlayer)
-                .addName("%colony%", colony.getName())
-                .addStringTemplate("%colonyNation%", colonyNation)
-                .addStringTemplate("%nation%", attackerNation));
+                new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
+                        "combat.raid.other", colonyPlayer)
+                        .addName("%colony%", colony.getName())
+                        .addStringTemplate("%colonyNation%", colonyNation)
+                        .addStringTemplate("%nation%", attackerNation));
     }
 
     /**
@@ -3756,7 +3803,7 @@ outer:  for (Effect effect : effects) {
      * @param cs a {@code ChangeSet} value
      */
     private void csDamageBuilding(Building building, ChangeSet cs) {
-        ServerColony colony = (ServerColony)building.getColony();
+        ServerColony colony = (ServerColony) building.getColony();
         Tile copied = colony.getTile().getTileToCache();
         boolean changed = false;
         BuildingType type = building.getType();
@@ -3769,11 +3816,11 @@ outer:  for (Effect effect : effects) {
             // Have any abilities been removed that gate other production,
             // e.g. removing docks should shut down fishing.
             for (WorkLocation wl : transform(colony.getAllWorkLocations(),
-                                             w -> !w.isEmpty() && !w.canBeWorked())) {
+                    w -> !w.isEmpty() && !w.canBeWorked())) {
                 changed |= colony.ejectUnits(wl, wl.getUnitList());//-til
                 logger.info("Units ejected from workLocation "
-                    + wl.getId() + " on loss of "
-                    + building.getType().getSuffix());
+                        + wl.getId() + " on loss of "
+                        + building.getType().getSuffix());
             }
         } else if (building.canBeDamaged()) {
             changed = colony.ejectUnits(building, building.downgrade());//-til
@@ -3801,17 +3848,17 @@ outer:  for (Effect effect : effects) {
         UnitTypeChange uc = winner.getUnitChange(UnitChangeType.PROMOTION);
         if (uc == null || uc.to == winner.getType()) {
             logger.warning("Promotion failed, type="
-                + ((uc == null) ? "null" : "same type: " + uc.to));
+                    + ((uc == null) ? "null" : "same type: " + uc.to));
             return;
         }
         winner.changeType(uc.to);//-vis(winnerPlayer)
         winnerPlayer.invalidateCanSeeTiles();//+vis(winnerPlayer)
 
         cs.addMessage(winnerPlayer,
-            new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
-                             "combat.unitPromoted", winner)
-                .addStringTemplate("%oldName%", winnerLabel)
-                .addStringTemplate("%unit%", winner.getLabel()));
+                new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
+                        "combat.unitPromoted", winner)
+                        .addStringTemplate("%oldName%", winnerLabel)
+                        .addStringTemplate("%unit%", winner.getLabel()));
     }
 
     /**
@@ -3823,9 +3870,9 @@ outer:  for (Effect effect : effects) {
      */
     private void csSinkColonyShips(Unit attacker, Colony colony, ChangeSet cs) {
         boolean captureRepairing = getSpecification()
-            .getBoolean(GameOptions.CAPTURE_UNITS_UNDER_REPAIR);
+                .getBoolean(GameOptions.CAPTURE_UNITS_UNDER_REPAIR);
         List<Unit> units = transform(colony.getTile().getUnits(),
-            u -> u.isNaval() && !(captureRepairing && u.isDamaged()));
+                u -> u.isNaval() && !(captureRepairing && u.isDamaged()));
         if (!units.isEmpty()) {
             final Player shipPlayer = colony.getOwner();
             final Player attackerPlayer = attacker.getOwner();
@@ -3835,10 +3882,10 @@ outer:  for (Effect effect : effects) {
                 t.addStringTemplate(u.getLabel());
             }
             cs.addMessage(shipPlayer,
-                new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
-                                 "combat.shipsSunk", shipPlayer)
-                    .addStringTemplate("%ships%", t)
-                    .addAmount("%number%", units.size()));
+                    new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
+                            "combat.shipsSunk", shipPlayer)
+                            .addStringTemplate("%ships%", t)
+                            .addAmount("%number%", units.size()));
         }
     }
 
@@ -3858,21 +3905,21 @@ outer:  for (Effect effect : effects) {
         final StringTemplate attackerNation = attackerUnit.getApparentOwnerName();
 
         cs.addMessage(attackerPlayer,
-            new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
-                             "combat.shipSunk.enemy", attackerUnit)
-                .addStringTemplate("%location%",
-                    shipLocation.getLocationLabelFor(attackerPlayer))
-                .addStringTemplate("%unit%", attackerUnit.getLabel())
-                .addStringTemplate("%enemyUnit%", ship.getLabel())
-                .addStringTemplate("%enemyNation%", shipNation));
+                new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
+                        "combat.shipSunk.enemy", attackerUnit)
+                        .addStringTemplate("%location%",
+                                shipLocation.getLocationLabelFor(attackerPlayer))
+                        .addStringTemplate("%unit%", attackerUnit.getLabel())
+                        .addStringTemplate("%enemyUnit%", ship.getLabel())
+                        .addStringTemplate("%enemyNation%", shipNation));
         cs.addMessage(shipPlayer,
-            new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
-                             "combat.shipSunk.ours", ship.getTile())
-                .addStringTemplate("%location%",
-                    shipLocation.getLocationLabelFor(shipPlayer))
-                .addStringTemplate("%unit%", ship.getLabel())
-                .addStringTemplate("%enemyUnit%", attackerUnit.getLabel())
-                .addStringTemplate("%enemyNation%", attackerNation));
+                new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
+                        "combat.shipSunk.ours", ship.getTile())
+                        .addStringTemplate("%location%",
+                                shipLocation.getLocationLabelFor(shipPlayer))
+                        .addStringTemplate("%unit%", ship.getLabel())
+                        .addStringTemplate("%enemyUnit%", attackerUnit.getLabel())
+                        .addStringTemplate("%enemyNation%", attackerNation));
 
         csSinkShip(ship, attackerPlayer, cs);
     }
@@ -3889,25 +3936,25 @@ outer:  for (Effect effect : effects) {
         final Player attackerPlayer = settlement.getOwner();
         final Player shipPlayer = ship.getOwner();
         final StringTemplate shipNation = ship.getApparentOwnerName();
-        final Building building = ((Colony)settlement).getStockade();
+        final Building building = ((Colony) settlement).getStockade();
 
         cs.addMessage(attackerPlayer,
-            new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
-                             "combat.shipSunkByBombardment.enemy", settlement)
-                .addStringTemplate("%location%",
-                    settlement.getLocationLabelFor(attackerPlayer))
-                .addNamed("%building%", building)
-                .addStringTemplate("%enemyUnit%", ship.getLabel())
-                .addStringTemplate("%enemyNation%", shipNation));
+                new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
+                        "combat.shipSunkByBombardment.enemy", settlement)
+                        .addStringTemplate("%location%",
+                                settlement.getLocationLabelFor(attackerPlayer))
+                        .addNamed("%building%", building)
+                        .addStringTemplate("%enemyUnit%", ship.getLabel())
+                        .addStringTemplate("%enemyNation%", shipNation));
         cs.addMessage(shipPlayer,
-            new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
-                             "combat.shipSunkByBombardment", ship.getTile())
-                .addStringTemplate("%location%",
-                    settlement.getLocationLabelFor(shipPlayer))
-                .addStringTemplate("%unit%", ship.getLabel())
-                .addNamed("%building%", building)
-                .addStringTemplate("%enemyNation%",
-                    attackerPlayer.getNationLabel()));
+                new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
+                        "combat.shipSunkByBombardment", ship.getTile())
+                        .addStringTemplate("%location%",
+                                settlement.getLocationLabelFor(shipPlayer))
+                        .addStringTemplate("%unit%", ship.getLabel())
+                        .addNamed("%building%", building)
+                        .addStringTemplate("%enemyNation%",
+                                attackerPlayer.getNationLabel()));
 
         csSinkShip(ship, attackerPlayer, cs);
     }
@@ -3921,12 +3968,12 @@ outer:  for (Effect effect : effects) {
      */
     private void csSinkShip(Unit ship, Player attackerPlayer, ChangeSet cs) {
         final Player shipPlayer = ship.getOwner();
-        ((ServerUnit)ship).csRemove(See.perhaps().always(shipPlayer),
-            ship.getLocation(), cs);//-vis(shipPlayer)
+        ((ServerUnit) ship).csRemove(See.perhaps().always(shipPlayer),
+                ship.getLocation(), cs);//-vis(shipPlayer)
         shipPlayer.invalidateCanSeeTiles();//+vis(shipPlayer)
         if (attackerPlayer != null) {
             cs.addAttribute(See.only(attackerPlayer), "sound",
-                            "sound.event.shipSunk");
+                    "sound.event.shipSunk");
         }
     }
 
@@ -3941,43 +3988,43 @@ outer:  for (Effect effect : effects) {
         final Player winnerPlayer = winner.getOwner();
         final StringTemplate winnerNation = winner.getApparentOwnerName();
         final Location winnerLoc = (winner.isInColony()) ? winner.getColony()
-            : winner.getLocation();
+                : winner.getLocation();
         final StringTemplate winnerLocation
-            = winnerLoc.getLocationLabelFor(winnerPlayer);
+                = winnerLoc.getLocationLabelFor(winnerPlayer);
         final Player loserPlayer = loser.getOwner();
         final StringTemplate loserNation = loser.getApparentOwnerName();
         final Location loserLoc = (loser.isInColony()) ? loser.getColony()
-            : loser.getLocation();
+                : loser.getLocation();
         final StringTemplate loserLocation
-            = loserLoc.getLocationLabelFor(loserPlayer);
+                = loserLoc.getLocationLabelFor(loserPlayer);
 
         String key = "combat.unitSlaughtered.enemy."
-            + loser.getType().getSuffix();
+                + loser.getType().getSuffix();
         cs.addMessage(winnerPlayer,
-            new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
-                             key, winner)
-                .addDefaultId("combat.unitSlaughtered.enemy")
-                .addStringTemplate("%location%", winnerLocation)
-                .addStringTemplate("%unit%", winner.getLabel())
-                .addStringTemplate("%enemyNation%", loserNation)
-                .addStringTemplate("%enemyUnit%", loser.getLabel()));
+                new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
+                        key, winner)
+                        .addDefaultId("combat.unitSlaughtered.enemy")
+                        .addStringTemplate("%location%", winnerLocation)
+                        .addStringTemplate("%unit%", winner.getLabel())
+                        .addStringTemplate("%enemyNation%", loserNation)
+                        .addStringTemplate("%enemyUnit%", loser.getLabel()));
         key = "combat.unitSlaughtered.ours." + loser.getType().getSuffix();
         cs.addMessage(loserPlayer,
-            new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
-                             key, loser.getTile())
-                .addDefaultId("combat.unitSlaughtered.ours")
-                .addStringTemplate("%location%", loserLocation)
-                .addStringTemplate("%unit%", loser.getLabel())
-                .addStringTemplate("%enemyNation%", winnerNation)
-                .addStringTemplate("%enemyUnit%", winner.getLabel()));
+                new ModelMessage(ModelMessage.MessageType.COMBAT_RESULT,
+                        key, loser.getTile())
+                        .addDefaultId("combat.unitSlaughtered.ours")
+                        .addStringTemplate("%location%", loserLocation)
+                        .addStringTemplate("%unit%", loser.getLabel())
+                        .addStringTemplate("%enemyNation%", winnerNation)
+                        .addStringTemplate("%enemyUnit%", winner.getLabel()));
         if (loserPlayer.isIndian()
-            && ((ServerPlayer)loserPlayer).checkForDeath() == DeadCheck.IS_DEAD) {
+                && ((ServerPlayer) loserPlayer).checkForDeath() == DeadCheck.IS_DEAD) {
             StringTemplate nativeNation = loserPlayer.getNationLabel();
             cs.addGlobalHistory(getGame(),
-                new HistoryEvent(getGame().getTurn(),
-                    HistoryEvent.HistoryEventType.DESTROY_NATION, winnerPlayer)
-                    .addStringTemplate("%nation%", winnerPlayer.getNationLabel())
-                    .addStringTemplate("%nativeNation%", nativeNation));
+                    new HistoryEvent(getGame().getTurn(),
+                            HistoryEvent.HistoryEventType.DESTROY_NATION, winnerPlayer)
+                            .addStringTemplate("%nation%", winnerPlayer.getNationLabel())
+                            .addStringTemplate("%nativeNation%", nativeNation));
         }
 
         // Destroy unit.  Note See.only visibility used to handle the
@@ -3985,10 +4032,10 @@ outer:  for (Effect effect : effects) {
         // See.perhaps was used there, the settlement will be gone
         // when perhaps() is processed, which would erroneously make
         // the unit visible.
-        ((ServerUnit)loser).csRemove((loserLoc.getSettlement() != null)
-            ? See.only(loserPlayer)
-            : See.perhaps().always(loserPlayer),
-            loserLoc, cs);//-vis(loserPlayer)
+        ((ServerUnit) loser).csRemove((loserLoc.getSettlement() != null)
+                        ? See.only(loserPlayer)
+                        : See.perhaps().always(loserPlayer),
+                loserLoc, cs);//-vis(loserPlayer)
         loserPlayer.invalidateCanSeeTiles();//+vis(loserPlayer)
     }
 
@@ -4018,7 +4065,7 @@ outer:  for (Effect effect : effects) {
         Modifier modifier = first(spec.getModifiers(Modifier.COLONY_GOODS_PARTY));
         if (modifier != null) {
             modifier = Modifier.makeTimedModifier("model.goods.bells",
-                                                  modifier, turn);
+                    modifier, turn);
             modifier.setModifierIndex(Modifier.PARTY_PRODUCTION_INDEX);
         }
         return modifier;
@@ -4047,10 +4094,10 @@ outer:  for (Effect effect : effects) {
             final int extraTax = 3; // FIXME, magic number
             csSetTax(tax + extraTax, cs);
             cs.add(See.only(this),
-                   new MonarchActionMessage(Monarch.MonarchAction.FORCE_TAX,
-                       StringTemplate.template(Monarch.MonarchAction.FORCE_TAX.getTextKey())
-                       .addAmount("%amount%", tax + extraTax),
-                       getNationId()));
+                    new MonarchActionMessage(Monarch.MonarchAction.FORCE_TAX,
+                            StringTemplate.template(Monarch.MonarchAction.FORCE_TAX.getTextKey())
+                                    .addAmount("%amount%", tax + extraTax),
+                            getNationId()));
             logger.info("Forced tax raise to: " + (tax + extraTax));
         } else { // Tea party
             Specification spec = getGame().getSpecification();
@@ -4058,7 +4105,7 @@ outer:  for (Effect effect : effects) {
             colony.removeGoods(goodsType, amount);
 
             int arrears = market.getPaidForSale(goodsType)
-                * spec.getInteger(GameOptions.ARREARS_FACTOR);
+                    * spec.getInteger(GameOptions.ARREARS_FACTOR);
             Market market = getMarket();
             market.setArrears(goodsType, arrears);
 
@@ -4066,26 +4113,26 @@ outer:  for (Effect effect : effects) {
             cs.addModifier(this, colony, tpm, true);
             cs.add(See.only(this), colony.getGoodsContainer());
             cs.add(See.only(this), market.getMarketData(goodsType));
-            
+
             String messageId = "model.player.colonyGoodsParty."
-                + goodsType.getSuffix();
+                    + goodsType.getSuffix();
             if (!Messages.containsKey(messageId)) {
                 messageId = (colony.isLandLocked())
-                    ? "model.player.colonyGoodsParty.landLocked"
-                    : "model.player.colonyGoodsParty.harbour";
+                        ? "model.player.colonyGoodsParty.landLocked"
+                        : "model.player.colonyGoodsParty.harbour";
             }
             cs.addMessage(this,
-                new ModelMessage(ModelMessage.MessageType.FOREIGN_DIPLOMACY,
-                                 messageId, this)
-                    .addName("%colony%", colony.getName())
-                    .addAmount("%amount%", amount)
-                    .addNamed("%goods%", goodsType));
+                    new ModelMessage(ModelMessage.MessageType.FOREIGN_DIPLOMACY,
+                            messageId, this)
+                            .addName("%colony%", colony.getName())
+                            .addAmount("%amount%", amount)
+                            .addNamed("%goods%", goodsType));
             cs.addAttribute(See.only(this), "flush", Boolean.TRUE.toString());
             logger.info("Goods party at " + colony.getName()
-                + " with: " + goods + " arrears: " + arrears);
+                    + " with: " + goods + " arrears: " + arrears);
             if (isAI()) { // Reset the goods wishes
                 colony.firePropertyChange(Colony.REARRANGE_COLONY,
-                                          goodsType, null);
+                        goodsType, null);
             }
         }
     }
@@ -4101,9 +4148,9 @@ outer:  for (Effect effect : effects) {
     public void ignoreTax(int tax, Goods goods, ChangeSet cs) {
         csRaiseTax(tax, goods, true, cs);
         cs.addMessage(this,
-            new ModelMessage(ModelMessage.MessageType.FOREIGN_DIPLOMACY,
-                             "model.player.ignoredTax", this)
-                .addAmount("%amount%", tax));
+                new ModelMessage(ModelMessage.MessageType.FOREIGN_DIPLOMACY,
+                        "model.player.ignoredTax", this)
+                        .addAmount("%amount%", tax));
     }
 
     /**
@@ -4114,8 +4161,8 @@ outer:  for (Effect effect : effects) {
      */
     public void ignoreMercenaries(ChangeSet cs) {
         cs.addMessage(this,
-            new ModelMessage(ModelMessage.MessageType.FOREIGN_DIPLOMACY,
-                             "model.player.ignoredMercenaries", this));
+                new ModelMessage(ModelMessage.MessageType.FOREIGN_DIPLOMACY,
+                        "model.player.ignoredMercenaries", this));
     }
 
     /**
@@ -4133,16 +4180,16 @@ outer:  for (Effect effect : effects) {
         if (price <= 0 || mercenaries.isEmpty()) return;
         final int n = NameCache.getMercenaryLeaderIndex(random);
         cs.add(See.only(this),
-            new MonarchActionMessage(action, StringTemplate
-                .template(action.getTextKey())
-                .addName("%leader%", NameCache.getMercenaryLeaderName(n))
-                .addAmount("%gold%", price)
-                .addStringTemplate("%mercenaries%",
-                    AbstractUnit.getListLabel(", ", mercenaries)),
-                Integer.toString(n)));
+                new MonarchActionMessage(action, StringTemplate
+                        .template(action.getTextKey())
+                        .addName("%leader%", NameCache.getMercenaryLeaderName(n))
+                        .addAmount("%gold%", price)
+                        .addStringTemplate("%mercenaries%",
+                                AbstractUnit.getListLabel(", ", mercenaries)),
+                        Integer.toString(n)));
         new MonarchSession(this, action, mercenaries, price).register();
     }
-        
+
     /**
      * Set the player tax rate.
      * If this requires a change to the bells bonuses, we have to update
@@ -4158,7 +4205,7 @@ outer:  for (Effect effect : effects) {
             cs.add(See.only(this), this);
         } else {
             cs.addPartial(See.only(this), this,
-                "tax", String.valueOf(this.getTax()));
+                    "tax", String.valueOf(this.getTax()));
         }
     }
 
@@ -4175,9 +4222,9 @@ outer:  for (Effect effect : effects) {
         if (checkGold(price)) {
             final Specification spec = getSpecification();
             final Predicate<AbstractUnit> isNaval = au ->
-                au.getType(spec).isNaval();
+                    au.getType(spec).isNaval();
             final Predicate<AbstractUnit> isLand = au ->
-                !au.getType(spec).isNaval();
+                    !au.getType(spec).isNaval();
             List<AbstractUnit> naval = transform(mercs, isNaval);
             Tile dst;
             if (naval.isEmpty()) { // Deliver to first settlement
@@ -4187,25 +4234,25 @@ outer:  for (Effect effect : effects) {
             } else { // Let them sail in
                 dst = getEntryTile();
                 loadShips(createUnits(transform(mercs, isLand), null, null),
-                          createUnits(naval, dst, random),//-vis
-                          null);
+                        createUnits(naval, dst, random),//-vis
+                        null);
                 invalidateCanSeeTiles();//+vis(this)
                 cs.add(See.perhaps(), dst);
             }
             cs.addMessage(this,
-                new ModelMessage(ModelMessage.MessageType.UNIT_ARRIVED,
-                                 "model.player.mercenariesArrived", this)
-                    .addStringTemplate("%location%",
-                                       dst.up().getLocationLabelFor(this)));
+                    new ModelMessage(ModelMessage.MessageType.UNIT_ARRIVED,
+                            "model.player.mercenariesArrived", this)
+                            .addStringTemplate("%location%",
+                                    dst.up().getLocationLabelFor(this)));
             modifyGold(-price);
             cs.addPartial(See.only(this), this,
-                          "gold", String.valueOf(this.getGold()));
+                    "gold", String.valueOf(this.getGold()));
         } else {
             getMonarch().setDispleasure(true);
             cs.add(See.only(this),
-                   new MonarchActionMessage(Monarch.MonarchAction.DISPLEASURE,
-                       StringTemplate.template(Monarch.MonarchAction.DISPLEASURE.getTextKey()),
-                       getNationId()));
+                    new MonarchActionMessage(Monarch.MonarchAction.DISPLEASURE,
+                            StringTemplate.template(Monarch.MonarchAction.DISPLEASURE.getTextKey()),
+                            getNationId()));
         }
     }
 
@@ -4228,16 +4275,16 @@ outer:  for (Effect effect : effects) {
             } else {
                 cs.addHistory(other, new HistoryEvent(turn,
                         HistoryEvent.HistoryEventType.MEET_NATION, other)
-                    .addStringTemplate("%nation%", getNationLabel()));
+                        .addStringTemplate("%nation%", getNationLabel()));
             }
         } else { // (serverPlayer.isEuropean)
             cs.addHistory(this, new HistoryEvent(turn,
                     HistoryEvent.HistoryEventType.MEET_NATION, other)
-                .addStringTemplate("%nation%", other.getNationLabel()));
+                    .addStringTemplate("%nation%", other.getNationLabel()));
         }
 
         logger.finest("First contact between " + this.getId()
-            + " and " + other.getId());
+                + " and " + other.getId());
         return true;
     }
 
@@ -4252,18 +4299,18 @@ outer:  for (Effect effect : effects) {
      */
     public void csNativeFirstContact(Player other, Tile tile, ChangeSet cs) {
         cs.add(See.only(this),
-               new FirstContactMessage(this, other, tile));
+                new FirstContactMessage(this, other, tile));
         csChangeStance(Stance.PEACE, other, true, cs);
         if (tile != null) {
             // Establish a diplomacy session so that if the player
             // accepts the tile offer, we can verify that the offer
             // was made.
             DiplomacySession ds = new DiplomacySession(tile.getFirstUnit(),
-                tile.getOwningSettlement(), FreeCol.getTimeout(false));
+                    tile.getOwningSettlement(), FreeCol.getTimeout(false));
             ds.register();
             ds.setAgreement(DiplomaticTrade
-                .makePeaceTreaty(DiplomaticTrade.TradeContext.CONTACT,
-                                 this, other));
+                    .makePeaceTreaty(DiplomaticTrade.TradeContext.CONTACT,
+                            this, other));
         }
     }
 
@@ -4288,25 +4335,25 @@ outer:  for (Effect effect : effects) {
             ds = DiplomacySession.findContactSession(unit, otherUnit);
         } else {
             throw new RuntimeException("Non-null settlement (" + settlement
-                + ") or other unit (null) required");
+                    + ") or other unit (null) required");
         }
         if (ds != null) return; // Ongoing contact, no action required
-        
+
         // Initial agreement goes first to this player
         DiplomaticTrade agreement = DiplomaticTrade
-            .makePeaceTreaty(DiplomaticTrade.TradeContext.CONTACT, this, other);
+                .makePeaceTreaty(DiplomaticTrade.TradeContext.CONTACT, this, other);
         final long timeout = FreeCol.getTimeout(false);
         DiplomacySession session = (settlement == null)
-            ? new DiplomacySession(unit, otherUnit, timeout)
-            : new DiplomacySession(unit, settlement, timeout);
+                ? new DiplomacySession(unit, otherUnit, timeout)
+                : new DiplomacySession(unit, settlement, timeout);
         session.register();
         session.setAgreement(agreement);
         cs.add(See.only(this), session.getMessage(this));
         unit.setMovesLeft(0);
         cs.addPartial(See.only(this), unit,
-            "movesLeft", String.valueOf(unit.getMovesLeft()));
+                "movesLeft", String.valueOf(unit.getMovesLeft()));
         logger.info("New European contact for " + unit
-            + ", with session: " + session.getKey());
+                + ", with session: " + session.getKey());
     }
 
     /**
@@ -4340,9 +4387,9 @@ outer:  for (Effect effect : effects) {
                 mainType = uc.to;
             } else { // Can not have this unit.
                 logger.warning("Change type/owner failed for " + unit
-                    + " -> " + newOwner + "(" + change + "/" +  uc + ")");
-                ((ServerUnit)unit).csRemove(See.perhaps().always(this),
-                    oldTile, cs);
+                        + " -> " + newOwner + "(" + change + "/" + uc + ")");
+                ((ServerUnit) unit).csRemove(See.perhaps().always(this),
+                        oldTile, cs);
                 return false;
             }
 
@@ -4352,19 +4399,19 @@ outer:  for (Effect effect : effects) {
                 } else if (uc.isAvailableTo(newOwner)) {
                     if (uc.to != u.getType() && !u.changeType(uc.to)) {
                         logger.warning("Type change failure: " + u
-                            + " -> " + uc.to);
+                                + " -> " + uc.to);
                     }
                 } else {
                     logger.warning("Change type/owner failed for cargo " + u
-                        + " -> " + newOwner + "(" + change + "/" + uc + ")");
-                    ((ServerUnit)u).csRemove(See.only(this), unit, cs);
+                            + " -> " + newOwner + "(" + change + "/" + uc + ")");
+                    ((ServerUnit) u).csRemove(See.only(this), unit, cs);
                 }
             }
 
             unit.changeOwner(newOwner);
             if (mainType != unit.getType() && !unit.changeType(mainType)) {
                 logger.warning("Type change failure: " + unit
-                    + " -> " + mainType);
+                        + " -> " + mainType);
                 return false;
             }
         } else {
@@ -4375,7 +4422,7 @@ outer:  for (Effect effect : effects) {
             cs.addRemoves(See.only(this), unit, unit.getUnitList());
         }
         cs.add(See.only(newOwner),
-               ((ServerPlayer)newOwner).exploreForUnit(unit));
+                ((ServerPlayer) newOwner).exploreForUnit(unit));
         return true;
     }
 
@@ -4398,32 +4445,32 @@ outer:  for (Effect effect : effects) {
                                        ChangeSet cs) {
         // Always inform the demander of the result.
         cs.add(See.only(demandPlayer),
-                   new IndianDemandMessage(unit, colony, type, amount)
-                       .setResult(result));
+                new IndianDemandMessage(unit, colony, type, amount)
+                        .setResult(result));
 
         if (result == IndianDemandAction.INDIAN_DEMAND_ACCEPT) {
             if (type == null) {
                 this.modifyGold(-amount);
                 demandPlayer.modifyGold(amount);
                 cs.addPartial(See.only(this), this,
-                    "gold", String.valueOf(this.getGold()));
+                        "gold", String.valueOf(this.getGold()));
                 cs.addPartial(See.only(demandPlayer), demandPlayer,
-                    "gold", String.valueOf(demandPlayer.getGold()));
+                        "gold", String.valueOf(demandPlayer.getGold()));
             } else {
                 GoodsContainer colonyContainer = colony.getGoodsContainer(),
-                    unitContainer = unit.getGoodsContainer();
+                        unitContainer = unit.getGoodsContainer();
                 GoodsContainer.moveGoods(colonyContainer, type, amount,
-                                         unitContainer);
+                        unitContainer);
                 cs.add(See.only(this), colonyContainer);
                 cs.add(See.only(demandPlayer), unitContainer);
             }
-            
+
             // FIXME: One day the AI should decide what it does with tension
             int difficulty = getSpecification()
-                .getInteger(GameOptions.NATIVE_DEMANDS);
+                    .getInteger(GameOptions.NATIVE_DEMANDS);
             int tension = -(5 - difficulty) * 50;
             ServerIndianSettlement sis = (ServerIndianSettlement)
-                unit.getHomeIndianSettlement();
+                    unit.getHomeIndianSettlement();
             if (sis == null) {
                 demandPlayer.csModifyTension(this, tension, cs);
             } else {
@@ -4444,17 +4491,18 @@ outer:  for (Effect effect : effects) {
         agreement.incrementVersion();
         TradeStatus status = agreement.getStatus();
         switch (status) {
-        case PROPOSE_TRADE:
-            session.setAgreement(agreement);
-            ServerPlayer otherPlayer = session.getOtherPlayer(this);
-            cs.add(See.only(otherPlayer), session.getMessage(otherPlayer));
-            break;
-        case ACCEPT_TRADE:
-            session.complete(true, cs);
-            break;
-        case REJECT_TRADE: default:
-            session.complete(false, cs);
-            break;
+            case PROPOSE_TRADE:
+                session.setAgreement(agreement);
+                ServerPlayer otherPlayer = session.getOtherPlayer(this);
+                cs.add(See.only(otherPlayer), session.getMessage(otherPlayer));
+                break;
+            case ACCEPT_TRADE:
+                session.complete(true, cs);
+                break;
+            case REJECT_TRADE:
+            default:
+                session.complete(false, cs);
+                break;
         }
     }
 
@@ -4479,7 +4527,7 @@ outer:  for (Effect effect : effects) {
         //
         for (BuildingType bt : getFreeBuildingTypes()) {
             for (Colony c : getColonyList()) {
-                ((ServerColony)c).csFreeBuilding(bt, cs);
+                ((ServerColony) c).csFreeBuilding(bt, cs);
             }
         }
     }
@@ -4500,12 +4548,12 @@ outer:  for (Effect effect : effects) {
         final Game game = getGame();
         final Specification spec = getSpecification();
         int oldImmigration = getImmigration(), oldLiberty = getLiberty(),
-            newSoL = 0, newImmigration = 0, newLiberty = 0;
+                newSoL = 0, newImmigration = 0, newLiberty = 0;
 
         // Settlements
         List<Settlement> settlements = getSettlementList();
         for (Settlement settlement : settlements) {
-            ((TurnTaker)settlement).csNewTurn(random, lb, cs);
+            ((TurnTaker) settlement).csNewTurn(random, lb, cs);
             newSoL += settlement.getSonsOfLiberty();
         }
 
@@ -4514,31 +4562,31 @@ outer:  for (Effect effect : effects) {
             newSoL = newSoL / numberOfSettlements;
             if (oldSoL / 10 != newSoL / 10) {
                 String key = (newSoL > oldSoL)
-                    ? "model.player.soLIncrease"
-                    : "model.player.soLDecrease";
+                        ? "model.player.soLIncrease"
+                        : "model.player.soLDecrease";
                 cs.addMessage(this,
-                    new ModelMessage(MessageType.SONS_OF_LIBERTY, key, this)
-                        .addAmount("%oldSoL%", oldSoL)
-                        .addAmount("%newSoL%", newSoL));
+                        new ModelMessage(MessageType.SONS_OF_LIBERTY, key, this)
+                                .addAmount("%oldSoL%", oldSoL)
+                                .addAmount("%newSoL%", newSoL));
             }
             oldSoL = newSoL; // Remember SoL for check changes at next turn.
         }
         newImmigration = getImmigration() - oldImmigration;
         newLiberty = getLiberty() - oldLiberty;
-        
+
         // Units.
         for (Unit unit : getUnitSet()) {
             try {
-                ((TurnTaker)unit).csNewTurn(random, lb, cs);
+                ((TurnTaker) unit).csNewTurn(random, lb, cs);
             } catch (ClassCastException cce) {
                 logger.log(Level.SEVERE, "Not a ServerUnit: " + unit.getId(),
-                           cce);
+                        cce);
             }
         }
 
         // Europe.
         if (europe != null) {
-            ((TurnTaker)europe).csNewTurn(random, lb, cs);
+            ((TurnTaker) europe).csNewTurn(random, lb, cs);
             modifyImmigration(europe.getImmigration(newImmigration));
             newImmigration = getImmigration() - oldImmigration;
         }
@@ -4548,18 +4596,18 @@ outer:  for (Effect effect : effects) {
             if (!hasAbility(Ability.SELECT_RECRUIT)) {
                 while (checkEmigrate()) {
                     csEmigrate(MigrationType.getUnspecificSlot(),
-                               MigrationType.NORMAL, random, cs);
+                            MigrationType.NORMAL, random, cs);
                 }
             }
 
             // Update liberty and immigration
             if (newImmigration != 0) {
                 cs.addPartial(See.only(this), this,
-                              "immigration", String.valueOf(getImmigration()));
+                        "immigration", String.valueOf(getImmigration()));
             }
             if (newLiberty != 0) {
                 cs.addPartial(See.only(this), this,
-                              "liberty", String.valueOf(getLiberty()));
+                        "liberty", String.valueOf(getLiberty()));
             }
 
             if (spec.getBoolean(GameOptions.ENABLE_UPKEEP)) {
@@ -4572,24 +4620,24 @@ outer:  for (Effect effect : effects) {
             }
 
             if (isRebel()
-                && interventionBells >= spec.getInteger(GameOptions.INTERVENTION_BELLS)) {
+                    && interventionBells >= spec.getInteger(GameOptions.INTERVENTION_BELLS)) {
                 interventionBells = Integer.MIN_VALUE;
-                
+
                 // Enter near a port.
                 List<Colony> ports = getConnectedPortList();
                 Colony port = getRandomMember(logger, "Intervention port",
-                                              ports, random);
+                        ports, random);
                 Tile portTile = port.getTile();
                 Tile entry = game.getMap().searchCircle(portTile,
-                    GoalDeciders.getSimpleHighSeasGoalDecider(),
-                    portTile.getHighSeasCount()+1).getSafeTile(this, random);
-                
+                        GoalDeciders.getSimpleHighSeasGoalDecider(),
+                        portTile.getHighSeasCount() + 1).getSafeTile(this, random);
+
                 // Create the force.
                 Force ivf = getMonarch().getInterventionForce();
                 List<Unit> land = createUnits(ivf.getLandUnitsList(),
-                                              entry, random);//-vis(this)
+                        entry, random);//-vis(this)
                 List<Unit> naval = createUnits(ivf.getNavalUnitsList(),
-                                               entry, random);//-vis(this)
+                        entry, random);//-vis(this)
                 List<Unit> leftOver = loadShips(land, naval, random);//-vis(this)
                 for (Unit unit : leftOver) {
                     // no use for left over units
@@ -4602,18 +4650,18 @@ outer:  for (Effect effect : effects) {
                 invalidateCanSeeTiles();//+vis(this)
                 cs.add(See.perhaps(), tiles);
                 cs.addMessage(this,
-                    new ModelMessage(MessageType.FOREIGN_DIPLOMACY,
-                                     "model.player.interventionForceArrives",
-                                     this));
+                        new ModelMessage(MessageType.FOREIGN_DIPLOMACY,
+                                "model.player.interventionForceArrives",
+                                this));
                 logger.info("Intervention force (" + naval.size() + " naval, "
-                    + land.size() + " land, "
-                    + leftOver.size() + " left over) arrives at " + entry
-                    + "(for " + port.getName() + ")");
+                        + land.size() + " land, "
+                        + leftOver.size() + " left over) arrives at " + entry
+                        + "(for " + port.getName() + ")");
             }
 
             // Generate warnings once everything is stabilized
             for (Colony c : getColonyList()) {
-                ((ServerColony)c).csNewTurnWarnings(random, lb, cs);
+                ((ServerColony) c).csNewTurnWarnings(random, lb, cs);
             }
         }
 
@@ -4625,15 +4673,15 @@ outer:  for (Effect effect : effects) {
             if (sta == Stance.UNCONTACTED) continue;
             for (Player p : game.getLiveEuropeanPlayerList(this)) {
                 if (p == s || !p.hasContacted(this)
-                    || !p.hasContacted(s)) continue;
+                        || !p.hasContacted(s)) continue;
                 if (p.hasAbility(Ability.BETTER_FOREIGN_AFFAIRS_REPORT)
-                    || war) {
+                        || war) {
                     cs.addStance(See.only(p), this, sta, s);
                     cs.addMessage(p,
-                        new ModelMessage(MessageType.FOREIGN_DIPLOMACY,
-                                         sta.getOtherStanceChangeKey(), this)
-                            .addStringTemplate("%attacker%", getNationLabel())
-                            .addStringTemplate("%defender%", s.getNationLabel()));
+                            new ModelMessage(MessageType.FOREIGN_DIPLOMACY,
+                                    sta.getOtherStanceChangeKey(), this)
+                                    .addStringTemplate("%attacker%", getNationLabel())
+                                    .addStringTemplate("%defender%", s.getNationLabel()));
                 }
             }
         }
@@ -4649,8 +4697,8 @@ outer:  for (Effect effect : effects) {
     public String toString() {
         StringBuilder sb = new StringBuilder(64);
         sb.append("[ServerPlayer ").append(getId())
-            .append(' ').append(getName())
-            .append(']');
+                .append(' ').append(getName())
+                .append(']');
         return sb.toString();
     }
 }

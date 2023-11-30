@@ -1,20 +1,20 @@
 /**
- *  Copyright (C) 2002-2021  The FreeCol Team
- *
- *  This file is part of FreeCol.
- *
- *  FreeCol is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  FreeCol is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with FreeCol.  If not, see <http://www.gnu.org/licenses/>.
+ * Copyright (C) 2002-2021  The FreeCol Team
+ * <p>
+ * This file is part of FreeCol.
+ * <p>
+ * FreeCol is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * FreeCol is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with FreeCol.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package net.sf.freecol.server.control;
@@ -23,44 +23,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import net.sf.freecol.common.model.Ability;
-import net.sf.freecol.common.model.AbstractGoods;
-import net.sf.freecol.common.model.AbstractUnit;
-import net.sf.freecol.common.model.Building;
-import net.sf.freecol.common.model.BuildingType;
-import net.sf.freecol.common.model.Colony;
+import net.sf.freecol.common.model.*;
 import net.sf.freecol.common.model.CombatModel.CombatEffectType;
-import net.sf.freecol.common.model.Direction;
-import net.sf.freecol.common.model.Event;
-import net.sf.freecol.common.model.Europe;
-import net.sf.freecol.common.model.FoundingFather;
 import net.sf.freecol.common.model.FoundingFather.FoundingFatherType;
-import net.sf.freecol.common.model.Game;
-import net.sf.freecol.common.model.Goods;
-import net.sf.freecol.common.model.GoodsType;
-import net.sf.freecol.common.model.IndianSettlement;
-import net.sf.freecol.common.model.Map;
-import net.sf.freecol.common.model.Modifier;
 import net.sf.freecol.common.model.Modifier.ModifierType;
-import net.sf.freecol.common.model.Nation;
-import net.sf.freecol.common.model.Player;
 import net.sf.freecol.common.model.Player.PlayerType;
-import net.sf.freecol.common.model.Stance;
-import net.sf.freecol.common.model.Role;
-import net.sf.freecol.common.model.Scope;
-import net.sf.freecol.common.model.SimpleCombatModel;
-import net.sf.freecol.common.model.Specification;
-import net.sf.freecol.common.model.StanceTradeItem;
-import net.sf.freecol.common.model.Tension;
 import net.sf.freecol.common.model.Tension.Level;
-import net.sf.freecol.common.model.Tile;
-import net.sf.freecol.common.model.TileImprovementType;
-import net.sf.freecol.common.model.TileType;
-import net.sf.freecol.common.model.Unit;
-import net.sf.freecol.common.model.UnitChangeType;
-import net.sf.freecol.common.model.UnitType;
-import net.sf.freecol.common.model.WorkLocation;
+
 import static net.sf.freecol.common.util.CollectionUtils.*;
+
 import net.sf.freecol.server.ServerTestHelper;
 import net.sf.freecol.server.model.ServerBuilding;
 import net.sf.freecol.server.model.ServerColony;
@@ -74,140 +45,140 @@ import net.sf.freecol.util.test.FreeColTestUtils;
 public class InGameControllerTest extends FreeColTestCase {
 
     private static BuildingType carpenterHouse
-        = spec().getBuildingType("model.building.carpenterHouse");
+            = spec().getBuildingType("model.building.carpenterHouse");
     private static BuildingType press
-        = spec().getBuildingType("model.building.printingPress");
+            = spec().getBuildingType("model.building.printingPress");
     private static final BuildingType schoolHouseType
-        = spec().getBuildingType("model.building.schoolhouse");
+            = spec().getBuildingType("model.building.schoolhouse");
     private static final BuildingType stockadeType
-        = spec().getBuildingType("model.building.stockade");
+            = spec().getBuildingType("model.building.stockade");
 
     private static final GoodsType bellsType
-        = spec().getGoodsType("model.goods.bells");
+            = spec().getGoodsType("model.goods.bells");
     private static final GoodsType cottonType
-        = spec().getGoodsType("model.goods.cotton");
+            = spec().getGoodsType("model.goods.cotton");
     private static final GoodsType foodType
-        = spec().getPrimaryFoodType();
+            = spec().getPrimaryFoodType();
     private static final GoodsType grainType
-        = spec().getGoodsType("model.goods.grain");
+            = spec().getGoodsType("model.goods.grain");
     private static final GoodsType hammersType
-        = spec().getGoodsType("model.goods.hammers");
+            = spec().getGoodsType("model.goods.hammers");
     private static final GoodsType horsesType
-        = spec().getGoodsType("model.goods.horses");
+            = spec().getGoodsType("model.goods.horses");
     private static final GoodsType lumberType
-        = spec().getGoodsType("model.goods.lumber");
+            = spec().getGoodsType("model.goods.lumber");
     private static final GoodsType musketsType
-        = spec().getGoodsType("model.goods.muskets");
+            = spec().getGoodsType("model.goods.muskets");
     private static final GoodsType toolsType
-        = spec().getGoodsType("model.goods.tools");
+            = spec().getGoodsType("model.goods.tools");
 
     private static final Role scoutRole
-        = spec().getRole("model.role.scout");
+            = spec().getRole("model.role.scout");
     private static final Role soldierRole
-        = spec().getRole("model.role.soldier");
+            = spec().getRole("model.role.soldier");
     private static final Role dragoonRole
-        = spec().getRole("model.role.dragoon");
+            = spec().getRole("model.role.dragoon");
     private static final Role pioneerRole
-        = spec().getRole("model.role.pioneer");
+            = spec().getRole("model.role.pioneer");
     private static final Role missionaryRole
-        = spec().getRole("model.role.missionary");
+            = spec().getRole("model.role.missionary");
     private static final Role infantryRole
-        = spec().getRole("model.role.infantry");
+            = spec().getRole("model.role.infantry");
     private static final Role cavalryRole
-        = spec().getRole("model.role.cavalry");
+            = spec().getRole("model.role.cavalry");
     private static final Role armedBraveRole
-        = spec().getRole("model.role.armedBrave");
+            = spec().getRole("model.role.armedBrave");
     private static final Role mountedBraveRole
-        = spec().getRole("model.role.mountedBrave");
+            = spec().getRole("model.role.mountedBrave");
     private static final Role nativeDragoonRole
-        = spec().getRole("model.role.nativeDragoon");
+            = spec().getRole("model.role.nativeDragoon");
 
     private static final TileImprovementType clear
-        = spec().getTileImprovementType("model.improvement.clearForest");
+            = spec().getTileImprovementType("model.improvement.clearForest");
     private static final TileImprovementType plow
-        = spec().getTileImprovementType("model.improvement.plow");
+            = spec().getTileImprovementType("model.improvement.plow");
     private static final TileImprovementType road
-        = spec().getTileImprovementType("model.improvement.road");
+            = spec().getTileImprovementType("model.improvement.road");
 
     private static final TileType arctic
-        = spec().getTileType("model.tile.arctic");
+            = spec().getTileType("model.tile.arctic");
     private static final TileType desert
-        = spec().getTileType("model.tile.desert");
+            = spec().getTileType("model.tile.desert");
     private static final TileType desertForest
-        = spec().getTileType("model.tile.scrubForest");
+            = spec().getTileType("model.tile.scrubForest");
     private static final TileType grassland
-        = spec().getTileType("model.tile.grassland");
+            = spec().getTileType("model.tile.grassland");
     private static final TileType grasslandForest
-        = spec().getTileType("model.tile.coniferForest");
+            = spec().getTileType("model.tile.coniferForest");
     private static final TileType hills
-        = spec().getTileType("model.tile.hills");
+            = spec().getTileType("model.tile.hills");
     private static final TileType marsh
-        = spec().getTileType("model.tile.marsh");
+            = spec().getTileType("model.tile.marsh");
     private static final TileType marshForest
-        = spec().getTileType("model.tile.wetlandForest");
+            = spec().getTileType("model.tile.wetlandForest");
     private static final TileType mountains
-        = spec().getTileType("model.tile.mountains");
+            = spec().getTileType("model.tile.mountains");
     private static final TileType ocean
-        = spec().getTileType("model.tile.ocean");
+            = spec().getTileType("model.tile.ocean");
     private static final TileType plains
-        = spec().getTileType("model.tile.plains");
+            = spec().getTileType("model.tile.plains");
     private static final TileType plainsForest
-        = spec().getTileType("model.tile.mixedForest");
+            = spec().getTileType("model.tile.mixedForest");
     private static final TileType prairie
-        = spec().getTileType("model.tile.prairie");
+            = spec().getTileType("model.tile.prairie");
     private static final TileType prairieForest
-        = spec().getTileType("model.tile.broadleafForest");
+            = spec().getTileType("model.tile.broadleafForest");
     private static final TileType savannah
-        = spec().getTileType("model.tile.savannah");
+            = spec().getTileType("model.tile.savannah");
     private static final TileType savannahForest
-        = spec().getTileType("model.tile.tropicalForest");
+            = spec().getTileType("model.tile.tropicalForest");
     private static final TileType swamp
-        = spec().getTileType("model.tile.swamp");
+            = spec().getTileType("model.tile.swamp");
     private static final TileType swampForest
-        = spec().getTileType("model.tile.rainForest");
+            = spec().getTileType("model.tile.rainForest");
     private static final TileType tundra
-        = spec().getTileType("model.tile.tundra");
+            = spec().getTileType("model.tile.tundra");
     private static final TileType tundraForest
-        = spec().getTileType("model.tile.borealForest");
+            = spec().getTileType("model.tile.borealForest");
 
     private static final UnitType braveType
-        = spec().getUnitType("model.unit.brave");
+            = spec().getUnitType("model.unit.brave");
     private static final UnitType colonistType
-        = spec().getUnitType("model.unit.freeColonist");
+            = spec().getUnitType("model.unit.freeColonist");
     private static final UnitType farmerType
-        = spec().getUnitType("model.unit.expertFarmer");
+            = spec().getUnitType("model.unit.expertFarmer");
     private static final UnitType colonialType
-        = spec().getUnitType("model.unit.colonialRegular");
+            = spec().getUnitType("model.unit.colonialRegular");
     private static final UnitType veteranType
-        = spec().getUnitType("model.unit.veteranSoldier");
+            = spec().getUnitType("model.unit.veteranSoldier");
     private static final UnitType pettyCriminalType
-        = spec().getUnitType("model.unit.pettyCriminal");
+            = spec().getUnitType("model.unit.pettyCriminal");
     private static final UnitType indenturedServantType
-        = spec().getUnitType("model.unit.indenturedServant");
+            = spec().getUnitType("model.unit.indenturedServant");
     private static final UnitType kingsRegularType
-        = spec().getUnitType("model.unit.kingsRegular");
+            = spec().getUnitType("model.unit.kingsRegular");
     private static final UnitType indianConvertType
-        = spec().getUnitType("model.unit.indianConvert");
+            = spec().getUnitType("model.unit.indianConvert");
     private static final UnitType hardyPioneerType
-        = spec().getUnitType("model.unit.hardyPioneer");
+            = spec().getUnitType("model.unit.hardyPioneer");
     private static final UnitType statesmanType
-        = spec().getUnitType("model.unit.elderStatesman");
+            = spec().getUnitType("model.unit.elderStatesman");
     private static final UnitType wagonTrainType
-        = spec().getUnitType("model.unit.wagonTrain");
+            = spec().getUnitType("model.unit.wagonTrain");
     private static final UnitType caravelType
-        = spec().getUnitType("model.unit.caravel");
+            = spec().getUnitType("model.unit.caravel");
     private static final UnitType galleonType
-        = spec().getUnitType("model.unit.galleon");
+            = spec().getUnitType("model.unit.galleon");
     private static final UnitType privateerType
-        = spec().getUnitType("model.unit.privateer");
+            = spec().getUnitType("model.unit.privateer");
     private static final UnitType missionaryType
-        = spec().getUnitType("model.unit.jesuitMissionary");
+            = spec().getUnitType("model.unit.jesuitMissionary");
     private static final UnitType artilleryType
-        = spec().getUnitType("model.unit.artillery");
+            = spec().getUnitType("model.unit.artillery");
     private static final UnitType damagedArtilleryType
-        = spec().getUnitType("model.unit.damagedArtillery");
+            = spec().getUnitType("model.unit.damagedArtillery");
     private static final UnitType treasureTrainType
-        = spec().getUnitType("model.unit.treasureTrain");
+            = spec().getUnitType("model.unit.treasureTrain");
 
     private SimpleCombatModel combatModel = new SimpleCombatModel();
 
@@ -235,34 +206,34 @@ public class InGameControllerTest extends FreeColTestCase {
         int initialDutchTension = dutch.getTension(french).getValue();
         int initialFrenchTension = french.getTension(dutch).getValue();
         assertEquals("The Dutch must be at peace with the French",
-                     Stance.PEACE, dutch.getStance(french));
+                Stance.PEACE, dutch.getStance(french));
         assertEquals("The French must be at peace with the Dutch",
-                     Stance.PEACE, french.getStance(dutch));
+                Stance.PEACE, french.getStance(dutch));
         assertEquals("Wrong initial dutch tension",
-                     initialTensionValue, initialDutchTension);
+                initialTensionValue, initialDutchTension);
         assertEquals("Wrong initial french tension",
-                     initialTensionValue, initialFrenchTension);
+                initialTensionValue, initialFrenchTension);
 
         // French declare war
         igc.changeStance(french, Stance.WAR, dutch, true);
 
         // Verify stance
         assertTrue("The Dutch should be at war with the French",
-                   dutch.getStance(french) == Stance.WAR);
+                dutch.getStance(french) == Stance.WAR);
         assertTrue("The French should be at war with the Dutch",
-                   french.getStance(dutch) == Stance.WAR);
+                french.getStance(dutch) == Stance.WAR);
 
         // Verify tension
         int currDutchTension = dutch.getTension(french).getValue();
         int currFrenchTension = french.getTension(dutch).getValue();
         int expectedDutchTension = Math.min(Tension.TENSION_MAX,
-            initialDutchTension + Tension.WAR_MODIFIER);
+                initialDutchTension + Tension.WAR_MODIFIER);
         int expectedFrenchTension = Math.min(Tension.TENSION_MAX,
-            initialFrenchTension + Tension.WAR_MODIFIER);
+                initialFrenchTension + Tension.WAR_MODIFIER);
         assertEquals("Wrong dutch tension",
-                     expectedDutchTension, currDutchTension);
+                expectedDutchTension, currDutchTension);
         assertEquals("Wrong french tension",
-                     expectedFrenchTension, currFrenchTension);
+                expectedFrenchTension, currFrenchTension);
     }
 
     public void testCreateMission() {
@@ -272,8 +243,8 @@ public class InGameControllerTest extends FreeColTestCase {
         ServerPlayer dutch = getServerPlayer(game, "model.nation.dutch");
         ServerPlayer french = getServerPlayer(game, "model.nation.french");
         FreeColTestCase.IndianSettlementBuilder builder
-            = new FreeColTestCase.IndianSettlementBuilder(game);
-        ServerIndianSettlement camp = (ServerIndianSettlement)builder.build();
+                = new FreeColTestCase.IndianSettlementBuilder(game);
+        ServerIndianSettlement camp = (ServerIndianSettlement) builder.build();
         camp.setContacted(dutch);
         camp.setContacted(french);
         Tile tile = camp.getTile().getNeighbourOrNull(Direction.N);
@@ -290,16 +261,16 @@ public class InGameControllerTest extends FreeColTestCase {
         // Mission establishment should fail for the Dutch
         igc.establishMission(dutch, dutchJesuit, camp);
         assertTrue("Dutch Jesuit should be dead",
-                   dutchJesuit.isDisposed());
+                dutchJesuit.isDisposed());
         assertTrue("Indian settlement should not have a mission",
-                   !camp.hasMissionary());
+                !camp.hasMissionary());
 
         // But succeed for the French
         igc.establishMission(french, frenchJesuit, camp);
         assertTrue("French Jesuit should not be dead",
-                   !frenchJesuit.isDisposed());
+                !frenchJesuit.isDisposed());
         assertTrue("Indian settlement should have a mission",
-                   camp.hasMissionary());
+                camp.hasMissionary());
     }
 
     public void testDumpGoods() {
@@ -311,10 +282,10 @@ public class InGameControllerTest extends FreeColTestCase {
         Tile tile = map.getTile(1, 1);
         Unit privateer = new ServerUnit(game, tile, dutch, privateerType);
         assertEquals("Privateer should not carry anything",
-                     0, privateer.getGoodsSpaceTaken());
+                0, privateer.getGoodsSpaceTaken());
         privateer.addGoods(cottonType, 75);
         assertEquals("Privateer should carry cotton", 75,
-                     privateer.getGoodsCount(cottonType));
+                privateer.getGoodsCount(cottonType));
 
         // Unloading more than present should fail
         igc.unloadGoods(dutch, cottonType, 100, privateer);
@@ -330,9 +301,9 @@ public class InGameControllerTest extends FreeColTestCase {
         int gold = dutch.getGold();
         igc.unloadGoods(dutch, cottonType, 50, privateer);
         assertEquals("Privateer in Europe should no longer carry cotton", 0,
-                     privateer.getGoodsCount(cottonType));
+                privateer.getGoodsCount(cottonType));
         assertEquals("No payment for boycotted goods", gold,
-                     dutch.getGold());
+                dutch.getGold());
     }
 
 
@@ -346,61 +317,61 @@ public class InGameControllerTest extends FreeColTestCase {
         Unit ship = new ServerUnit(game, tile, dutch, galleonType);
         Unit treasure = new ServerUnit(game, tile, dutch, treasureTrainType);
         assertTrue("Treasure train can carry treasure",
-                   treasure.canCarryTreasure());
+                treasure.canCarryTreasure());
         treasure.setTreasureAmount(100);
         assertFalse("Can not cash in treasure from a tile",
-                    treasure.canCashInTreasureTrain());
+                treasure.canCashInTreasureTrain());
         treasure.setLocation(ship);
         assertFalse("Can not cash in treasure from a ship",
-                    treasure.canCashInTreasureTrain());
+                treasure.canCashInTreasureTrain());
 
         // Succeed in Europe
         ship.setLocation(dutch.getEurope());
         assertTrue("Can cash in treasure in Europe",
-                   treasure.canCashInTreasureTrain());
+                treasure.canCashInTreasureTrain());
         int fee = treasure.getTransportFee();
         assertEquals("Cash in transport fee is zero in Europe",
-                     0, fee);
+                0, fee);
         int oldGold = dutch.getGold();
         igc.cashInTreasureTrain(dutch, treasure);
         assertEquals("Cash in increases gold by the treasure amount",
-                     100, dutch.getGold() - oldGold);
+                100, dutch.getGold() - oldGold);
 
         // Fail from a port while galleon exists, then succeed
         treasure = new ServerUnit(game, tile, dutch, treasureTrainType);
         treasure.setTreasureAmount(100);
         Colony port = getStandardColony(1, 9, 4);
         assertFalse("Standard colony is not landlocked",
-                    port.isLandLocked());
+                port.isLandLocked());
         assertTrue("Standard colony is connected to Europe",
-                   port.isConnectedPort());
+                port.isConnectedPort());
         treasure.setLocation(port.getTile());
         assertFalse("Can not cash in treasure from a port (galleon exists)",
-                   treasure.canCashInTreasureTrain());
+                treasure.canCashInTreasureTrain());
         dutch.removeUnit(ship);
         assertTrue("Can cash in treasure from a port (galleon gone)",
-                   treasure.canCashInTreasureTrain());
+                treasure.canCashInTreasureTrain());
 
         // Fail from a landlocked colony
         Colony inland = getStandardColony(1, 7, 7);
         assertTrue("Inland colony is landlocked",
-                   inland.isLandLocked());
+                inland.isLandLocked());
         assertFalse("Inland colony is not connected to Europe",
-                    inland.isConnectedPort());
+                inland.isConnectedPort());
         treasure.setLocation(inland.getTile());
         assertFalse("Can not cash in treasure from inland colony",
-                    treasure.canCashInTreasureTrain());
+                treasure.canCashInTreasureTrain());
 
         // Fail from a colony with a port but no connection to Europe
         map.getTile(5, 5).setType(spec().getTileType("model.tile.lake"));
         Colony lake = getStandardColony(1, 4, 5);
         assertFalse("Lake colony is not landlocked",
-                    lake.isLandLocked());
+                lake.isLandLocked());
         assertFalse("Lake colony is not connected to Europe",
-                    lake.isConnectedPort());
+                lake.isConnectedPort());
         treasure.setLocation(lake.getTile());
         assertFalse("Can not cash in treasure from lake colony",
-                    treasure.canCashInTreasureTrain());
+                treasure.canCashInTreasureTrain());
     }
 
     public void testEmbark() {
@@ -420,45 +391,45 @@ public class InGameControllerTest extends FreeColTestCase {
         // Can not put ship on carrier
         igc.embarkUnit(dutch, caravel, galleon);
         assertTrue("Caravel can not be put on galleon",
-                   caravel.getLocation() == seaTile);
+                caravel.getLocation() == seaTile);
 
         // Can not put wagon on galleon at its normal size
         wagon.getType().setSpaceTaken(12);
         igc.embarkUnit(dutch, wagon, galleon);
         assertTrue("Large wagon can not be put on galleon",
-                   wagon.getLocation() == landTile);
+                wagon.getLocation() == landTile);
 
         // but we can if it is made smaller
         wagon.getType().setSpaceTaken(2);
         igc.embarkUnit(dutch, wagon, galleon);
         assertTrue("Wagon should now fit on galleon",
-                   wagon.getLocation() == galleon);
+                wagon.getLocation() == galleon);
         assertEquals("Embarked wagon should be in SENTRY state",
-                     Unit.UnitState.SENTRY, wagon.getState());
+                Unit.UnitState.SENTRY, wagon.getState());
 
         // Can put colonist on carrier
         igc.embarkUnit(dutch, colonist, caravel);
         assertTrue("Colonist should embark on caravel",
-                   colonist.getLocation() == caravel);
+                colonist.getLocation() == caravel);
         assertEquals("Embarked colonist should be in SENTRY state",
-                     Unit.UnitState.SENTRY, colonist.getState());
+                Unit.UnitState.SENTRY, colonist.getState());
     }
 
     public void testClearSpecialty() {
-        final Game game =  ServerTestHelper.startServerGame(getTestMap());
+        final Game game = ServerTestHelper.startServerGame(getTestMap());
         final Map map = game.getMap();
         final InGameController igc = ServerTestHelper.getInGameController();
 
         ServerPlayer dutch = getServerPlayer(game, "model.nation.dutch");
         Unit unit = new ServerUnit(game, map.getTile(5, 8), dutch,
-                                   hardyPioneerType);
+                hardyPioneerType);
         assertTrue("Unit should be a hardy pioneer",
-                   unit.getType() == hardyPioneerType);
+                unit.getType() == hardyPioneerType);
 
         // Basic function
         igc.clearSpeciality(dutch, unit);
         assertTrue("Unit should be cleared of its specialty",
-                    unit.getType() != hardyPioneerType);
+                unit.getType() != hardyPioneerType);
 
         // Can not clear speciality while teaching
         Colony colony = getStandardColony();
@@ -466,9 +437,9 @@ public class InGameControllerTest extends FreeColTestCase {
         colony.addBuilding(school);
 
         Unit teacher = new ServerUnit(game, map.getTile(5, 8), dutch,
-                                      hardyPioneerType);
+                hardyPioneerType);
         assertEquals("Unit should be a hardy pioneer",
-                     hardyPioneerType, teacher.getType());
+                hardyPioneerType, teacher.getType());
 
         boolean selection = FreeColTestUtils.setStudentSelection(false);
         teacher.setLocation(school);
@@ -476,23 +447,22 @@ public class InGameControllerTest extends FreeColTestCase {
 
         igc.clearSpeciality(dutch, teacher);
         assertEquals("Teacher specialty cannot be cleared",
-                     hardyPioneerType, teacher.getType());
+                hardyPioneerType, teacher.getType());
 
         FreeColTestUtils.setStudentSelection(selection);
     }
 
     public void testAtackedNavalUnitIsDamaged() {
-        final Game game =  ServerTestHelper.startServerGame(getTestMap(ocean));
+        final Game game = ServerTestHelper.startServerGame(getTestMap(ocean));
         final Map map = game.getMap();
         final InGameController igc = ServerTestHelper.getInGameController();
-
         ServerPlayer dutch = getServerPlayer(game, "model.nation.dutch");
         ServerPlayer french = getServerPlayer(game, "model.nation.french");
         igc.changeStance(french, Stance.WAR, dutch, true);
         assertEquals("Dutch should be at war with french",
-                     dutch.getStance(french), Stance.WAR);
+                dutch.getStance(french), Stance.WAR);
         assertEquals("French should be at war with dutch",
-                     french.getStance(dutch), Stance.WAR);
+                french.getStance(dutch), Stance.WAR);
 
         Tile tile1 = map.getTile(5, 8);
         tile1.setExplored(dutch, true);
@@ -506,38 +476,85 @@ public class InGameControllerTest extends FreeColTestCase {
         Unit galleon = new ServerUnit(game, tile1, dutch, galleonType);
         Unit privateer = new ServerUnit(game, tile2, french, privateerType);
         assertEquals("Galleon should be empty", 0,
-                     galleon.getGoodsSpaceTaken());
+                galleon.getGoodsSpaceTaken());
         Goods cargo = new Goods(game, galleon, musketsType, 100);
         galleon.add(cargo);
         assertEquals("Galleon should be loaded", 1,
-                     galleon.getGoodsSpaceTaken());
+                galleon.getGoodsSpaceTaken());
         assertFalse("Galleon should not be repairing",
-                    galleon.isDamagedAndUnderForcedRepair());
+                galleon.isDamagedAndUnderForcedRepair());
         galleon.setDestination(tile3);
         assertEquals("Wrong destination for Galleon",
-                     tile3, galleon.getDestination());
+                tile3, galleon.getDestination());
         galleon.getTile().setHighSeasCount(5);
         assertEquals("Galleon repair location is Europe",
-            dutch.getEurope(), galleon.getRepairLocation());
-
+                dutch.getEurope(), galleon.getRepairLocation());
+        igc.changeCaptureShipOdds(0.0); // set probability of capturing to 100%
         // Privateer should win, loot and damage the galleon
         List<CombatEffectType> crs
-            = fakeAttackResult(CombatEffectType.WIN, privateer, galleon);
+                = fakeAttackResult(CombatEffectType.WIN, privateer, galleon);
         checkCombat("Privateer v galleon", crs,
-                    CombatEffectType.WIN, CombatEffectType.LOOT_SHIP,
-                    CombatEffectType.DAMAGE_SHIP_ATTACK);
+                CombatEffectType.WIN, CombatEffectType.LOOT_SHIP, CombatEffectType.DAMAGE_SHIP_ATTACK);
         igc.combat(dutch, privateer, galleon, crs);
 
         assertTrue("Galleon should be in Europe repairing",
-                   galleon.isDamagedAndUnderForcedRepair());
+                galleon.isDamagedAndUnderForcedRepair());
         assertEquals("Galleon should be empty", 0,
-                     galleon.getGoodsSpaceTaken());
+                galleon.getGoodsSpaceTaken());
         assertNull("Galleon should no longer have a destination",
-                   galleon.getDestination());
+                galleon.getDestination());
+    }
+
+    public void testAttackedNavalUnitIsCaptured() {
+        final Game game = ServerTestHelper.startServerGame(getTestMap(ocean));
+        final Map map = game.getMap();
+        final InGameController igc = ServerTestHelper.getInGameController();
+        ServerPlayer dutch = getServerPlayer(game, "model.nation.dutch");
+        ServerPlayer french = getServerPlayer(game, "model.nation.french");
+        igc.changeStance(french, Stance.WAR, dutch, true);
+        assertEquals("Dutch should be at war with french",
+                dutch.getStance(french), Stance.WAR);
+        assertEquals("French should be at war with dutch",
+                french.getStance(dutch), Stance.WAR);
+
+        Tile tile1 = map.getTile(5, 8);
+        tile1.setExplored(dutch, true);
+        tile1.setExplored(french, true);
+        Tile tile2 = map.getTile(4, 8);
+        tile2.setExplored(dutch, true);
+        tile2.setExplored(french, true);
+        Tile tile3 = map.getTile(6, 8);
+        tile3.setExplored(dutch, true);
+        tile3.setExplored(french, true);
+        Unit galleon = new ServerUnit(game, tile1, dutch, galleonType);
+        Unit privateer = new ServerUnit(game, tile2, french, privateerType);
+        assertFalse("Galleon should not be repairing",
+                galleon.isDamagedAndUnderForcedRepair());
+        galleon.setDestination(tile3);
+        assertEquals("Wrong destination for Galleon",
+                tile3, galleon.getDestination());
+        galleon.getTile().setHighSeasCount(5);
+        assertEquals("Galleon repair location is Europe",
+                dutch.getEurope(), galleon.getRepairLocation());
+
+        igc.changeCaptureShipOdds(1.0); // set probability of capturing to 100%
+
+        int frenchNavalUnitCount = french.getUnitCount(true);
+        int dutchNavalUnitCount = dutch.getUnitCount(true);
+        // Privateer should win, and the galleon
+        List<CombatEffectType> crs
+                = fakeAttackResult(CombatEffectType.WIN, privateer, galleon);
+        checkCombat("Privateer v galleon", crs,
+                CombatEffectType.WIN, CombatEffectType.CAPTURE_SHIP,
+                CombatEffectType.SINK_SHIP);
+        igc.combat(dutch, privateer, galleon, crs);
+        assertEquals("Galleon should be french now", frenchNavalUnitCount + 1, french.getUnitCount(true));
+        assertEquals("Galleon should not exist in the dutch", dutchNavalUnitCount - 1, dutch.getUnitCount(true));
+
     }
 
     public void testUnarmedAttack() {
-        final Game game =  ServerTestHelper.startServerGame(getTestMap(plains));
+        final Game game = ServerTestHelper.startServerGame(getTestMap(plains));
         final Map map = game.getMap();
         final InGameController igc = ServerTestHelper.getInGameController();
 
@@ -554,55 +571,55 @@ public class InGameControllerTest extends FreeColTestCase {
         tile2.setExplored(french, true);
         // Create Colonial Regular with default role (impossible:-)
         Unit colonial = new ServerUnit(game, tile1, dutch, colonialType,
-                                       spec().getDefaultRole());
+                spec().getDefaultRole());
         assertEquals("Must be Colonial Regular",
-                     colonialType, colonial.getType());
+                colonialType, colonial.getType());
         assertEquals("Only has default base offence",
-                     UnitType.DEFAULT_OFFENCE, colonial.getType().getBaseOffence());
+                UnitType.DEFAULT_OFFENCE, colonial.getType().getBaseOffence());
         assertEquals("Only has default base defence",
-                     UnitType.DEFAULT_DEFENCE, colonial.getType().getBaseDefence());
+                UnitType.DEFAULT_DEFENCE, colonial.getType().getBaseDefence());
         assertTrue("Has default role", colonial.hasDefaultRole());
 
         // Create Veteran Soldier with default role
         Unit soldier = new ServerUnit(game, tile2, french, veteranType);
         assertTrue("Veteran is armed",
-                   soldier.isArmed());
+                soldier.isArmed());
         assertTrue("Veteran is an offensive unit",
-                   soldier.isOffensiveUnit());
+                soldier.isOffensiveUnit());
         assertEquals("Has soldier role", soldierRole,
-                     soldier.getRole());
+                soldier.getRole());
 
         // Colonial regulars should never be unarmed
         assertEquals("Unarmed Colonial Regular can not attack!",
-                     Unit.MoveType.MOVE_NO_ATTACK_CIVILIAN,
-                     colonial.getMoveType(tile2));
+                Unit.MoveType.MOVE_NO_ATTACK_CIVILIAN,
+                colonial.getMoveType(tile2));
         colonial.changeRole(soldierRole, 1);
         assertEquals("Colonial Regular can attack",
-                     Unit.MoveType.ATTACK_UNIT,
-                     colonial.getMoveType(tile2));
+                Unit.MoveType.ATTACK_UNIT,
+                colonial.getMoveType(tile2));
 
         // Veteran attacks and demotes the Colonial Regular
         List<CombatEffectType> crs
-            = fakeAttackResult(CombatEffectType.WIN, soldier, colonial);
+                = fakeAttackResult(CombatEffectType.WIN, soldier, colonial);
         checkCombat("Soldier v Colonial (1)", crs,
-            CombatEffectType.WIN, CombatEffectType.LOSE_EQUIP, CombatEffectType.DEMOTE_UNIT);
+                CombatEffectType.WIN, CombatEffectType.LOSE_EQUIP, CombatEffectType.DEMOTE_UNIT);
         igc.combat(french, soldier, colonial, crs);
 
         assertEquals("Colonial Regular is demoted",
-                     veteranType, colonial.getType());
+                veteranType, colonial.getType());
 
         // Veteran attacks and captures the Colonial Regular
         crs = fakeAttackResult(CombatEffectType.WIN, soldier, colonial);
         checkCombat("Soldier v Colonial (2)", crs,
-            CombatEffectType.WIN, CombatEffectType.CAPTURE_UNIT);
+                CombatEffectType.WIN, CombatEffectType.CAPTURE_UNIT);
         igc.combat(french, soldier, colonial, crs);
 
         assertEquals("Colonial Regular is demoted",
-                     colonistType, colonial.getType());
+                colonistType, colonial.getType());
         assertEquals("Colonial Regular should be captured",
-                     french, colonial.getOwner());
+                french, colonial.getOwner());
         assertEquals("Colonial Regular is moved to the Veterans tile",
-                     tile2, colonial.getTile());
+                tile2, colonial.getTile());
     }
 
     public void testAttackColonyWithVeteran() {
@@ -622,104 +639,104 @@ public class InGameControllerTest extends FreeColTestCase {
         Unit colonist = first(colony.getUnits());
         colonist.changeType(colonialType);
         assertEquals("Colonist should be Colonial Regular",
-                     colonialType, colonist.getType());
+                colonialType, colonist.getType());
         Unit defender = new ServerUnit(getGame(), colony.getTile(), dutch,
-                                       veteranType, dragoonRole);
+                veteranType, dragoonRole);
         Unit attacker = new ServerUnit(getGame(), tile2, french, veteranType,
-                                       dragoonRole);
+                dragoonRole);
         assertEquals("Colony defender is Veteran Soldier",
-                     defender, colony.getTile().getDefendingUnit(attacker));
+                defender, colony.getTile().getDefendingUnit(attacker));
 
         // Attacker wins and defender loses horses
         List<CombatEffectType> crs
-            = fakeAttackResult(CombatEffectType.WIN, attacker, defender);
+                = fakeAttackResult(CombatEffectType.WIN, attacker, defender);
         checkCombat("Veteran v Colony (1)", crs,
-            CombatEffectType.WIN, CombatEffectType.LOSE_EQUIP);
+                CombatEffectType.WIN, CombatEffectType.LOSE_EQUIP);
         igc.combat(french, attacker, defender, crs);
 
         assertTrue("Attacker should be mounted",
-                   attacker.isMounted());
+                attacker.isMounted());
         assertTrue("Attacker should be armed",
-                   attacker.isArmed());
+                attacker.isArmed());
         assertEquals("Attacker should be a Veteran Soldier",
-                     veteranType, attacker.getType());
+                veteranType, attacker.getType());
         assertFalse("Defender should not be mounted",
-                    defender.isMounted());
+                defender.isMounted());
         assertTrue("Defender should be armed",
-                   defender.isArmed());
+                defender.isArmed());
         assertEquals("Defender should be a Veteran Soldier",
-                     veteranType, defender.getType());
+                veteranType, defender.getType());
         assertEquals("Defender is still the best colony defender",
-                     defender, colony.getTile().getDefendingUnit(attacker));
+                defender, colony.getTile().getDefendingUnit(attacker));
 
         // Attacker loses and loses horses
         crs = fakeAttackResult(CombatEffectType.LOSE, attacker, defender);
         checkCombat("Veteran v Colony (2) ", crs,
-            CombatEffectType.LOSE, CombatEffectType.LOSE_EQUIP);
+                CombatEffectType.LOSE, CombatEffectType.LOSE_EQUIP);
         igc.combat(french, attacker, defender, crs);
 
         assertFalse("Attacker should not be mounted",
-                    attacker.isMounted());
+                attacker.isMounted());
         assertTrue("Attacker should be armed",
-                   attacker.isArmed());
+                attacker.isArmed());
         assertEquals("Attacker should be a Veteran Soldier",
-                     veteranType, attacker.getType());
+                veteranType, attacker.getType());
         assertFalse("Defender should not be mounted",
-                    defender.isMounted());
+                defender.isMounted());
         assertTrue("Defender should be armed",
-                   defender.isArmed());
+                defender.isArmed());
         assertEquals("Defender should be a Veteran Soldier",
-                     veteranType, defender.getType());
+                veteranType, defender.getType());
         assertEquals("Defender is still the best colony defender",
-                     defender, colony.getTile().getDefendingUnit(attacker));
+                defender, colony.getTile().getDefendingUnit(attacker));
 
         // Attacker wins and defender loses muskets
         crs = fakeAttackResult(CombatEffectType.WIN, attacker, defender);
         checkCombat("Veteran v Colony (3)", crs,
-            CombatEffectType.WIN, CombatEffectType.LOSE_EQUIP);
+                CombatEffectType.WIN, CombatEffectType.LOSE_EQUIP);
         igc.combat(french, attacker, defender, crs);
 
         assertFalse("Attacker should not be mounted",
-                    attacker.isMounted());
+                attacker.isMounted());
         assertTrue("Attacker should be armed",
-                   attacker.isArmed());
+                attacker.isArmed());
         assertEquals("Attacker should be a Veteran Soldier",
-                     veteranType, attacker.getType());
+                veteranType, attacker.getType());
         assertFalse("Defender should not be mounted",
-                    defender.isMounted());
+                defender.isMounted());
         assertFalse("Defender should not be armed",
-                    defender.isArmed());
+                defender.isArmed());
         assertEquals("Defender should be a Veteran Soldier",
-                     veteranType, defender.getType());
+                veteranType, defender.getType());
         assertFalse("Defender should not be a defensive unit",
-                    defender.isDefensiveUnit());
+                defender.isDefensiveUnit());
 
         // Attacker wins and captures the settlement
         crs = fakeAttackResult(CombatEffectType.WIN, attacker, defender);
         checkCombat("Veteran v Colony (4)", crs,
-            CombatEffectType.WIN, CombatEffectType.CAPTURE_COLONY);
+                CombatEffectType.WIN, CombatEffectType.CAPTURE_COLONY);
         igc.combat(french, attacker, defender, crs);
 
         assertFalse("Attacker should not be mounted",
-                    attacker.isMounted());
+                attacker.isMounted());
         assertTrue("Attacker should be armed",
-                   attacker.isArmed());
+                attacker.isArmed());
         assertEquals("Attacker should be a Veteran Soldier",
-                     veteranType, attacker.getType());
+                veteranType, attacker.getType());
         assertFalse("Defender should not be mounted",
-                    defender.isMounted());
+                defender.isMounted());
         assertFalse("Defender should not be armed",
-                    defender.isArmed());
+                defender.isArmed());
         assertEquals("Defender should be demoted",
-                     colonistType, defender.getType());
+                colonistType, defender.getType());
         assertEquals("Attacker should be on the colony tile",
-                     colony.getTile(), attacker.getTile());
+                colony.getTile(), attacker.getTile());
         assertEquals("Defender should be on the colony tile",
-                     colony.getTile(), defender.getTile());
+                colony.getTile(), defender.getTile());
         assertEquals("Colony should be owned by the attacker",
-                     attacker.getOwner(), colony.getOwner());
+                attacker.getOwner(), colony.getOwner());
         assertEquals("Colony colonist should be demoted",
-                     veteranType, colonist.getType());
+                veteranType, colonist.getType());
     }
 
     public void testAttackColonyWithBrave() {
@@ -736,206 +753,206 @@ public class InGameControllerTest extends FreeColTestCase {
         tile2.setExplored(dutch, true);
         Unit colonist = first(colony.getUnits());
         Unit defender = new ServerUnit(getGame(), colony.getTile(), dutch,
-                                       veteranType, dragoonRole);
+                veteranType, dragoonRole);
         Unit attacker = new ServerUnit(getGame(), tile2, inca, braveType,
-                                       nativeDragoonRole);
+                nativeDragoonRole);
         assertTrue("Attacker should be armed",
-                   attacker.isArmed());
+                attacker.isArmed());
         assertTrue("Attacker should be mounted",
-                   attacker.isMounted());
+                attacker.isMounted());
         assertTrue("Inca is indian",
-                   inca.isIndian());
+                inca.isIndian());
         assertEquals("Defender is the colony best defender",
-                     defender, colony.getTile().getDefendingUnit(attacker));
+                defender, colony.getTile().getDefendingUnit(attacker));
 
         // Attacker wins and defender loses horses
         List<CombatEffectType> crs
-            = fakeAttackResult(CombatEffectType.WIN, attacker, defender);
+                = fakeAttackResult(CombatEffectType.WIN, attacker, defender);
         checkCombat("Brave v Colony (1)", crs,
-            CombatEffectType.WIN, CombatEffectType.LOSE_EQUIP);
+                CombatEffectType.WIN, CombatEffectType.LOSE_EQUIP);
         igc.combat(inca, attacker, defender, crs);
 
         assertEquals("Colony size should be 1",
-                     1, colony.getUnitCount());
+                1, colony.getUnitCount());
         assertTrue("Attacker should be mounted",
-                   attacker.isMounted());
+                attacker.isMounted());
         assertTrue("Attacker should be armed",
-                   attacker.isArmed());
+                attacker.isArmed());
         assertEquals("Attacker should be a brave",
-                     braveType, attacker.getType());
+                braveType, attacker.getType());
         assertFalse("Defender should not be mounted",
-                    defender.isMounted());
+                defender.isMounted());
         assertTrue("Defender should be armed",
-                   defender.isArmed());
+                defender.isArmed());
         assertEquals("Defender should be Veteran Soldier",
-                     veteranType, defender.getType());
+                veteranType, defender.getType());
         assertTrue("Defender should be a defensive unit",
-                   defender.isDefensiveUnit());
+                defender.isDefensiveUnit());
         assertEquals("Defender is the colony best defender",
-                     defender, colony.getTile().getDefendingUnit(attacker));
+                defender, colony.getTile().getDefendingUnit(attacker));
 
         // Attacker wins and defender loses muskets
         crs = fakeAttackResult(CombatEffectType.WIN, attacker, defender);
         checkCombat("Brave v Colony (2)", crs,
-            CombatEffectType.WIN, CombatEffectType.LOSE_EQUIP);
+                CombatEffectType.WIN, CombatEffectType.LOSE_EQUIP);
         igc.combat(inca, attacker, defender, crs);
 
         assertEquals("Colony size should be 1",
-                     1, colony.getUnitCount());
+                1, colony.getUnitCount());
         assertTrue("Attacker should be mounted",
-                   attacker.isMounted());
+                attacker.isMounted());
         assertTrue("Attacker should be armed",
-                   attacker.isArmed());
+                attacker.isArmed());
         assertEquals("Attacker should be a brave",
-                     braveType, attacker.getType());
+                braveType, attacker.getType());
         assertFalse("Defender should not be mounted",
-                    defender.isMounted());
+                defender.isMounted());
         assertFalse("Defender should not be armed",
-                    defender.isArmed());
+                defender.isArmed());
         assertEquals("Defender should be Veteran Soldier",
-                     veteranType, defender.getType());
+                veteranType, defender.getType());
         assertFalse("Defender should not be a defensive unit",
-                    defender.isDefensiveUnit());
+                defender.isDefensiveUnit());
 
         // Make sure pillaging is out.
         assertFalse("Colony can not be plundered",
-                    colony.canBePlundered());
+                colony.canBePlundered());
         assertFalse("Colony can not be pillaged",
-                    colony.canBePillaged(attacker));
+                colony.canBePillaged(attacker));
 
         // Attacker wins and slaughters the defender.
         crs = fakeAttackResult(CombatEffectType.WIN, attacker, defender);
         checkCombat("Brave v Colony (3)", crs,
-            CombatEffectType.WIN, CombatEffectType.SLAUGHTER_UNIT);
+                CombatEffectType.WIN, CombatEffectType.SLAUGHTER_UNIT);
         igc.combat(inca, attacker, defender, crs);
 
         assertEquals("Colony size should be 1",
-                     1, colony.getUnitCount());
+                1, colony.getUnitCount());
         assertTrue("Attacker should be mounted",
-                   attacker.isMounted());
+                attacker.isMounted());
         assertTrue("Attacker should be armed",
-                   attacker.isArmed());
+                attacker.isArmed());
         assertEquals("Attacker should be a brave",
-                     braveType, attacker.getType());
+                braveType, attacker.getType());
         assertTrue("Defender should be disposed",
-                   defender.isDisposed());
+                defender.isDisposed());
         assertFalse("Colony should not be disposed",
-                    colony.isDisposed());
+                colony.isDisposed());
         defender = colony.getDefendingUnit(attacker);
 
         // Attacker pillages, burning building
         assertFalse("Colony should not be pillageable",
-                    colony.canBePillaged(attacker));
+                colony.canBePillaged(attacker));
         Building school = new ServerBuilding(game, colony, schoolHouseType);
         colony.addBuilding(school);
         assertTrue("Colony has school, should be pillageable",
-                   colony.canBePillaged(attacker));
+                colony.canBePillaged(attacker));
         crs = fakeAttackResult(CombatEffectType.WIN, attacker, defender);
         checkCombat("Brave v Colony (4)", crs,
-            CombatEffectType.WIN, CombatEffectType.PILLAGE_COLONY);
+                CombatEffectType.WIN, CombatEffectType.PILLAGE_COLONY);
         igc.combat(inca, attacker, defender, crs);
 
         assertTrue("Attacker should be mounted",
-                   attacker.isMounted());
+                attacker.isMounted());
         assertTrue("Attacker should be armed",
-                   attacker.isArmed());
+                attacker.isArmed());
         assertEquals("Attacker should be a brave",
-                     braveType, attacker.getType());
+                braveType, attacker.getType());
         assertTrue("Colony should not be disposed",
-                   !colony.isDisposed());
+                !colony.isDisposed());
         assertTrue("Colony should not have a school",
-                   colony.getBurnableBuildings().isEmpty());
+                colony.getBurnableBuildings().isEmpty());
 
         // Attacker pillages, damaging ship
         assertFalse("Colony should not be pillageable",
-                    colony.canBePillaged(attacker));
+                colony.canBePillaged(attacker));
         Unit privateer = new ServerUnit(game, colony.getTile(), dutch,
-                                        privateerType);
+                privateerType);
         colony.getTile().setHighSeasCount(-1); // no repair possible
         assertTrue("Colony has ship, should be pillageable",
-                   colony.canBePillaged(attacker));
+                colony.canBePillaged(attacker));
         crs = fakeAttackResult(CombatEffectType.WIN, attacker, defender);
         checkCombat("Brave v Colony (5)", crs,
-            CombatEffectType.WIN, CombatEffectType.PILLAGE_COLONY);
+                CombatEffectType.WIN, CombatEffectType.PILLAGE_COLONY);
         igc.combat(inca, attacker, defender, crs);
 
         assertTrue("Attacker should be mounted",
-                   attacker.isMounted());
+                attacker.isMounted());
         assertTrue("Attacker should be armed",
-                   attacker.isArmed());
+                attacker.isArmed());
         assertEquals("Attacker should be a brave",
-                     braveType, attacker.getType());
+                braveType, attacker.getType());
         assertTrue("Colony should not be disposed",
-                   !colony.isDisposed());
+                !colony.isDisposed());
         assertTrue("Privateer should be under repair",
-                   privateer.isDamagedAndUnderForcedRepair());
+                privateer.isDamagedAndUnderForcedRepair());
         assertEquals("Privateer should be in Europe", dutch.getEurope(),
-                     privateer.getLocation());
+                privateer.getLocation());
 
         // Attacker pillages, stealing goods
         assertFalse("Colony should not be pillageable",
-                    colony.canBePillaged(attacker));
+                colony.canBePillaged(attacker));
         colony.addGoods(cottonType, 100);
         assertTrue("Colony has goods, should be pillageable",
-                   colony.canBePillaged(attacker));
+                colony.canBePillaged(attacker));
         crs = fakeAttackResult(CombatEffectType.WIN, attacker, defender);
         checkCombat("Brave v Colony (6)", crs,
-            CombatEffectType.WIN, CombatEffectType.PILLAGE_COLONY);
+                CombatEffectType.WIN, CombatEffectType.PILLAGE_COLONY);
         igc.combat(inca, attacker, defender, crs);
 
         assertTrue("Attacker should be mounted",
-                   attacker.isMounted());
+                attacker.isMounted());
         assertTrue("Attacker should be armed",
-                   attacker.isArmed());
+                attacker.isArmed());
         assertEquals("Attacker should be a brave",
-                     braveType, attacker.getType());
+                braveType, attacker.getType());
         assertTrue("Colony should not be disposed",
-                   !colony.isDisposed());
+                !colony.isDisposed());
         assertTrue("Colony should have lost cotton",
-                   colony.getGoodsCount(cottonType) < 100);
+                colony.getGoodsCount(cottonType) < 100);
         colony.removeGoods(cottonType);
 
         // Attacker pillages, stealing gold
         assertFalse("Colony should not be pillageable",
-                    colony.canBePillaged(attacker));
+                colony.canBePillaged(attacker));
         dutch.setGold(100);
         assertTrue("Dutch have gold, colony should be pillageable",
-                   colony.canBePillaged(attacker));
+                colony.canBePillaged(attacker));
         crs = fakeAttackResult(CombatEffectType.WIN, attacker, defender);
         checkCombat("Brave v Colony (7)", crs,
-            CombatEffectType.WIN, CombatEffectType.PILLAGE_COLONY);
+                CombatEffectType.WIN, CombatEffectType.PILLAGE_COLONY);
         igc.combat(inca, attacker, defender, crs);
 
         assertTrue("Attacker should be mounted",
-                   attacker.isMounted());
+                attacker.isMounted());
         assertTrue("Attacker should be armed",
-                   attacker.isArmed());
+                attacker.isArmed());
         assertEquals("Attacker should be a brave",
-                     braveType, attacker.getType());
+                braveType, attacker.getType());
         assertTrue("Colony should not be disposed",
-                   !colony.isDisposed());
+                !colony.isDisposed());
         assertTrue("Dutch should have lost gold",
-                   dutch.getGold() < 100);
+                dutch.getGold() < 100);
         dutch.setGold(0);
         assertFalse("Colony should not be pillageable",
-                    colony.canBePillaged(attacker));
+                colony.canBePillaged(attacker));
 
         // Attacker wins and destroys the colony
         crs = fakeAttackResult(CombatEffectType.WIN, attacker, defender);
         checkCombat("Brave v Colony (8)", crs,
-            CombatEffectType.WIN, CombatEffectType.SLAUGHTER_UNIT, CombatEffectType.DESTROY_COLONY);
+                CombatEffectType.WIN, CombatEffectType.SLAUGHTER_UNIT, CombatEffectType.DESTROY_COLONY);
         igc.combat(inca, attacker, defender, crs);
 
         assertTrue("Attacker should be mounted",
-                   attacker.isMounted());
+                attacker.isMounted());
         assertTrue("Attacker should be armed",
-                   attacker.isArmed());
+                attacker.isArmed());
         assertEquals("Attacker should be a brave",
-                     braveType, attacker.getType());
+                braveType, attacker.getType());
         assertTrue("Colony should be disposed",
-                    colony.isDisposed());
+                colony.isDisposed());
         assertEquals("Attacker should have moved into the colony tile",
-                     colony.getTile(), attacker.getTile());
+                colony.getTile(), attacker.getTile());
     }
 
     public void testLoseColonyDefenceWithRevere() {
@@ -954,12 +971,12 @@ public class InGameControllerTest extends FreeColTestCase {
         tile2.setExplored(dutch, true);
         Unit colonist = first(colony.getUnits());
         Unit attacker = new ServerUnit(getGame(), tile2, inca, braveType,
-                                       nativeDragoonRole);
+                nativeDragoonRole);
         assertEquals("Colonist should be the colony best defender",
-                     colonist, colony.getDefendingUnit(attacker));
+                colonist, colony.getDefendingUnit(attacker));
         dutch.addFather(spec()
-                        .getFoundingFather("model.foundingFather.paulRevere"));
-        java.util.Map<GoodsType,Integer> goodsAdded = new HashMap<>();
+                .getFoundingFather("model.foundingFather.paulRevere"));
+        java.util.Map<GoodsType, Integer> goodsAdded = new HashMap<>();
         for (AbstractGoods goods : soldierRole.getRequiredGoodsList()) {
             colony.addGoods(goods);
             goodsAdded.put(goods.getType(), goods.getAmount());
@@ -967,21 +984,21 @@ public class InGameControllerTest extends FreeColTestCase {
 
         // Attacker wins, defender autoequips, but loses the muskets
         List<CombatEffectType> crs
-            = fakeAttackResult(CombatEffectType.WIN, attacker, colonist);
+                = fakeAttackResult(CombatEffectType.WIN, attacker, colonist);
         checkCombat("Inca v Colony", crs,
-                    CombatEffectType.WIN, CombatEffectType.AUTOEQUIP_UNIT,
-                    CombatEffectType.LOSE_AUTOEQUIP);
+                CombatEffectType.WIN, CombatEffectType.AUTOEQUIP_UNIT,
+                CombatEffectType.LOSE_AUTOEQUIP);
         igc.combat(inca, attacker, colonist, crs);
 
         assertFalse("Colonist should not be disposed",
-                    colonist.isDisposed());
+                colonist.isDisposed());
         assertFalse("Colonist should not be captured",
-                    colonist.getOwner() == attacker.getOwner());
+                colonist.getOwner() == attacker.getOwner());
         for (AbstractGoods goods : soldierRole.getRequiredGoodsList()) {
             boolean goodsLost = colony.getGoodsCount(goods.getType())
-                < goodsAdded.get(goods.getType());
+                    < goodsAdded.get(goods.getType());
             assertTrue("Colony should have lost " + goods.getType().toString(),
-                       goodsLost);
+                    goodsLost);
         }
     }
 
@@ -1004,20 +1021,20 @@ public class InGameControllerTest extends FreeColTestCase {
 
         // Soldier wins and kills the pioneer
         List<CombatEffectType> crs
-            = fakeAttackResult(CombatEffectType.WIN, soldier, pioneer);
+                = fakeAttackResult(CombatEffectType.WIN, soldier, pioneer);
         checkCombat("Soldier v Pioneer", crs,
-                    CombatEffectType.WIN, CombatEffectType.SLAUGHTER_UNIT);
+                CombatEffectType.WIN, CombatEffectType.SLAUGHTER_UNIT);
         igc.combat(french, soldier, pioneer, crs);
 
         assertTrue("Pioneer should be dead",
-                   pioneer.isDisposed());
+                pioneer.isDisposed());
     }
 
     public void testScoutDiesNotLosesEquipment() {
         final Game game = ServerTestHelper.startServerGame(getTestMap());
         final Map map = game.getMap();
         final InGameController igc = ServerTestHelper.getInGameController();
-        
+
         ServerPlayer dutch = getServerPlayer(game, "model.nation.dutch");
         ServerPlayer french = getServerPlayer(game, "model.nation.french");
         igc.changeStance(dutch, Stance.WAR, french, true);
@@ -1029,20 +1046,20 @@ public class InGameControllerTest extends FreeColTestCase {
         tile2.setExplored(dutch, true);
         tile2.setExplored(french, true);
         Unit scout = new ServerUnit(game, tile1, dutch, colonistType,
-                                    scoutRole);
+                scoutRole);
         Unit soldier = new ServerUnit(game, tile2, french, veteranType,
-                                      soldierRole);
+                soldierRole);
         scout.setMovesLeft(1);
 
         // Soldier wins and kills the scout
         List<CombatEffectType> crs
-            = fakeAttackResult(CombatEffectType.WIN, soldier, scout);
+                = fakeAttackResult(CombatEffectType.WIN, soldier, scout);
         checkCombat("Soldier v scout", crs,
-                    CombatEffectType.WIN, CombatEffectType.SLAUGHTER_UNIT);
+                CombatEffectType.WIN, CombatEffectType.SLAUGHTER_UNIT);
         igc.combat(french, soldier, scout, crs);
 
         assertTrue("Scout should be dead",
-                   scout.isDisposed());
+                scout.isDisposed());
         assertEquals(soldierRole, soldier.getRole());
     }
 
@@ -1057,34 +1074,34 @@ public class InGameControllerTest extends FreeColTestCase {
 
         // UnitType promotion
         assertEquals("Criminals should promote to servants",
-                     indenturedServantType,
-                     spec().getUnitChange(UnitChangeType.PROMOTION,
-                                          pettyCriminalType).to);
+                indenturedServantType,
+                spec().getUnitChange(UnitChangeType.PROMOTION,
+                        pettyCriminalType).to);
         assertEquals("Servants should promote to colonists",
-                     colonistType,
-                     spec().getUnitChange(UnitChangeType.PROMOTION,
-                                          indenturedServantType).to);
+                colonistType,
+                spec().getUnitChange(UnitChangeType.PROMOTION,
+                        indenturedServantType).to);
         assertEquals("Colonists should promote to Veterans",
-                     veteranType,
-                     spec().getUnitChange(UnitChangeType.PROMOTION,
-                                          colonistType).to);
+                veteranType,
+                spec().getUnitChange(UnitChangeType.PROMOTION,
+                        colonistType).to);
         assertEquals("Veterans should promote to Colonials",
-                     colonialType,
-                     spec().getUnitChange(UnitChangeType.PROMOTION,
-                                          veteranType).to);
+                colonialType,
+                spec().getUnitChange(UnitChangeType.PROMOTION,
+                        veteranType).to);
         // Only independent players can own colonial regulars
         assertNull("Colonials should not be promotable",
-                   spec().getUnitChange(UnitChangeType.PROMOTION,
-                                        colonialType));
+                spec().getUnitChange(UnitChangeType.PROMOTION,
+                        colonialType));
         assertNull("Artillery should not be promotable",
-                   spec().getUnitChange(UnitChangeType.PROMOTION,
-                                        artilleryType));
+                spec().getUnitChange(UnitChangeType.PROMOTION,
+                        artilleryType));
         assertNull("Kings regulars should not be promotable",
-                   spec().getUnitChange(UnitChangeType.PROMOTION,
-                                        kingsRegularType));
+                spec().getUnitChange(UnitChangeType.PROMOTION,
+                        kingsRegularType));
         assertNull("Indian converts should not be promotable",
-                   spec().getUnitChange(UnitChangeType.PROMOTION,
-                                        indianConvertType));
+                spec().getUnitChange(UnitChangeType.PROMOTION,
+                        indianConvertType));
         Tile tile1 = map.getTile(5, 8);
         tile1.setExplored(dutch, true);
         tile1.setExplored(french, true);
@@ -1092,79 +1109,79 @@ public class InGameControllerTest extends FreeColTestCase {
         tile2.setExplored(dutch, true);
         tile2.setExplored(french, true);
         Unit unit = new ServerUnit(game, tile1, dutch,
-                                   pettyCriminalType, soldierRole);
+                pettyCriminalType, soldierRole);
         Unit soldier = new ServerUnit(game, tile2, french,
-                                      colonistType, soldierRole);
+                colonistType, soldierRole);
         // Enable automatic promotion
         dutch.addAbility(new Ability(Ability.AUTOMATIC_PROMOTION));
 
         // Criminal -> Servant
         List<CombatEffectType> crs
-            = fakeAttackResult(CombatEffectType.WIN, unit, soldier);
+                = fakeAttackResult(CombatEffectType.WIN, unit, soldier);
         checkCombat("Criminal promotion", crs,
-                    CombatEffectType.WIN, CombatEffectType.LOSE_EQUIP,
-                    CombatEffectType.PROMOTE_UNIT);
+                CombatEffectType.WIN, CombatEffectType.LOSE_EQUIP,
+                CombatEffectType.PROMOTE_UNIT);
         igc.combat(dutch, unit, soldier, crs);
 
         assertEquals("Criminal should be promoted to servant",
-                     unit.getType(), indenturedServantType);
+                unit.getType(), indenturedServantType);
 
         // Servant -> Colonist
         soldier.changeRole(soldierRole, 1);
         crs = fakeAttackResult(CombatEffectType.WIN, unit, soldier);
         checkCombat("Servant promotion", crs,
-                    CombatEffectType.WIN, CombatEffectType.LOSE_EQUIP,
-                    CombatEffectType.PROMOTE_UNIT);
+                CombatEffectType.WIN, CombatEffectType.LOSE_EQUIP,
+                CombatEffectType.PROMOTE_UNIT);
         igc.combat(dutch, unit, soldier, crs);
 
         assertEquals("Servant should be promoted to colonist",
-                     unit.getType(), colonistType);
+                unit.getType(), colonistType);
 
         // Colonist -> Veteran
         soldier.changeRole(soldierRole, 1);
         crs = fakeAttackResult(CombatEffectType.WIN, unit, soldier);
         checkCombat("Colonist promotion failed", crs,
-                    CombatEffectType.WIN, CombatEffectType.LOSE_EQUIP,
-                    CombatEffectType.PROMOTE_UNIT);
+                CombatEffectType.WIN, CombatEffectType.LOSE_EQUIP,
+                CombatEffectType.PROMOTE_UNIT);
         igc.combat(dutch, unit, soldier, crs);
 
         assertEquals("Colonist should be promoted to Veteran",
-                     unit.getType(), veteranType);
+                unit.getType(), veteranType);
 
         // Further upgrading a VeteranSoldier to ColonialRegular
         // should only work once independence is declared.  Must set
         // the new nation name or combat crashes in message generation.
         assertFalse("Colonial Regulars should not yet be available",
-                    colonialType.isAvailableTo(dutch));
+                colonialType.isAvailableTo(dutch));
         dutch.changePlayerType(PlayerType.REBEL);
         dutch.setIndependentNationName("Vrije Nederlands");
         assertTrue("Colonial Regulars should be available",
-                   colonialType.isAvailableTo(dutch));
+                colonialType.isAvailableTo(dutch));
         assertEquals("Veterans should promote to Colonial Regulars",
-                     colonialType,
-                     spec().getUnitChange(UnitChangeType.PROMOTION,
-                         veteranType).to);
+                colonialType,
+                spec().getUnitChange(UnitChangeType.PROMOTION,
+                        veteranType).to);
 
         // Veteran -> Colonial Regular
         soldier.changeRole(soldierRole, 1);
         crs = fakeAttackResult(CombatEffectType.WIN, unit, soldier);
         checkCombat("Veteran promotion", crs,
-                    CombatEffectType.WIN, CombatEffectType.LOSE_EQUIP,
-                    CombatEffectType.PROMOTE_UNIT);
+                CombatEffectType.WIN, CombatEffectType.LOSE_EQUIP,
+                CombatEffectType.PROMOTE_UNIT);
         igc.combat(dutch, unit, soldier, crs);
 
         assertEquals("Veteran should be promoted to Colonial Regular",
-                     unit.getType(), colonialType);
+                unit.getType(), colonialType);
 
         // No further promotion should work
         soldier.changeRole(soldierRole, 1);
         crs = fakeAttackResult(CombatEffectType.WIN, unit, soldier);
         checkCombat("Colonial Regular over-promotion failed", crs,
-                    CombatEffectType.WIN, CombatEffectType.LOSE_EQUIP);
+                CombatEffectType.WIN, CombatEffectType.LOSE_EQUIP);
         igc.combat(dutch, unit, soldier, crs);
 
         assertEquals("Colonial Regular should still be Colonial Regular",
-                     unit.getType(), colonialType);
+                unit.getType(), colonialType);
     }
 
     public void testColonistDemotedBySoldier() {
@@ -1185,27 +1202,27 @@ public class InGameControllerTest extends FreeColTestCase {
 
         Unit colonist = new ServerUnit(game, tile1, dutch, colonistType);
         assertTrue("Colonists should be capturable",
-                   colonist.hasAbility(Ability.CAN_BE_CAPTURED));
+                colonist.hasAbility(Ability.CAN_BE_CAPTURED));
         Unit soldier = new ServerUnit(game, tile2, french, colonistType);
         assertTrue("Soldier should be capturable",
-                   soldier.hasAbility(Ability.CAN_BE_CAPTURED));
+                soldier.hasAbility(Ability.CAN_BE_CAPTURED));
         soldier.changeRole(soldierRole, 1);
         assertFalse("Armed soldier should not be capturable",
-                    soldier.hasAbility(Ability.CAN_BE_CAPTURED));
+                soldier.hasAbility(Ability.CAN_BE_CAPTURED));
 
         // Colonist loses and is captured
         List<CombatEffectType> crs
-            = fakeAttackResult(CombatEffectType.LOSE, colonist, soldier);
+                = fakeAttackResult(CombatEffectType.LOSE, colonist, soldier);
         checkCombat("Colonist v Soldier", crs,
-                    CombatEffectType.LOSE, CombatEffectType.CAPTURE_UNIT);
+                CombatEffectType.LOSE, CombatEffectType.CAPTURE_UNIT);
         igc.combat(dutch, colonist, soldier, crs);
 
         assertEquals("Colonist should still be a colonist",
-                     colonistType, colonist.getType());
+                colonistType, colonist.getType());
         assertEquals("Colonist should be captured",
-                     french, colonist.getOwner());
+                french, colonist.getOwner());
         assertEquals("Colonist should have moved to the soldier tile",
-                     tile2, colonist.getTile());
+                tile2, colonist.getTile());
     }
 
     public void testSoldierDemotedBySoldier() {
@@ -1224,38 +1241,38 @@ public class InGameControllerTest extends FreeColTestCase {
         tile2.setExplored(dutch, true);
         tile2.setExplored(french, true);
         Unit soldier1 = new ServerUnit(game, tile1, dutch,
-                                       colonistType, soldierRole);
+                colonistType, soldierRole);
         Unit soldier2 = new ServerUnit(game, tile2, french,
-                                       colonistType, soldierRole);
+                colonistType, soldierRole);
 
         // Soldier loses and loses muskets
         List<CombatEffectType> crs
-            = fakeAttackResult(CombatEffectType.LOSE, soldier1, soldier2);
+                = fakeAttackResult(CombatEffectType.LOSE, soldier1, soldier2);
         checkCombat("Soldier should lose equipment", crs,
-                    CombatEffectType.LOSE, CombatEffectType.LOSE_EQUIP);
+                CombatEffectType.LOSE, CombatEffectType.LOSE_EQUIP);
         igc.combat(dutch, soldier1, soldier2, crs);
 
         assertEquals("Soldier should be a colonist",
-                     colonistType, soldier1.getType());
+                colonistType, soldier1.getType());
         assertEquals("Soldier should still be Dutch",
-                     dutch, soldier1.getOwner());
+                dutch, soldier1.getOwner());
         assertEquals("Soldier should not have moved",
-                     tile1, soldier1.getTile());
+                tile1, soldier1.getTile());
         assertTrue("Soldier should have default role",
-                   soldier1.hasDefaultRole());
+                soldier1.hasDefaultRole());
 
         // Soldier loses and is captured
         crs = fakeAttackResult(CombatEffectType.LOSE, soldier1, soldier2);
         checkCombat("Soldier v soldier", crs,
-                    CombatEffectType.LOSE, CombatEffectType.CAPTURE_UNIT);
+                CombatEffectType.LOSE, CombatEffectType.CAPTURE_UNIT);
         igc.combat(dutch, soldier1, soldier2, crs);
 
         assertEquals("Soldier should be a colonist",
-                     colonistType, soldier1.getType());
+                colonistType, soldier1.getType());
         assertEquals("Soldier should now be French",
-                     french, soldier1.getOwner());
+                french, soldier1.getOwner());
         assertEquals("Soldier should have moved",
-                     tile2, soldier1.getTile());
+                tile2, soldier1.getTile());
     }
 
     public void testDragoonDemotedBySoldier() {
@@ -1274,65 +1291,65 @@ public class InGameControllerTest extends FreeColTestCase {
         tile2.setExplored(dutch, true);
         tile2.setExplored(french, true);
         Unit dragoon = new ServerUnit(game, tile1, dutch,
-                                      colonistType, dragoonRole);
+                colonistType, dragoonRole);
         ServerTestHelper.newTurn();
 
         assertEquals("Dragoon has 12 moves",
-                     12, dragoon.getInitialMovesLeft());
+                12, dragoon.getInitialMovesLeft());
         assertEquals("Dragoon has 12 moves left",
-                     12, dragoon.getMovesLeft());
+                12, dragoon.getMovesLeft());
         Unit soldier = new ServerUnit(game, tile2, french,
-                                      colonistType, soldierRole);
+                colonistType, soldierRole);
 
         // Dragoon loses and loses horses
         List<CombatEffectType> crs
-            = fakeAttackResult(CombatEffectType.LOSE, dragoon, soldier);
+                = fakeAttackResult(CombatEffectType.LOSE, dragoon, soldier);
         checkCombat("Dragoon v soldier (1)", crs,
-            CombatEffectType.LOSE, CombatEffectType.LOSE_EQUIP);
+                CombatEffectType.LOSE, CombatEffectType.LOSE_EQUIP);
         igc.combat(dutch, dragoon, soldier, crs);
 
         assertEquals("Attacker should be a colonist", colonistType,
-                     dragoon.getType());
+                dragoon.getType());
         assertEquals("Attacker should be Dutch", dutch,
-                     dragoon.getOwner());
+                dragoon.getOwner());
         assertEquals("Attacker should be on tile1", tile1,
-                     dragoon.getTile());
+                dragoon.getTile());
         assertEquals("Attacker should be a soldier", soldierRole,
-                     dragoon.getRole());
+                dragoon.getRole());
         assertTrue("Attacker should still be armed",
-                   dragoon.isArmed());
+                dragoon.isArmed());
         assertFalse("Attacker should not still be mounted",
-                    dragoon.isMounted());
+                dragoon.isMounted());
         assertEquals("Attacker has 3 moves", 3,
-                     dragoon.getInitialMovesLeft());
+                dragoon.getInitialMovesLeft());
         assertEquals("Attacker has 0 moves left", 0,
-                     dragoon.getMovesLeft());
+                dragoon.getMovesLeft());
 
         crs = fakeAttackResult(CombatEffectType.LOSE, dragoon, soldier);
         checkCombat("Dragoon v soldier (2)", crs,
-            CombatEffectType.LOSE, CombatEffectType.LOSE_EQUIP);
+                CombatEffectType.LOSE, CombatEffectType.LOSE_EQUIP);
         igc.combat(dutch, dragoon, soldier, crs);
 
         assertEquals("Attacker should be a colonist", colonistType,
-                     dragoon.getType());
+                dragoon.getType());
         assertEquals("Attacker should be Dutch", dutch,
-                     dragoon.getOwner());
+                dragoon.getOwner());
         assertEquals("Attacker should be on tile1", tile1,
-                     dragoon.getTile());
+                dragoon.getTile());
         assertTrue("Attacker should have default role",
-                   dragoon.hasDefaultRole());
+                dragoon.hasDefaultRole());
 
         crs = fakeAttackResult(CombatEffectType.WIN, soldier, dragoon);
         checkCombat("Soldier v ex-dragoon", crs,
-                    CombatEffectType.WIN, CombatEffectType.CAPTURE_UNIT);
+                CombatEffectType.WIN, CombatEffectType.CAPTURE_UNIT);
         igc.combat(french, soldier, dragoon, crs);
 
         assertEquals("Defender should be a colonist", colonistType,
-                     dragoon.getType());
+                dragoon.getType());
         assertEquals("Defender should be French", french,
-                     dragoon.getOwner());
+                dragoon.getOwner());
         assertEquals("Defender should be on tile2", tile2,
-                     dragoon.getTile());
+                dragoon.getTile());
     }
 
     public void testDragoonDemotedByBrave() {
@@ -1351,70 +1368,70 @@ public class InGameControllerTest extends FreeColTestCase {
 
         // Build indian settlements
         FreeColTestCase.IndianSettlementBuilder builder
-            = new FreeColTestCase.IndianSettlementBuilder(game);
+                = new FreeColTestCase.IndianSettlementBuilder(game);
         builder.player(inca).settlementTile(map.getTile(1, 1))
-            .capital(true).skillToTeach(null);
+                .capital(true).skillToTeach(null);
         IndianSettlement settlement1 = builder.build();
         builder.reset().player(inca).settlementTile(map.getTile(8, 8))
-            .skillToTeach(null);
+                .skillToTeach(null);
         IndianSettlement settlement2 = builder.build();
         Unit dragoon = new ServerUnit(game, tile1, dutch, colonistType,
-                                      dragoonRole);
+                dragoonRole);
         Unit brave = new ServerUnit(game, tile2, inca, braveType,
-                                    spec().getDefaultRole());
+                spec().getDefaultRole());
         brave.changeHomeIndianSettlement(settlement1);
 
         // Dragoon loses and brave captures its horses
         List<CombatEffectType> crs
-            = fakeAttackResult(CombatEffectType.LOSE, dragoon, brave);
+                = fakeAttackResult(CombatEffectType.LOSE, dragoon, brave);
         checkCombat("Dragoon v Brave (1)", crs,
-                    CombatEffectType.LOSE, CombatEffectType.CAPTURE_EQUIP);
+                CombatEffectType.LOSE, CombatEffectType.CAPTURE_EQUIP);
         igc.combat(dutch, dragoon, brave, crs);
 
         assertEquals("Dragoon should be a colonist",
-                     colonistType, dragoon.getType());
+                colonistType, dragoon.getType());
         assertEquals("Dragoon should be Dutch",
-                     dutch, dragoon.getOwner());
+                dutch, dragoon.getOwner());
         assertEquals("Dragoon should be on Tile1",
-                     tile1, dragoon.getTile());
+                tile1, dragoon.getTile());
         assertEquals("Dragoon should now be soldier",
-                     soldierRole, dragoon.getRole());
+                soldierRole, dragoon.getRole());
         assertEquals("Brave should now be mounted",
-                     mountedBraveRole, brave.getRole());
+                mountedBraveRole, brave.getRole());
         assertEquals("Brave settlement should have Horses",
-                     25, settlement1.getGoodsCount(horsesType));
+                25, settlement1.getGoodsCount(horsesType));
         assertEquals("Other settlement should not have horses",
-                     0, settlement2.getGoodsCount(horsesType));
+                0, settlement2.getGoodsCount(horsesType));
 
         // Dragoon loses and brave captures its muskets
         crs = fakeAttackResult(CombatEffectType.LOSE, dragoon, brave);
         checkCombat("Dragoon v Brave (2)", crs,
-                    CombatEffectType.LOSE, CombatEffectType.CAPTURE_EQUIP);
+                CombatEffectType.LOSE, CombatEffectType.CAPTURE_EQUIP);
         igc.combat(dutch, dragoon, brave, crs);
 
         assertEquals("Attacker should be a colonist",
-                     colonistType, dragoon.getType());
+                colonistType, dragoon.getType());
         assertEquals("Attacker should be Dutch",
-                     dutch, dragoon.getOwner());
+                dutch, dragoon.getOwner());
         assertEquals("Attacker should be on Tile1",
-                     tile1, dragoon.getTile());
+                tile1, dragoon.getTile());
         assertTrue("Attacker should have default role",
-                    dragoon.hasDefaultRole());
+                dragoon.hasDefaultRole());
         assertEquals("Brave should be nativeDragoon",
-                     nativeDragoonRole, brave.getRole());
+                nativeDragoonRole, brave.getRole());
         assertEquals("Braves settlement should have 25 muskets",
-                     25, settlement1.getGoodsCount(musketsType));
+                25, settlement1.getGoodsCount(musketsType));
         assertEquals("Other settlement should not have muskets",
-                     0, settlement2.getGoodsCount(musketsType));
+                0, settlement2.getGoodsCount(musketsType));
 
         // Dragoon loses and is slaughtered
         crs = fakeAttackResult(CombatEffectType.LOSE, dragoon, brave);
         checkCombat("Dragoon v Brave (3)", crs,
-                    CombatEffectType.LOSE, CombatEffectType.SLAUGHTER_UNIT);
+                CombatEffectType.LOSE, CombatEffectType.SLAUGHTER_UNIT);
         igc.combat(dutch, dragoon, brave, crs);
 
         assertTrue("Dragoon should be disposed",
-                   dragoon.isDisposed());
+                dragoon.isDisposed());
     }
 
     public void testScoutDefeatedBySoldier() {
@@ -1433,19 +1450,19 @@ public class InGameControllerTest extends FreeColTestCase {
         tile2.setExplored(dutch, true);
         tile2.setExplored(french, true);
         Unit scout = new ServerUnit(game, tile1, dutch, colonistType,
-                                    scoutRole);
+                scoutRole);
         Unit soldier = new ServerUnit(game, tile2, french, colonistType,
-                                      soldierRole);
+                soldierRole);
 
         // Scout loses and is slaughtered
         List<CombatEffectType> crs
-            = fakeAttackResult(CombatEffectType.LOSE, scout, soldier);
+                = fakeAttackResult(CombatEffectType.LOSE, scout, soldier);
         checkCombat("Scout v Soldier", crs,
-                    CombatEffectType.LOSE, CombatEffectType.SLAUGHTER_UNIT);
+                CombatEffectType.LOSE, CombatEffectType.SLAUGHTER_UNIT);
         igc.combat(dutch, scout, soldier, crs);
 
         assertTrue("Scout should be disposed",
-                   scout.isDisposed());
+                scout.isDisposed());
         assertEquals(soldierRole, soldier.getRole());
     }
 
@@ -1465,42 +1482,42 @@ public class InGameControllerTest extends FreeColTestCase {
         tile2.setExplored(dutch, true);
         tile2.setExplored(french, true);
         Unit soldier1 = new ServerUnit(game, tile1, dutch,
-                                       veteranType, soldierRole);
+                veteranType, soldierRole);
         Unit soldier2 = new ServerUnit(game, tile2, french,
-                                       colonistType, soldierRole);
+                colonistType, soldierRole);
         assertEquals("Veterans should become colonists on capture",
-                     colonistType,
-                     spec().getUnitChange(UnitChangeType.CAPTURE,
-                                          veteranType).to);
- 
+                colonistType,
+                spec().getUnitChange(UnitChangeType.CAPTURE,
+                        veteranType).to);
+
         // Soldier loses and loses equipment
         List<CombatEffectType> crs
-            = fakeAttackResult(CombatEffectType.LOSE, soldier1, soldier2);
+                = fakeAttackResult(CombatEffectType.LOSE, soldier1, soldier2);
         checkCombat("Soldier v Soldier", crs,
-            CombatEffectType.LOSE, CombatEffectType.LOSE_EQUIP);
+                CombatEffectType.LOSE, CombatEffectType.LOSE_EQUIP);
         igc.combat(dutch, soldier1, soldier2, crs);
 
         assertEquals("Soldier1 should be a Veteran", veteranType,
-                     soldier1.getType());
+                soldier1.getType());
         assertEquals("Soldier1 should be Dutch", dutch,
-                     soldier1.getOwner());
+                soldier1.getOwner());
         assertEquals("Soldier1 should be on tile1", tile1,
-                     soldier1.getTile());
+                soldier1.getTile());
         assertTrue("Soldier1 should have default role",
-                   soldier1.hasDefaultRole());
+                soldier1.hasDefaultRole());
 
         // Soldier1 loses and is captured
         crs = fakeAttackResult(CombatEffectType.LOSE, soldier1, soldier2);
         checkCombat("Soldier1 v Soldier2", crs,
-            CombatEffectType.LOSE, CombatEffectType.CAPTURE_UNIT);
+                CombatEffectType.LOSE, CombatEffectType.CAPTURE_UNIT);
         igc.combat(dutch, soldier1, soldier2, crs);
 
         assertEquals("Soldier1 should be a colonist", colonistType,
-                     soldier1.getType());
+                soldier1.getType());
         assertEquals("Soldier1 should be French", french,
-                     soldier1.getOwner());
+                soldier1.getOwner());
         assertEquals("Soldier1 should be have moved", tile2,
-                     soldier1.getTile());
+                soldier1.getTile());
     }
 
     public void testArtilleryDemotedBySoldier() {
@@ -1521,35 +1538,35 @@ public class InGameControllerTest extends FreeColTestCase {
         Unit artillery = new ServerUnit(game, tile1, dutch, artilleryType);
         Unit soldier = new ServerUnit(game, tile2, french, colonistType, soldierRole);
         assertEquals("Artillery should demote to damaged artillery",
-                     damagedArtilleryType,
-                     artillery.getUnitChange(UnitChangeType.DEMOTION).to);
+                damagedArtilleryType,
+                artillery.getUnitChange(UnitChangeType.DEMOTION).to);
 
         // Artillery loses and is demoted
         List<CombatEffectType> crs
-            = fakeAttackResult(CombatEffectType.LOSE, artillery, soldier);
+                = fakeAttackResult(CombatEffectType.LOSE, artillery, soldier);
         checkCombat("Artillery v Soldier (1)", crs,
-            CombatEffectType.LOSE, CombatEffectType.DEMOTE_UNIT);
+                CombatEffectType.LOSE, CombatEffectType.DEMOTE_UNIT);
         igc.combat(dutch, artillery, soldier, crs);
 
         assertEquals("Artillery should be damaged artillery",
-                     damagedArtilleryType, artillery.getType());
+                damagedArtilleryType, artillery.getType());
         assertEquals("Artillery should be Dutch",
-                     dutch, artillery.getOwner());
+                dutch, artillery.getOwner());
         assertEquals("Artillery should be on Tile1",
-                     tile1, artillery.getTile());
+                tile1, artillery.getTile());
 
         // Artillery loses and is slaughtered
         crs = fakeAttackResult(CombatEffectType.LOSE, artillery, soldier);
         checkCombat("Artillery v Soldier (2)", crs,
-            CombatEffectType.LOSE, CombatEffectType.SLAUGHTER_UNIT);
+                CombatEffectType.LOSE, CombatEffectType.SLAUGHTER_UNIT);
         igc.combat(dutch, artillery, soldier, crs);
 
         assertTrue("Artillery should be disposed",
-                   artillery.isDisposed());
+                artillery.isDisposed());
     }
 
     // Test diplomatic trades.
-    private void setPlayersAt(Stance stance,Tension tension) {
+    private void setPlayersAt(Stance stance, Tension tension) {
         final Game game = getGame();
 
         ServerPlayer dutch = getServerPlayer(game, "model.nation.dutch");
@@ -1565,13 +1582,13 @@ public class InGameControllerTest extends FreeColTestCase {
         Tension.Level expectedTension = tension.getLevel();
 
         assertEquals("Wrong Dutch player stance with french player",
-                     dutch.getStance(french),stance);
+                dutch.getStance(french), stance);
         assertEquals("Wrong French player stance with dutch player",
-                     french.getStance(dutch),stance);
+                french.getStance(dutch), stance);
         assertEquals("Tension of dutch player towards french player wrong",
-                     expectedTension, dutch.getTension(french).getLevel());
+                expectedTension, dutch.getTension(french).getLevel());
         assertEquals("Tension of french player towards dutch player wrong",
-                     expectedTension, french.getTension(dutch).getLevel());
+                expectedTension, french.getTension(dutch).getLevel());
     }
 
     /**
@@ -1582,13 +1599,13 @@ public class InGameControllerTest extends FreeColTestCase {
                                      Stance expectedStance,
                                      int expectedTension) {
         assertFalse(player1 + " player should not be at war",
-                    player1.isAtWar());
+                player1.isAtWar());
         assertEquals(player1 + " player should be at peace with "
-                     + player2 + " player",
-                     player1.getStance(player2), expectedStance);
+                        + player2 + " player",
+                player1.getStance(player2), expectedStance);
         int player1CurrTension = player1.getTension(player2).getValue();
         assertEquals(player1 + " player tension values wrong",
-                     expectedTension, player1CurrTension);
+                expectedTension, player1CurrTension);
     }
 
     /**
@@ -1603,7 +1620,7 @@ public class InGameControllerTest extends FreeColTestCase {
         ServerPlayer french = getServerPlayer(game, "model.nation.french");
         Tension hateful = new Tension(Tension.Level.HATEFUL.getLimit());
         Stance initialStance = Stance.WAR;
-        Stance newStance =  Stance.PEACE;
+        Stance newStance = Stance.PEACE;
 
         //setup
         setPlayersAt(initialStance, hateful);
@@ -1616,9 +1633,9 @@ public class InGameControllerTest extends FreeColTestCase {
 
         // Verify results
         int dutchExpectedTension = Math.max(0, dutchInitialTension
-            + Tension.CEASE_FIRE_MODIFIER + Tension.PEACE_TREATY_MODIFIER);
+                + Tension.CEASE_FIRE_MODIFIER + Tension.PEACE_TREATY_MODIFIER);
         int frenchExpectedTension = Math.max(0, frenchInitialTension
-            + Tension.CEASE_FIRE_MODIFIER + Tension.PEACE_TREATY_MODIFIER);
+                + Tension.CEASE_FIRE_MODIFIER + Tension.PEACE_TREATY_MODIFIER);
 
         verifyTreatyResults(dutch, french, newStance, dutchExpectedTension);
         verifyTreatyResults(french, dutch, newStance, frenchExpectedTension);
@@ -1636,7 +1653,7 @@ public class InGameControllerTest extends FreeColTestCase {
         ServerPlayer french = getServerPlayer(game, "model.nation.french");
         Tension hateful = new Tension(Tension.Level.HATEFUL.getLimit());
         Stance initialStance = Stance.CEASE_FIRE;
-        Stance newStance =  Stance.PEACE;
+        Stance newStance = Stance.PEACE;
 
         //setup
         //Note: the game only allows setting cease fire stance from war stance
@@ -1646,16 +1663,16 @@ public class InGameControllerTest extends FreeColTestCase {
         int dutchInitialTension = dutch.getTension(french).getValue();
         int frenchInitialTension = french.getTension(dutch).getValue();
         StanceTradeItem peaceTreaty
-            = new StanceTradeItem(game, dutch, french, newStance);
+                = new StanceTradeItem(game, dutch, french, newStance);
 
         // Execute peace treaty
         igc.changeStance(dutch, newStance, french, true);
 
         // Verify results
         int dutchExpectedTension = Math.max(0, dutchInitialTension
-            + Tension.PEACE_TREATY_MODIFIER);
+                + Tension.PEACE_TREATY_MODIFIER);
         int frenchExpectedTension = Math.max(0, frenchInitialTension
-            + Tension.PEACE_TREATY_MODIFIER);
+                + Tension.PEACE_TREATY_MODIFIER);
 
         verifyTreatyResults(dutch, french, newStance, dutchExpectedTension);
         verifyTreatyResults(french, dutch, newStance, frenchExpectedTension);
@@ -1672,10 +1689,10 @@ public class InGameControllerTest extends FreeColTestCase {
         ServerPlayer french = getServerPlayer(game, "model.nation.french");
         Tension hateful = new Tension(Tension.Level.HATEFUL.getLimit());
         Stance initialStance = Stance.WAR;
-        Stance newStance =  Stance.CEASE_FIRE;
+        Stance newStance = Stance.CEASE_FIRE;
 
         //setup
-        setPlayersAt(initialStance,hateful);
+        setPlayersAt(initialStance, hateful);
 
         int dutchInitialTension = dutch.getTension(french).getValue();
         int frenchInitialTension = french.getTension(dutch).getValue();
@@ -1685,9 +1702,9 @@ public class InGameControllerTest extends FreeColTestCase {
 
         // Verify results
         int dutchExpectedTension = Math.max(0, dutchInitialTension
-            + Tension.CEASE_FIRE_MODIFIER);
+                + Tension.CEASE_FIRE_MODIFIER);
         int frenchExpectedTension = Math.max(0, frenchInitialTension
-            + Tension.CEASE_FIRE_MODIFIER);
+                + Tension.CEASE_FIRE_MODIFIER);
 
         verifyTreatyResults(dutch, french, newStance, dutchExpectedTension);
         verifyTreatyResults(french, dutch, newStance, frenchExpectedTension);
@@ -1702,29 +1719,29 @@ public class InGameControllerTest extends FreeColTestCase {
         Player.makeContact(inca, dutch);
 
         FreeColTestCase.IndianSettlementBuilder builder
-            = new FreeColTestCase.IndianSettlementBuilder(game);
+                = new FreeColTestCase.IndianSettlementBuilder(game);
         IndianSettlement camp = builder.player(inca).build();
         camp.setContacted(dutch);
 
         assertEquals("Inca should be at peace with dutch",
-                     Stance.PEACE, inca.getStance(dutch));
+                Stance.PEACE, inca.getStance(dutch));
         Tension campAlarm = camp.getAlarm(dutch);
         assertNotNull("Camp should have had contact with Dutch",
-                      campAlarm);
+                campAlarm);
         assertEquals("Camp should be happy",
-                     Tension.Level.HAPPY, campAlarm.getLevel());
+                Tension.Level.HAPPY, campAlarm.getLevel());
 
         igc.changeStance(dutch, Stance.WAR, inca, false);
         assertEquals("Inca should not yet be at war with the Dutch",
-                     Stance.PEACE, inca.getStance(dutch));
+                Stance.PEACE, inca.getStance(dutch));
 
         igc.changeStance(dutch, Stance.WAR, inca, true);
         assertEquals("Inca should be at war with the Dutch",
-                     Stance.WAR, inca.getStance(dutch));
+                Stance.WAR, inca.getStance(dutch));
 
         campAlarm = camp.getAlarm(dutch);
         assertEquals("Camp should be hateful",
-                     Tension.Level.HATEFUL, campAlarm.getLevel());
+                Tension.Level.HATEFUL, campAlarm.getLevel());
     }
 
     public void testEquipIndian() {
@@ -1732,50 +1749,50 @@ public class InGameControllerTest extends FreeColTestCase {
         final InGameController igc = ServerTestHelper.getInGameController();
 
         FreeColTestCase.IndianSettlementBuilder builder
-            = new FreeColTestCase.IndianSettlementBuilder(game);
+                = new FreeColTestCase.IndianSettlementBuilder(game);
         IndianSettlement camp = builder.build();
-        ServerPlayer indian = (ServerPlayer)camp.getOwner();
+        ServerPlayer indian = (ServerPlayer) camp.getOwner();
         List<AbstractGoods> required = nativeDragoonRole.getRequiredGoodsList();
         int horsesReqPerUnit = AbstractGoods.getCount(horsesType, required);
         int musketsReqPerUnit = AbstractGoods.getCount(musketsType, required);
 
         // Setup
-        camp.addGoods(horsesType,horsesReqPerUnit);
-        camp.addGoods(musketsType,musketsReqPerUnit);
+        camp.addGoods(horsesType, horsesReqPerUnit);
+        camp.addGoods(musketsType, musketsReqPerUnit);
 
         assertEquals("Initial number of horses in Indian camp not as expected",
-            horsesReqPerUnit, camp.getGoodsCount(horsesType));
+                horsesReqPerUnit, camp.getGoodsCount(horsesType));
         assertEquals("Initial number of muskets in Indian camp not as expected",
-            musketsReqPerUnit, camp.getGoodsCount(musketsType));
+                musketsReqPerUnit, camp.getGoodsCount(musketsType));
 
         Unit brave = camp.getUnitList().get(0);
         assertFalse("Brave should not be mounted",
-                    brave.isMounted());
+                brave.isMounted());
         assertFalse("Brave should not be armed",
-                    brave.isArmed());
+                brave.isArmed());
         assertFalse("Brave should not be a pioneer",
-                    brave.roleIsAvailable(pioneerRole));
+                brave.roleIsAvailable(pioneerRole));
         assertTrue("Brave can become a mounted brave",
-                   brave.roleIsAvailable(mountedBraveRole));
+                brave.roleIsAvailable(mountedBraveRole));
         assertTrue("Brave can become a armed brave",
-                   brave.roleIsAvailable(armedBraveRole));
+                brave.roleIsAvailable(armedBraveRole));
         assertTrue("Brave can become a native dragoon",
-                   brave.roleIsAvailable(nativeDragoonRole));
+                brave.roleIsAvailable(nativeDragoonRole));
 
         // Mount and arm the brave
         camp.equipForRole(brave, nativeDragoonRole, 1);
 
         // Verify results
         assertEquals("Brave should have native dragoon role", nativeDragoonRole,
-                     brave.getRole());
+                brave.getRole());
         assertTrue("Brave should be mounted",
-                   brave.isMounted());
+                brave.isMounted());
         assertTrue("Brave should be armed",
-                   brave.isArmed());
+                brave.isArmed());
         assertEquals("No muskets should remain in camp", 0,
-                     camp.getGoodsCount(musketsType));
+                camp.getGoodsCount(musketsType));
         assertEquals("No horses should remain in camp", 0,
-                     camp.getGoodsCount(horsesType));
+                camp.getGoodsCount(horsesType));
     }
 
     public void testEquipIndianNotEnoughReqGoods() {
@@ -1783,7 +1800,7 @@ public class InGameControllerTest extends FreeColTestCase {
         final InGameController igc = ServerTestHelper.getInGameController();
 
         FreeColTestCase.IndianSettlementBuilder builder
-            = new FreeColTestCase.IndianSettlementBuilder(game);
+                = new FreeColTestCase.IndianSettlementBuilder(game);
         IndianSettlement camp = builder.build();
 
         List<AbstractGoods> required = mountedBraveRole.getRequiredGoodsList();
@@ -1791,35 +1808,35 @@ public class InGameControllerTest extends FreeColTestCase {
         int musketsReq = AbstractGoods.getCount(musketsType, required);
 
         // Setup
-        camp.addGoods(horsesType, horsesReq/2);
-        camp.addGoods(musketsType, musketsReq/2);
+        camp.addGoods(horsesType, horsesReq / 2);
+        camp.addGoods(musketsType, musketsReq / 2);
         assertEquals("Initial number of horses in camp not as expected",
-                     horsesReq/2, camp.getGoodsCount(horsesType));
+                horsesReq / 2, camp.getGoodsCount(horsesType));
         assertEquals("Initial number of muskets in camp not as expected",
-                     musketsReq/2, camp.getGoodsCount(musketsType));
+                musketsReq / 2, camp.getGoodsCount(musketsType));
 
         Unit brave = camp.getUnitList().get(0);
         assertTrue("Initial brave has default role",
-                   brave.hasDefaultRole());
+                brave.hasDefaultRole());
         assertFalse("Initial brave should not be mounted",
-                    brave.isMounted());
+                brave.isMounted());
         assertFalse("Initial brave should not be armed",
-                    brave.isArmed());
+                brave.isArmed());
 
         // Try to mount and arm the brave
         camp.equipForRole(brave, nativeDragoonRole, 1);
 
         // Verify results
         assertTrue("Final brave has default role",
-                   brave.hasDefaultRole());
+                brave.hasDefaultRole());
         assertFalse("Final brave should not be armed",
-                    brave.isArmed());
+                brave.isArmed());
         assertEquals("The muskets should not have been touched",
-                     musketsReq/2, camp.getGoodsCount(musketsType));
+                musketsReq / 2, camp.getGoodsCount(musketsType));
         assertFalse("Final brave should not be mounted",
-                    brave.isMounted());
+                brave.isMounted());
         assertEquals("The horses should not have been touched",
-                     horsesReq/2, camp.getGoodsCount(horsesType));
+                horsesReq / 2, camp.getGoodsCount(horsesType));
     }
 
     public void testAddFatherUnits() {
@@ -1839,10 +1856,10 @@ public class InGameControllerTest extends FreeColTestCase {
 
         assertEquals(2, dutch.getUnitCount());
         List<UnitType> types = toList(transform(dutch.getUnits(), alwaysTrue(),
-                                      Unit::getType));
+                Unit::getType));
         assertTrue((colonistType == types.get(0)
                 && statesmanType == types.get(1))
-            || (colonistType == types.get(1)
+                || (colonistType == types.get(1)
                 && statesmanType == types.get(0)));
     }
 
@@ -1872,25 +1889,25 @@ public class InGameControllerTest extends FreeColTestCase {
         final InGameController igc = ServerTestHelper.getInGameController();
 
         Colony colony = getStandardColony(4);
-        ServerPlayer player = (ServerPlayer)colony.getOwner();
+        ServerPlayer player = (ServerPlayer) colony.getOwner();
         FreeColTestCase.IndianSettlementBuilder builder
-            = new FreeColTestCase.IndianSettlementBuilder(game)
+                = new FreeColTestCase.IndianSettlementBuilder(game)
                 .settlementTile(map.getTile(8, 8));
-        ServerIndianSettlement camp = (ServerIndianSettlement)builder.build();
-        ServerPlayer indian = (ServerPlayer)camp.getOwner();
+        ServerIndianSettlement camp = (ServerIndianSettlement) builder.build();
+        ServerPlayer indian = (ServerPlayer) camp.getOwner();
         Player.makeContact(indian, player);
         camp.setContacted(player);
 
         assertEquals("Initially, camp should be happy",
-            camp.getAlarm(player).getLevel(), Tension.Level.HAPPY);
+                camp.getAlarm(player).getLevel(), Tension.Level.HAPPY);
         igc.changeStance(indian, Stance.WAR, player, true);
         assertEquals("Camp should be hateful if war occurs",
-            camp.getAlarm(player).getLevel(), Tension.Level.HATEFUL);
+                camp.getAlarm(player).getLevel(), Tension.Level.HATEFUL);
 
         FoundingFather father = spec().getFoundingFather("model.foundingFather.pocahontas");
         igc.addFoundingFather(player, father);
         assertEquals("Pocahontas should make all happy again",
-            camp.getAlarm(player).getLevel(), Tension.Level.HAPPY);
+                camp.getAlarm(player).getLevel(), Tension.Level.HAPPY);
     }
 
     public void testLaSalle() {
@@ -1898,35 +1915,35 @@ public class InGameControllerTest extends FreeColTestCase {
         final InGameController igc = ServerTestHelper.getInGameController();
 
         Colony colony = getStandardColony(2);
-        ServerPlayer player = (ServerPlayer)colony.getOwner();
+        ServerPlayer player = (ServerPlayer) colony.getOwner();
         assertEquals(2, colony.getUnitCount());
 
         // The colony has no stockade initially
         assertNull("Colony should have no stockade",
-            colony.getBuilding(stockadeType));
+                colony.getBuilding(stockadeType));
         assertEquals("Population of 3 to required to build stockade", 3,
-            stockadeType.getRequiredPopulation());
+                stockadeType.getRequiredPopulation());
 
         // Adding LaSalle should have no effect when population is 2
         FoundingFather father
-            = spec().getFoundingFather("model.foundingFather.laSalle");
+                = spec().getFoundingFather("model.foundingFather.laSalle");
         assertEquals("model.building.stockade",
-                     father.getEvents().get(0).getValue());
+                father.getEvents().get(0).getValue());
         igc.addFoundingFather(player, father);
         ServerTestHelper.newTurn();
-        assertNull("Colony still should have no stockade", 
-            colony.getBuilding(stockadeType));
+        assertNull("Colony still should have no stockade",
+                colony.getBuilding(stockadeType));
 
         // increasing population to 3 should give access to stockade
         Unit unit = new ServerUnit(getGame(), colony.getTile(), player,
-                                   colonistType);
+                colonistType);
         // set the unit to work making bells
         unit.changeWorkType(bellsType);
         unit.setLocation(colony.getWorkLocationFor(unit, bellsType));
         ServerTestHelper.newTurn();
 
         assertNotNull("Colony should now have a stockade",
-            colony.getBuilding(stockadeType));
+                colony.getBuilding(stockadeType));
     }
 
     public void testBuildingBonus() {
@@ -1937,7 +1954,7 @@ public class InGameControllerTest extends FreeColTestCase {
         FoundingFather father = new FoundingFather("father", spec());
         father.setType(FoundingFatherType.TRADE);
         Modifier priceBonus = new Modifier(Modifier.BUILDING_PRICE_BONUS,
-                                           -100f, ModifierType.PERCENTAGE);
+                -100f, ModifierType.PERCENTAGE);
         Scope pressScope = new Scope();
         pressScope.setType("model.building.printingPress");
         List<Scope> scopeList = new ArrayList<>();
@@ -1959,18 +1976,18 @@ public class InGameControllerTest extends FreeColTestCase {
         ServerPlayer dutch = getServerPlayer(game, "model.nation.dutch");
         Colony colony = getStandardColony(1);
         Unit colonist = new ServerUnit(game, map.getTile(6, 8), dutch,
-                                       colonistType);
+                colonistType);
         colonist.changeWorkType(grainType);
         WorkLocation wl = colony.getWorkLocationFor(colonist, grainType);
         assertNotNull(wl);
         colonist.setLocation(wl);
         colonist.modifyExperience(10);
         assertTrue("Colonist should some initial experience",
-                   colonist.getExperience() > 0);
+                colonist.getExperience() > 0);
 
         igc.changeWorkType(dutch, colonist, cottonType);
         assertTrue("Colonist should have lost all experience",
-                   colonist.getExperience() == 0);
+                colonist.getExperience() == 0);
     }
 
     private int workLeftFor(UnitType unitType, TileType tileType,
@@ -2092,10 +2109,10 @@ public class InGameControllerTest extends FreeColTestCase {
         gardenerType.addAbility(new Ability(Ability.PERSON));
 
         addUnitTypeChange(UnitChangeType.ENTER_COLONY, gardenerType, farmerType,
-                          100, -1);
+                100, -1);
 
         assertEquals(farmerType,
-            spec().getUnitChange(UnitChangeType.ENTER_COLONY, gardenerType).to);
+                spec().getUnitChange(UnitChangeType.ENTER_COLONY, gardenerType).to);
         Unit gardener = new ServerUnit(game, null, dutch, gardenerType);
         assertEquals(gardenerType, gardener.getType());
         WorkLocation loc = colony.getWorkLocationFor(gardener);
@@ -2110,18 +2127,18 @@ public class InGameControllerTest extends FreeColTestCase {
         final Game game = ServerTestHelper.startServerGame(getTestMap(true));
         final InGameController igc = ServerTestHelper.getInGameController();
 
-        ServerColony colony = (ServerColony)getStandardColony(2);
+        ServerColony colony = (ServerColony) getStandardColony(2);
         colony.addGoods(lumberType, 100);
         Unit unit = colony.getUnitList().get(0);
         Building building = colony.getBuilding(carpenterHouse);
 
         assertEquals("Production()", 0,
-            building.getTotalProductionOf(hammersType));
+                building.getTotalProductionOf(hammersType));
 
         unit.setLocation(building);
         colony.invalidateCache();
         assertEquals("Production(unit)", 3,
-            building.getTotalProductionOf(hammersType));
+                building.getTotalProductionOf(hammersType));
 
         ServerPlayer swedish = null;
         for (Nation n : game.getSpecification().getNations()) {
@@ -2136,7 +2153,7 @@ public class InGameControllerTest extends FreeColTestCase {
         igc.debugChangeOwner(colony, swedish);
         colony.invalidateCache();
         assertEquals("Production(unit/building-advantage)", 5,
-            building.getTotalProductionOf(hammersType));
+                building.getTotalProductionOf(hammersType));
     }
 
     public void testAttrition() {
@@ -2144,9 +2161,9 @@ public class InGameControllerTest extends FreeColTestCase {
         final InGameController igc = ServerTestHelper.getInGameController();
 
         Colony colony = getStandardColony();
-        ServerPlayer player = (ServerPlayer)colony.getOwner();
+        ServerPlayer player = (ServerPlayer) colony.getOwner();
         Unit unit = new ServerUnit(game, colony.getTile(), player,
-                                   indianConvertType);
+                indianConvertType);
 
         // Starts at zero attrition
         assertEquals(0, unit.getAttrition());
@@ -2167,11 +2184,11 @@ public class InGameControllerTest extends FreeColTestCase {
 
         // Normal unit is not subject to attrition
         Unit colonist = new ServerUnit(game, unit.getTile(), player,
-                                       colonistType);
+                colonistType);
         assertEquals(0, colonist.getAttrition());
         ServerTestHelper.newTurn();
         assertEquals(0, colonist.getAttrition());
-        
+
         // Run down the clock on the convert
         while (unit.getAttrition() < unit.getType().getMaximumAttrition()) {
             ServerTestHelper.newTurn();
@@ -2179,5 +2196,5 @@ public class InGameControllerTest extends FreeColTestCase {
         assertFalse(unit.isDisposed());
         ServerTestHelper.newTurn();
         assertTrue(unit.isDisposed());
-    }        
+    }
 }

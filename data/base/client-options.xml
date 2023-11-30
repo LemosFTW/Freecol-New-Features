@@ -28,6 +28,7 @@
                       defaultValue="clientOptions.gui.languageOption.automatic" />
     </optionGroup>
 
+
     <optionGroup id="clientOptions.display" >
       <!-- Control the display scale -->
       <rangeOption id="model.option.displayScaling"
@@ -155,7 +156,13 @@
                        defaultValue="false"/>
         <!-- Whether to display the map controls by default or not. -->
         <booleanOption id="model.option.displayMapControls"
-                       defaultValue="true"/>                       
+                       defaultValue="true"/>
+
+
+        <booleanOption id="model.option.autoGetShip"
+                         defaultValue="false"/>
+
+
         <!-- Draw the fog of war on the minimap. -->
         <booleanOption id="model.option.miniMapToggleFogOfWar"
                        defaultValue="true"/>

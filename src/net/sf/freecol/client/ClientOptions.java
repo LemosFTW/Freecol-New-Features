@@ -259,6 +259,9 @@ public class ClientOptions extends OptionGroup {
     public static final String DISPLAY_MAP_CONTROLS
         = "model.option.displayMapControls";
 
+    public static final String AUTO_GET_SHIP
+        = "model.option.autoGetShip";
+
     /** The type of map controls, corner or classic. */
     public static final String MAP_CONTROLS
         = "model.option.mapControls";
