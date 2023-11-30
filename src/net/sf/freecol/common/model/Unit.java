@@ -1069,12 +1069,20 @@ public class Unit extends GoodsLocation
 
         // if unit is a soldier, update the ammunition difference so that it takes into account spent ammunition
         if (isSoldier()) {
-            ListIterator<AbstractGoods> it = difference.listIterator();
-            AbstractGoods good;
-            while (it.hasNext()) { //TODO check error situations maybe?
-                good = it.next();
+
+            // calculate ammunition required in the target role
+            int targetRoleAmmunition = 0;
+            List<AbstractGoods> requiredGoods = role.getRequiredGoodsList();
+            for (AbstractGoods good : requiredGoods) {
                 if (good.getNameKey().contains("ammunition")) {
-                    good.setAmount(getAmmunitionCount() * -1); //TODO this is possibly changing the actual amount value of the general good and screwing things up
+                    targetRoleAmmunition = good.getAmount();
+                    break;
+                }
+            }
+
+            for (AbstractGoods good : difference) {
+                if (good.getNameKey().contains("ammunition")) {
+                    good.setAmount(targetRoleAmmunition - getAmmunitionCount());
                     break;
                 }
             }
