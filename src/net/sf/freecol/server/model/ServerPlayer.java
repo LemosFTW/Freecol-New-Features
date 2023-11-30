@@ -2975,8 +2975,8 @@ outer:  for (Effect effect : effects) {
      */
     private void csCaptureEquip(Unit winner, Unit loser, ChangeSet cs) {
         Role role = loser.getRole();
-        csLoseEquip(winner, loser, cs);
         csCaptureEquipment(winner, loser, role, cs);
+        csLoseEquip(winner, loser, cs);
     }
 
     /**
@@ -2996,8 +2996,18 @@ outer:  for (Effect effect : effects) {
         if (newRole != null) {
             List<AbstractGoods> newGoods
                 = winner.getGoodsDifference(newRole, 1);
+
+            for (AbstractGoods ag : newGoods) {
+                if (ag.getNameKey().contains("ammunition")) {
+                    ag.setAmount(loser.getAmmunitionCount());
+                    break;
+                }
+            }
+
             GoodsType goodsType = newGoods.get(0).getType(); // FIXME: generalize
             winner.changeRole(newRole, 1);
+
+            winner.setAmmunitionCount(loser.getAmmunitionCount());
 
             // Currently can not capture equipment back so this only
             // makes sense for native players, and the message is
