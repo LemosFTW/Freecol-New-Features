@@ -75,6 +75,8 @@ public class IndividualFatherTest extends FreeColTestCase {
         = spec().getGoodsType("model.goods.horses");
     private static final GoodsType musketsType
         = spec().getGoodsType("model.goods.muskets");
+    private static final GoodsType ammunitionType
+    	= spec().getGoodsType("model.goods.ammunition");
 
     private static final Role soldierRole
         = spec().getRole("model.role.soldier");
@@ -373,8 +375,9 @@ public class IndividualFatherTest extends FreeColTestCase {
         assertNull("No muskets, no auto-equip",
                    colonist.getAutomaticRole());
 
-        // Add muskets
+        // Add muskets and ammunition
         colony.addGoods(musketsType, 100);
+        colony.addGoods(ammunitionType, 10);
 
         assertEquals("Auto equip to soldier role.", soldierRole,
                      colonist.getAutomaticRole());

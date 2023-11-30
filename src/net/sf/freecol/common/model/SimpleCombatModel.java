@@ -76,6 +76,12 @@ public class SimpleCombatModel extends CombatModel {
 
 
     /**
+     * The default odd for capturing enemy ships.
+     */
+    private static double captureShipOdd = 0.35;
+
+
+    /**
      * Deliberately empty constructor.
      */
     public SimpleCombatModel() {
@@ -140,14 +146,23 @@ public class SimpleCombatModel extends CombatModel {
     /**
      * Calculates the probability of a winning ship unit, capturing the enemy ship.
      *
-     * @param probability the probability, must be between 0 and 1.
      * @return {@code true} if the random value generated falls in the probability, {@code false} otherwise.
      */
-    private boolean calculateCaptureShipProbability(double probability) {
+    private boolean calculateCaptureShipProbability() {
         Random random = new Random();
         double randomValue = random.nextDouble();
 
-        return randomValue < probability;
+        return randomValue < captureShipOdd;
+    }
+
+    /**
+     *
+     *
+     * Changes the default odd for capturing enemy ships.
+     * @param odd is the new odd.
+     */
+    public static void setCaptureShipOdds(double odd) {
+        captureShipOdd = odd;
     }
 
     /**
@@ -736,8 +751,36 @@ public class SimpleCombatModel extends CombatModel {
         boolean attackerWon = crs.get(0) == CombatEffectType.WIN;
         boolean loserMustDie = loser.hasAbility(Ability.DISPOSE_ON_COMBAT_LOSS);
         UnitTypeChange uc;
-        double captureShipProbability = 0.35;
 
+        if (winner.isSoldier()) {
+            winner.reduceAmmunition();
+            if (attackerWon)
+                crs.add(CombatEffectType.ATTACKER_AMMO_USED);
+            else
+                crs.add(CombatEffectType.DEFENDER_AMMO_USED);
+
+            if (winner.getAmmunitionCount() == 0) {
+                if (attackerWon)
+                    crs.add(CombatEffectType.ATTACKER_NO_AMMO);
+                else
+                    crs.add(CombatEffectType.DEFENDER_NO_AMMO);
+            }
+        }
+
+        if (loser.isSoldier()) {
+            loser.reduceAmmunition();
+            if (attackerWon)
+                crs.add(CombatEffectType.DEFENDER_AMMO_USED);
+            else
+                crs.add(CombatEffectType.ATTACKER_AMMO_USED);
+
+            if (loser.getAmmunitionCount() == 0) {
+                if (attackerWon)
+                    crs.add(CombatEffectType.DEFENDER_NO_AMMO);
+                else
+                    crs.add(CombatEffectType.ATTACKER_NO_AMMO);
+            }
+        }
 
         if (loser.isNaval()) {
             // Naval victors get to loot the defenders hold.  Sink the
@@ -754,7 +797,7 @@ public class SimpleCombatModel extends CombatModel {
                     || loser.isBeached()) {
                 crs.add(CombatEffectType.SINK_SHIP_ATTACK);
                 // Only frigates, man-o-war and privateers can capture enemy ships
-            } else if (winner.isNaval() && calculateCaptureShipProbability(captureShipProbability) && winner.canCaptureGoods()) {
+            } else if (winner.isNaval() && calculateCaptureShipProbability() && winner.canCaptureGoods()) {
                 crs.add(CombatEffectType.CAPTURE_SHIP);
                 crs.add(CombatEffectType.SINK_SHIP); // sink enemy ship so he can't use it anymore
             } else {

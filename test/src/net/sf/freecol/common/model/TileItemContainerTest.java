@@ -42,7 +42,8 @@ public class TileItemContainerTest extends FreeColTestCase {
     private TileItemContainer getSample(Game game, Tile t, 
                                         boolean addImprovements, 
                                         boolean addResources,
-                                        boolean addRumours) {
+                                        boolean addRumours,
+                                        boolean addCaveExploration) {
         if (addImprovements) {
             t.addRiver(1, "0101");
             TileImprovement road = t.addRoad();
@@ -55,6 +56,10 @@ public class TileItemContainerTest extends FreeColTestCase {
     	
         if (addRumours) {
             t.add(new LostCityRumour(game, t, RumourType.FOUNTAIN_OF_YOUTH, "fountain"));
+        }
+
+        if(addCaveExploration) {
+            t.add(new CaveExploration(game, t));
         }
     	
         if (t.getTileItemContainer() == null) {
@@ -73,8 +78,8 @@ public class TileItemContainerTest extends FreeColTestCase {
         tOriginal.setType(plains);
         Tile tCopy = map.getTile(8, 9);
         tCopy.setType(desert);
-        TileItemContainer original = getSample(game,tOriginal,true,true,true);
-        TileItemContainer copy = getSample(game,tCopy,false,false,false);
+        TileItemContainer original = getSample(game,tOriginal,true,true,true, true);
+        TileItemContainer copy = getSample(game,tCopy,false,false,false, false);
         
         assertTrue("Setup error, original must have road",original.getRoad()!=null);
         assertFalse("Setup error, copy cannot have road",copy.getRoad()!=null);
@@ -84,6 +89,8 @@ public class TileItemContainerTest extends FreeColTestCase {
         assertFalse("Setup error, copy cannot have resource",copy.getResource()!=null);
         assertTrue("Setup error, original must have rumour",original.getLostCityRumour()!=null);
         assertFalse("Setup error, copy cannot have rumour",copy.getLostCityRumour()!=null);
+        assertTrue("Setup error, original must have caveExploration",original.getCaveExploration()!=null);
+        assertFalse("Setup error, copy cannot have caveExploration",copy.getCaveExploration()!=null);
         
         copy.copyFrom(original, Map.Layer.ALL);
         
@@ -91,7 +98,8 @@ public class TileItemContainerTest extends FreeColTestCase {
         assertTrue("Copy should have river",copy.getRiver()!=null);
         assertTrue("Copy should have resource",copy.getResource()!=null);
         assertTrue("Copy should have rumour",copy.getLostCityRumour()!=null);
-        
+        assertTrue("Copy should have cave exploration",copy.getCaveExploration()!=null);
+
         // Copy only natural
         copy.copyFrom(original, Map.Layer.RESOURCES);
         
@@ -99,5 +107,6 @@ public class TileItemContainerTest extends FreeColTestCase {
         assertTrue("Copy should have river",copy.getRiver()!=null);
         assertTrue("Copy should have resource",copy.getResource()!=null);
         assertFalse("Copy should not have rumour",copy.getLostCityRumour()!=null);
+        assertFalse("Copy should not have cave exploration",copy.getCaveExploration()!=null);
     }
 }

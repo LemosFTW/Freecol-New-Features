@@ -2660,9 +2660,36 @@ public class ServerPlayer extends Player implements TurnTaker {
                         }
                     }
                     break;
-                default:
-                    ok = false;
+                case ATTACKER_NO_AMMO:
+                    ok = isAttack && result != CombatEffectType.NO_RESULT;
+                    if (ok) {
+                        csNoAmmo(attackerUnit);
+                        attackerTileDirty = true;
+                    }
                     break;
+                case DEFENDER_NO_AMMO:
+                    ok = isAttack && result != CombatEffectType.NO_RESULT;
+                    if (ok) {
+                        csNoAmmo(defenderUnit);
+                        defenderTileDirty = true;
+                    }
+                    break;
+                case ATTACKER_AMMO_USED:
+                    ok = isAttack && result != CombatEffectType.NO_RESULT;
+                    if (ok) {
+                        // Need to guarantee that the correct ammunition count is displayed
+                        // at the end of the combat.
+                        attackerTileDirty = true;
+                    }
+                    break;
+                case DEFENDER_AMMO_USED:
+                    ok = isAttack && result != CombatEffectType.NO_RESULT;
+                    if (ok)
+                        defenderTileDirty = true;
+                    break;
+            default:
+                ok = false;
+                break;
             }
             if (!ok) {
                 throw new IllegalStateException("Attack (result=" + result
@@ -2980,8 +3007,8 @@ public class ServerPlayer extends Player implements TurnTaker {
      */
     private void csCaptureEquip(Unit winner, Unit loser, ChangeSet cs) {
         Role role = loser.getRole();
-        csLoseEquip(winner, loser, cs);
         csCaptureEquipment(winner, loser, role, cs);
+        csLoseEquip(winner, loser, cs);
     }
 
     /**
@@ -3000,9 +3027,19 @@ public class ServerPlayer extends Player implements TurnTaker {
         Role newRole = winner.canCaptureEquipment(role);
         if (newRole != null) {
             List<AbstractGoods> newGoods
-                    = winner.getGoodsDifference(newRole, 1);
+                = winner.getGoodsDifference(newRole, 1);
+
+            for (AbstractGoods ag : newGoods) {
+                if (ag.getNameKey().contains("ammunition")) {
+                    ag.setAmount(loser.getAmmunitionCount());
+                    break;
+                }
+            }
+
             GoodsType goodsType = newGoods.get(0).getType(); // FIXME: generalize
             winner.changeRole(newRole, 1);
+
+            winner.setAmmunitionCount(loser.getAmmunitionCount());
 
             // Currently can not capture equipment back so this only
             // makes sense for native players, and the message is
@@ -3638,7 +3675,7 @@ public class ServerPlayer extends Player implements TurnTaker {
 
         Role downgrade = role.getDowngrade();
         if (downgrade != null) {
-            loser.changeRole(downgrade, 1);
+            loser.downgradeRole(downgrade, 1);
         } else {
             loser.changeRole(spec.getDefaultRole(), 0);
         }
@@ -4037,6 +4074,19 @@ public class ServerPlayer extends Player implements TurnTaker {
                         : See.perhaps().always(loserPlayer),
                 loserLoc, cs);//-vis(loserPlayer)
         loserPlayer.invalidateCanSeeTiles();//+vis(loserPlayer)
+    }
+
+    /**
+     * Change unit role when out of ammo.
+     *
+     * @param unit The {@code Unit} that is out of ammo
+     */
+    private void csNoAmmo(Unit unit) {
+        String currRole = unit.getRole().getId();
+        if (!currRole.contains("NoAmmo"))
+            currRole = currRole + "NoAmmo";
+        Role role = getGame().getSpecification().getRole(currRole);
+        unit.changeRole(role, 1);
     }
 
     /**

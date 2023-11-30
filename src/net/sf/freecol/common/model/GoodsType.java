@@ -53,6 +53,9 @@ public final class GoodsType extends FreeColSpecObjectType {
     /** Is this a farmed goods type. */
     private boolean isFarmed;
 
+    /** Is found in caves. */
+    private boolean isFoundInCaves;
+
     /** Is this a food type. */
     private boolean isFood;
 
@@ -148,6 +151,15 @@ public final class GoodsType extends FreeColSpecObjectType {
      */
     public boolean isFarmed() {
         return isFarmed;
+    }
+
+    /**
+     * Is this good found in caves?
+     *
+     * @return True if it is found in caves.
+     */
+    public boolean isFoundInCaves(){
+        return isFoundInCaves;
     }
 
     /**
@@ -545,6 +557,7 @@ public final class GoodsType extends FreeColSpecObjectType {
             : (isRawMaterial()) ? 4
             : (isNewWorldLuxuryType()) ? 5
             : (isRefined()) ? 6
+            : (isFoundInCaves()) ? 7
             : -1;
     }
 
@@ -559,6 +572,7 @@ public final class GoodsType extends FreeColSpecObjectType {
         GoodsType o = copyInCast(other, GoodsType.class);
         if (o == null || !super.copyIn(o)) return false;
         this.isFarmed = o.isFarmed();
+        this.isFoundInCaves = o.isFoundInCaves();
         this.isFood = o.isFoodType();
         this.ignoreLimit = o.limitIgnored();
         this.newWorldGoods = o.isNewWorldGoodsType();
@@ -588,6 +602,7 @@ public final class GoodsType extends FreeColSpecObjectType {
     private static final String INITIAL_AMOUNT_TAG = "initial-amount";
     private static final String INITIAL_PRICE_TAG = "initial-price";
     private static final String IS_FARMED_TAG = "is-farmed";
+    private static final String IS_CAVE_GOOD_TAG= "is-cave-good";
     private static final String IS_FOOD_TAG = "is-food";
     private static final String IS_MILITARY_TAG = "is-military";
     private static final String LOW_PRODUCTION_THRESHOLD_TAG = "low-production-threshold";
@@ -611,6 +626,8 @@ public final class GoodsType extends FreeColSpecObjectType {
         super.writeAttributes(xw);
 
         xw.writeAttribute(IS_FARMED_TAG, isFarmed);
+
+        xw.writeAttribute(IS_CAVE_GOOD_TAG, isFoundInCaves);
 
         xw.writeAttribute(IS_FOOD_TAG, isFood);
 
@@ -683,6 +700,8 @@ public final class GoodsType extends FreeColSpecObjectType {
         final Specification spec = getSpecification();
 
         isFarmed = xr.getAttribute(IS_FARMED_TAG, false);
+
+        isFoundInCaves = xr.getAttribute(IS_CAVE_GOOD_TAG, false);
 
         isFood = xr.getAttribute(IS_FOOD_TAG, false);
 

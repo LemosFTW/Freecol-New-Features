@@ -90,6 +90,7 @@
       <xs:attribute name="can-settle" type="xs:boolean"/>
       <xs:attribute name="is-connected" type="xs:boolean"/>
       <xs:attribute name="is-forest" type="xs:boolean"/>
+      <xs:attribute name="is-cave" type="xs:boolean"/>
       <xs:attribute name="is-elevation" type="xs:boolean"/>
       <xs:attribute name="is-water" type="xs:boolean"/>
     </xs:complexType>

@@ -81,6 +81,8 @@ public class Modifier extends Feature {
         = "model.modifier.defence";
     public static final String EXPLORE_LOST_CITY_RUMOUR
         = "model.modifier.exploreLostCityRumour";
+    public static final String EXPLORE_CAVE
+            = "model.modifier.exploreCave";
     public static final String EXPOSED_TILES_RADIUS
         = "model.modifier.exposedTilesRadius";
     public static final String FORTIFIED

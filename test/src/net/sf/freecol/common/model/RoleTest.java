@@ -31,6 +31,8 @@ public class RoleTest extends FreeColTestCase {
         = spec().getGoodsType("model.goods.horses");
     private static final GoodsType muskets
         = spec().getGoodsType("model.goods.muskets");
+    private static final GoodsType ammunition
+    	= spec().getGoodsType("model.goods.ammunition");
     private static final GoodsType tools
         = spec().getGoodsType("model.goods.tools");
 
@@ -40,22 +42,34 @@ public class RoleTest extends FreeColTestCase {
         = spec().getRole("model.role.scout");
     private static final Role soldier
         = spec().getRole("model.role.soldier");
+    private static final Role soldierNoAmmo
+    	= spec().getRole("model.role.soldierNoAmmo");
     private static final Role dragoon
         = spec().getRole("model.role.dragoon");
+    private static final Role dragoonNoAmmo
+    	= spec().getRole("model.role.dragoonNoAmmo");
     private static final Role pioneer
         = spec().getRole("model.role.pioneer");
     private static final Role mission
         = spec().getRole("model.role.missionary");
     private static final Role infantry
         = spec().getRole("model.role.infantry");
+    private static final Role infantryNoAmmo
+    	= spec().getRole("model.role.infantryNoAmmo");
     private static final Role cavalry
         = spec().getRole("model.role.cavalry");
+    private static final Role cavalryNoAmmo
+    	= spec().getRole("model.role.cavalryNoAmmo");
     private static final Role armedBrave
         = spec().getRole("model.role.armedBrave");
+    private static final Role armedBraveNoAmmo
+    	= spec().getRole("model.role.armedBraveNoAmmo");
     private static final Role mountedBrave
         = spec().getRole("model.role.mountedBrave");
     private static final Role nativeDragoon
         = spec().getRole("model.role.nativeDragoon");
+    private static final Role nativeDragoonNoAmmo
+    	= spec().getRole("model.role.nativeDragoonNoAmmo");
 
     private static final UnitType braveType
         = spec().getUnitType("model.unit.brave");
@@ -100,28 +114,40 @@ public class RoleTest extends FreeColTestCase {
         List<AbstractGoods> goods
             = Role.getGoodsDifference(none, 1, soldier, 1);
         checkGoods("->soldier", goods,
-            new AbstractGoods(muskets, 50));
+            new AbstractGoods(muskets, 50),
+            new AbstractGoods(ammunition, 5));
 
         goods = Role.getGoodsDifference(soldier, 1, dragoon, 1);
         checkGoods("soldier->dragoon", goods,
             new AbstractGoods(horses, 50));
+        
+        goods = Role.getGoodsDifference(dragoon, 1, dragoonNoAmmo, 1);
+        checkGoods("soldier->dragoon", goods,
+            new AbstractGoods(ammunition, -5));
 
         goods = Role.getGoodsDifference(mission, 1, dragoon, 1);
         checkGoods("missionary->dragoon", goods,
             new AbstractGoods(horses, 50),
-            new AbstractGoods(muskets, 50));
+            new AbstractGoods(muskets, 50),
+            new AbstractGoods(ammunition, 5));
 
         goods = Role.getGoodsDifference(soldier, 1, none, 1);
         checkGoods("soldier->", goods,
-            new AbstractGoods(muskets, -50));
+            new AbstractGoods(muskets, -50),
+            new AbstractGoods(ammunition, -5));
 
         goods = Role.getGoodsDifference(nativeDragoon, 1, armedBrave, 1);
+        checkGoods("nativeDragoon->armedBrave", goods,
+            new AbstractGoods(horses, -25));
+        
+        goods = Role.getGoodsDifference(nativeDragoonNoAmmo, 1, armedBraveNoAmmo, 1);
         checkGoods("nativeDragoon->armedBrave", goods,
             new AbstractGoods(horses, -25));
 
         goods = Role.getGoodsDifference(soldier, 1, pioneer, 4);
         checkGoods("soldier->pioneer(4)", goods,
             new AbstractGoods(muskets, -50),
+            new AbstractGoods(ammunition, -5),
             new AbstractGoods(tools, 80));
     }
 

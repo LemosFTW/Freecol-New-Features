@@ -552,11 +552,7 @@ public class ServerColony extends Colony implements TurnTaker {
                         cs.addMessage(owner,
                             new ModelMessage(MessageType.MISSING_GOODS,
                                              "model.colony.buildableNeedsGoods",
-                                             this, build)
-                                .addName("%colony%", getName())
-                                .addNamed("%buildable%", build)
-                                .addAmount("%amount%", needed.getAmount())
-                                .addNamed("%goodsType%", needed.getType()));
+                                             this, build).addName("%colony%", getName()).addNamed("%buildable%", build).addAmount("%amount%", needed.getAmount()).addNamed("%goodsType%", needed.getType()));
                     }
                 }
             }

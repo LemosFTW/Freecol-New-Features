@@ -26,46 +26,12 @@ import java.util.Random;
 import java.util.Set;
 import java.util.logging.Logger;
 
+import net.sf.freecol.client.gui.label.GoodsTypeLabel;
 import net.sf.freecol.common.i18n.Messages;
 import net.sf.freecol.common.i18n.NameCache;
-import net.sf.freecol.common.model.Ability;
-import net.sf.freecol.common.model.AbstractGoods;
-import net.sf.freecol.common.model.Colony;
-import net.sf.freecol.common.model.CombatModel;
-import net.sf.freecol.common.model.Europe;
-import net.sf.freecol.common.model.FreeColGameObject;
-import net.sf.freecol.common.model.Game;
-import net.sf.freecol.common.model.GoodsContainer;
-import net.sf.freecol.common.model.GoodsType;
-import net.sf.freecol.common.model.HighSeas;
-import net.sf.freecol.common.model.HistoryEvent;
-import net.sf.freecol.common.model.IndianSettlement;
-import net.sf.freecol.common.model.Location;
-import net.sf.freecol.common.model.LostCityRumour;
+import net.sf.freecol.common.model.*;
 import net.sf.freecol.common.model.LostCityRumour.RumourType;
-import net.sf.freecol.common.model.Map;
-import net.sf.freecol.common.model.ModelMessage;
-import net.sf.freecol.common.model.Modifier;
-import net.sf.freecol.common.model.Player;
-import net.sf.freecol.common.model.Stance;
-import net.sf.freecol.common.model.Region;
-import net.sf.freecol.common.model.Resource;
-import net.sf.freecol.common.model.ResourceType;
-import net.sf.freecol.common.model.Role;
-import net.sf.freecol.common.model.Settlement;
-import net.sf.freecol.common.model.Specification;
-import net.sf.freecol.common.model.StringTemplate;
-import net.sf.freecol.common.model.Tension;
-import net.sf.freecol.common.model.Tile;
-import net.sf.freecol.common.model.TileImprovement;
-import net.sf.freecol.common.model.TileImprovementType;
-import net.sf.freecol.common.model.TileType;
-import net.sf.freecol.common.model.Turn;
-import net.sf.freecol.common.model.Unit;
-import net.sf.freecol.common.model.UnitChangeType;
-import net.sf.freecol.common.model.UnitTypeChange;
-import net.sf.freecol.common.model.UnitType;
-import net.sf.freecol.common.model.WorkLocation;
+import net.sf.freecol.common.model.CaveExploration.CaveType;
 import net.sf.freecol.common.networking.ChangeSet;
 import net.sf.freecol.common.networking.ChangeSet.See;
 import net.sf.freecol.common.networking.FountainOfYouthMessage;
@@ -140,6 +106,7 @@ public class ServerUnit extends Unit implements TurnTaker {
         workType = spec.getGoodsType(template.getWorkType().getId());
         movesLeft = template.getMovesLeft();
         hitPoints = template.getType().getHitPoints();
+        ammunitionCount = template.getAmmunitionCount();
         changeRole(spec.getRole(template.getRole().getId()),
                    template.getRoleCount());
         setStateUnchecked(template.getState());
@@ -186,6 +153,7 @@ public class ServerUnit extends Unit implements TurnTaker {
         this.treasureAmount = 0;
         this.attrition = 0;
         this.visibleGoodsCount = -1;
+        this.ammunitionCount = 0;
 
         // Check for creation change
         UnitTypeChange uc = getUnitChange(UnitChangeType.CREATION);
@@ -644,6 +612,116 @@ public class ServerUnit extends Unit implements TurnTaker {
         return result;
     }
 
+    /** TODO: */
+    private boolean csExploreCave(Random random, ChangeSet cs){
+        final Player owner = getOwner();
+        Tile tile = getTile();
+        CaveExploration caveExplore = tile.getCaveExploration();
+        if (caveExplore == null) return true;
+
+        Game game = getGame();
+        Specification spec = game.getSpecification();
+        UnitType unitType;
+        GoodsType goodsType;
+        Unit newUnit = null;
+        List<UnitType> treasureUnitTypes = spec.getUnitTypesWithAbility(Ability.CARRY_TREASURE);
+        List<GoodsType> goodsTypes = spec.getFoundInCavesGoodsTypeList();
+        CaveType cave = caveExplore.chooseType(this, random);
+
+        logger.info("Unit " + getId() + " is exploring rumour " + cave);
+        boolean result = true;
+        String key = cave.getDescriptionKey();
+        switch (cave) {
+            case NOTHING_MORE_TO_EXPLORE:
+                break;
+            case TRAP:
+                Role previousRole = this.getRole();
+                if(previousRole == spec.getDefaultRole()){
+                    result = false;
+                    cs.addMessage(owner,
+                            new ModelMessage(ModelMessage.MessageType.CAVE_EXPLORATION,
+                                    CaveType.LETHAL_TRAP.getDescriptionKey(), owner));
+                } else {
+                    Role downgrade = role.getDowngrade();
+                    if (downgrade != null) {
+                        this.changeRole(downgrade, 1);
+
+                    } else {
+                        this.changeRole(spec.getDefaultRole(), 0);
+                    }
+                    cs.addMessage(owner,
+                            new ModelMessage(ModelMessage.MessageType.CAVE_EXPLORATION,
+                                    key, owner));
+                }
+                break;
+            case LETHAL_TRAP:
+                cs.addMessage(owner,
+                        new ModelMessage(ModelMessage.MessageType.CAVE_EXPLORATION,
+                                key, owner));
+                result = false;
+                break;
+            case NOTHING:
+                cs.addMessage(owner, caveExplore.getNothingMessage(owner, random));
+                break;
+            case LEARN:
+                StringTemplate oldName = getLabel();
+                UnitTypeChange uc = getRandomMember(logger, "Choose learn",
+                        spec.getUnitChanges(UnitChangeType.CAVE_EXPLORATION, getType()),
+                        random);
+                changeType(uc.to);//-vis(serverPlayer)
+                owner.invalidateCanSeeTiles();//+vis(serverPlayer)
+                cs.addMessage(owner,
+                        new ModelMessage(ModelMessage.MessageType.CAVE_EXPLORATION,
+                                key, owner, this)
+                                .addStringTemplate("%unit%", oldName)
+                                .addNamed("%type%", getType()));
+                break;
+            case COLONIST:
+                List<UnitType> foundTypes = spec.getUnitTypesWithAbility(Ability.FOUND_IN_CAVE);
+                unitType = getRandomMember(logger, "Choose found", foundTypes, random);
+                newUnit = new ServerUnit(game, tile, owner, unitType);//-vis: safe, scout on tile
+                cs.addMessage(owner,
+                        new ModelMessage(ModelMessage.MessageType.CAVE_EXPLORATION,
+                                key, owner, newUnit));
+                break;
+            case TREASURE:
+                int treasureAmount = randomInt(logger,
+                        "Base treasure amount", random, 400) + 100;
+                unitType = getRandomMember(logger, "Choose train",
+                        treasureUnitTypes, random);
+                newUnit = new ServerUnit(game, tile, owner,
+                        unitType);//-vis: safe, scout on tile
+                newUnit.setTreasureAmount(treasureAmount);
+                cs.addMessage(owner,
+                        new ModelMessage(ModelMessage.MessageType.CAVE_EXPLORATION,
+                                key, owner, newUnit)
+                                .addAmount("%money%", treasureAmount));
+                break;
+            case RESOURCES:
+                int goodsAmount = randomInt(logger, "Base Item amount",
+                        random, 100) + 40;
+                unitType = spec.getUnitType("model.unit.wagonTrain");
+                goodsType = getRandomMember(logger, "Choose found item",
+                        goodsTypes, random);
+                Unit wagon = new ServerUnit(game, tile, owner, unitType);
+                Goods goods = new Goods(game, wagon, goodsType, goodsAmount);
+                wagon.add(goods);
+                cs.addMessage(owner,
+                        new ModelMessage(ModelMessage.MessageType.CAVE_EXPLORATION,
+                                key, owner, newUnit).addName("%item%", goodsType)
+                                .addAmount("%amount%", goodsAmount));
+                break;
+        }
+
+
+        //equivalente a muito do csExploreLostCityRumour...
+        if(caveExplore.isEmpty()){
+            tile.cacheUnseen();//+til
+            tile.removeCaveExploration();//-til
+        }
+        return result;
+    }
+
     /**
      * Check for new contacts at a tile.
      *
@@ -790,6 +868,16 @@ public class ServerUnit extends Unit implements TurnTaker {
             && !csExploreLostCityRumour(random, cs)) {
             this.csRemove(See.perhaps().always(owner),
                 oldLocation, cs);//-vis(serverPlayer)
+        }
+
+        if(!this.hasAbility(Ability.BOMBARD)
+                && !this.type.equals(getGame().getSpecification().getUnitType("model.unit.wagonTrain"))
+                && !this.hasAbility(Ability.CARRY_TREASURE)) {
+            if (newTile.hasCaveExploration() && owner.isEuropean()
+                    && !csExploreCave(random, cs)) {
+                this.csRemove(See.perhaps().always(owner),
+                        oldLocation, cs);
+            }
         }
         owner.invalidateCanSeeTiles();//+vis(serverPlayer)
 

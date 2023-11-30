@@ -54,21 +54,35 @@ public final class SpecificationTest extends FreeColTestCase {
         = spec().getGoodsType("model.goods.muskets");
     private static final GoodsType toolsType
         = spec().getGoodsType("model.goods.tools");
+    private static final GoodsType ammunitionType
+    	= spec().getGoodsType("model.goods.ammunition");
 
     private static final Role armedBraveRole
         = spec().getRole("model.role.armedBrave");
+    private static final Role armedBraveNoAmmoRole
+    	= spec().getRole("model.role.armedBraveNoAmmo");
     private static final Role cavalryRole
         = spec().getRole("model.role.cavalry");
+    private static final Role cavalryNoAmmoRole
+		= spec().getRole("model.role.cavalryNoAmmo");
     private static final Role dragoonRole
         = spec().getRole("model.role.dragoon");
+    private static final Role dragoonNoAmmoRole
+		= spec().getRole("model.role.dragoonNoAmmo");
     private static final Role infantryRole
         = spec().getRole("model.role.infantry");
+    private static final Role infantryNoAmmoRole
+		= spec().getRole("model.role.infantryNoAmmo");
     private static final Role missionaryRole
         = spec().getRole("model.role.missionary");
     private static final Role nativeDragoonRole
         = spec().getRole("model.role.nativeDragoon");
+    private static final Role nativeDragoonNoAmmoRole
+		= spec().getRole("model.role.nativeDragoonNoAmmo");
     private static final Role soldierRole
         = spec().getRole("model.role.soldier");
+    private static final Role soldierNoAmmoRole
+		= spec().getRole("model.role.soldierNoAmmo");
 
     private static final UnitType blackSmithType
         = spec().getUnitType("model.unit.masterBlacksmith");
@@ -224,12 +238,24 @@ public final class SpecificationTest extends FreeColTestCase {
         expectAbilities.put(Ability.NATIVE, false);
         expectAbilities.put(Ability.REF_UNIT, false);
         roleAbilities.put("model.role.soldier", expectAbilities);
+        
+        expectAbilities = new HashMap<>();
+        expectAbilities.put(Ability.CAN_BE_EQUIPPED, false);
+        expectAbilities.put(Ability.NATIVE, false);
+        expectAbilities.put(Ability.REF_UNIT, false);
+        roleAbilities.put("model.role.soldierNoAmmo", expectAbilities);
 
         expectAbilities = new HashMap<>();
         expectAbilities.put(Ability.CAN_BE_EQUIPPED, true);
         expectAbilities.put(Ability.NATIVE, false);
         expectAbilities.put(Ability.REF_UNIT, false);
         roleAbilities.put("model.role.dragoon", expectAbilities);
+        
+        expectAbilities = new HashMap<>();
+        expectAbilities.put(Ability.CAN_BE_EQUIPPED, false);
+        expectAbilities.put(Ability.NATIVE, false);
+        expectAbilities.put(Ability.REF_UNIT, false);
+        roleAbilities.put("model.role.dragoonNoAmmo", expectAbilities);
 
         expectAbilities = new HashMap<>();
         expectAbilities.put(Ability.CAN_BE_EQUIPPED, true);
@@ -250,6 +276,13 @@ public final class SpecificationTest extends FreeColTestCase {
         expectAbilities.put(Ability.REF_UNIT, true);
         expectAbilities.put(Ability.ROYAL_EXPEDITIONARY_FORCE, true);
         roleAbilities.put("model.role.infantry", expectAbilities);
+        
+        expectAbilities = new HashMap<>();
+        expectAbilities.put(Ability.CAN_BE_EQUIPPED, false);
+        expectAbilities.put(Ability.NATIVE, false);
+        expectAbilities.put(Ability.REF_UNIT, true);
+        expectAbilities.put(Ability.ROYAL_EXPEDITIONARY_FORCE, true);
+        roleAbilities.put("model.role.infantryNoAmmo", expectAbilities);
 
         expectAbilities = new HashMap<>();
         expectAbilities.put(Ability.CAN_BE_EQUIPPED, true);
@@ -257,6 +290,13 @@ public final class SpecificationTest extends FreeColTestCase {
         expectAbilities.put(Ability.REF_UNIT, true);
         expectAbilities.put(Ability.ROYAL_EXPEDITIONARY_FORCE, true);
         roleAbilities.put("model.role.cavalry", expectAbilities);
+        
+        expectAbilities = new HashMap<>();
+        expectAbilities.put(Ability.CAN_BE_EQUIPPED, false);
+        expectAbilities.put(Ability.NATIVE, false);
+        expectAbilities.put(Ability.REF_UNIT, true);
+        expectAbilities.put(Ability.ROYAL_EXPEDITIONARY_FORCE, true);
+        roleAbilities.put("model.role.cavalryNoAmmo", expectAbilities);
 
         expectAbilities = new HashMap<>();
         expectAbilities.put(Ability.CAN_BE_EQUIPPED, true);
@@ -269,12 +309,24 @@ public final class SpecificationTest extends FreeColTestCase {
         expectAbilities.put(Ability.NATIVE, true);
         expectAbilities.put(Ability.REF_UNIT, false);
         roleAbilities.put("model.role.armedBrave", expectAbilities);
+        
+        expectAbilities = new HashMap<>();
+        expectAbilities.put(Ability.CAN_BE_EQUIPPED, false);
+        expectAbilities.put(Ability.NATIVE, true);
+        expectAbilities.put(Ability.REF_UNIT, false);
+        roleAbilities.put("model.role.armedBraveNoAmmo", expectAbilities);
 
         expectAbilities = new HashMap<>();
         expectAbilities.put(Ability.CAN_BE_EQUIPPED, true);
         expectAbilities.put(Ability.NATIVE, true);
         expectAbilities.put(Ability.REF_UNIT, false);
         roleAbilities.put("model.role.nativeDragoon", expectAbilities);
+        
+        expectAbilities = new HashMap<>();
+        expectAbilities.put(Ability.CAN_BE_EQUIPPED, false);
+        expectAbilities.put(Ability.NATIVE, true);
+        expectAbilities.put(Ability.REF_UNIT, false);
+        roleAbilities.put("model.role.nativeDragoonNoAmmo", expectAbilities);
 
         // Verify
         forEachMapEntry(roleAbilities, e -> {
@@ -306,9 +358,22 @@ public final class SpecificationTest extends FreeColTestCase {
         role = spec.getRole("model.role.soldier");
         assertNotNull(role);
         checkGoods(role.getId(), role.getRequiredGoodsList(),
+            new AbstractGoods(musketsType, 50),
+            new AbstractGoods(ammunitionType, 5));
+        
+        role = spec.getRole("model.role.soldierNoAmmo");
+        assertNotNull(role);
+        checkGoods(role.getId(), role.getRequiredGoodsList(),
             new AbstractGoods(musketsType, 50));
 
         role = spec.getRole("model.role.dragoon");
+        assertNotNull(role);
+        checkGoods(role.getId(), role.getRequiredGoodsList(),
+            new AbstractGoods(horsesType, 50),
+            new AbstractGoods(musketsType, 50),
+            new AbstractGoods(ammunitionType, 5));
+        
+        role = spec.getRole("model.role.dragoonNoAmmo");
         assertNotNull(role);
         checkGoods(role.getId(), role.getRequiredGoodsList(),
             new AbstractGoods(horsesType, 50),
@@ -326,9 +391,22 @@ public final class SpecificationTest extends FreeColTestCase {
         role = spec.getRole("model.role.infantry");
         assertNotNull(role);
         checkGoods(role.getId(), role.getRequiredGoodsList(),
+            new AbstractGoods(musketsType, 50),
+            new AbstractGoods(ammunitionType, 5));
+        
+        role = spec.getRole("model.role.infantryNoAmmo");
+        assertNotNull(role);
+        checkGoods(role.getId(), role.getRequiredGoodsList(),
             new AbstractGoods(musketsType, 50));
 
         role = spec.getRole("model.role.cavalry");
+        assertNotNull(role);
+        checkGoods(role.getId(), role.getRequiredGoodsList(),
+            new AbstractGoods(horsesType, 50),
+            new AbstractGoods(musketsType, 50),
+            new AbstractGoods(ammunitionType, 5));
+        
+        role = spec.getRole("model.role.cavalryNoAmmo");
         assertNotNull(role);
         checkGoods(role.getId(), role.getRequiredGoodsList(),
             new AbstractGoods(horsesType, 50),
@@ -342,9 +420,22 @@ public final class SpecificationTest extends FreeColTestCase {
         role = spec.getRole("model.role.armedBrave");
         assertNotNull(role);
         checkGoods(role.getId(), role.getRequiredGoodsList(),
+            new AbstractGoods(musketsType, 25),
+            new AbstractGoods(ammunitionType, 5));
+        
+        role = spec.getRole("model.role.armedBraveNoAmmo");
+        assertNotNull(role);
+        checkGoods(role.getId(), role.getRequiredGoodsList(),
             new AbstractGoods(musketsType, 25));
 
         role = spec.getRole("model.role.nativeDragoon");
+        assertNotNull(role);
+        checkGoods(role.getId(), role.getRequiredGoodsList(),
+            new AbstractGoods(horsesType, 25),
+            new AbstractGoods(musketsType, 25),
+            new AbstractGoods(ammunitionType, 5));
+        
+        role = spec.getRole("model.role.nativeDragoonNoAmmo");
         assertNotNull(role);
         checkGoods(role.getId(), role.getRequiredGoodsList(),
             new AbstractGoods(horsesType, 25),

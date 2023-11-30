@@ -57,6 +57,8 @@ public final class TileType extends FreeColSpecObjectType
     public static final TileType WATER = new TileType("WATER", true);
     public static final TileType LAND  = new TileType("LAND", false);
 
+    /** Is this a cave tile? */
+    private boolean cave;
 
     /** Is this a forested tile? */
     private boolean forest;
@@ -133,6 +135,15 @@ public final class TileType extends FreeColSpecObjectType
      */
     public boolean isForested() {
         return forest;
+    }
+
+    /**
+     * Is this tile type a cave?
+     *
+     * @return True if this is a cave tile type.
+     */
+    public boolean isCave() {
+        return cave;
     }
 
     /**
@@ -482,6 +493,7 @@ public final class TileType extends FreeColSpecObjectType
     public <T extends FreeColObject> boolean copyIn(T other) {
         TileType o = copyInCast(other, TileType.class);
         if (o == null || !super.copyIn(o)) return false;
+        this.cave = o.isCave();
         this.forest = o.isForested();
         this.water = o.isWater();
         this.canSettle = o.canSettle();
@@ -520,6 +532,7 @@ public final class TileType extends FreeColSpecObjectType
     private static final String IS_CONNECTED_TAG = "is-connected";
     private static final String IS_ELEVATION_TAG = "is-elevation";
     private static final String IS_FOREST_TAG = "is-forest";
+    private static final String IS_CAVE_TAG = "is-cave";
     private static final String IS_WATER_TAG = "is-water";
     private static final String PROBABILITY_TAG = "probability";
     private static final String PRODUCTION_TAG = "production";
@@ -551,6 +564,8 @@ public final class TileType extends FreeColSpecObjectType
         xw.writeAttribute(BASIC_MOVE_COST_TAG, this.basicMoveCost);
 
         xw.writeAttribute(BASIC_WORK_TURNS_TAG, this.basicWorkTurns);
+
+        xw.writeAttribute(IS_CAVE_TAG, this.cave);
 
         xw.writeAttribute(IS_FOREST_TAG, this.forest);
 
@@ -623,6 +638,8 @@ public final class TileType extends FreeColSpecObjectType
         this.basicMoveCost = xr.getAttribute(BASIC_MOVE_COST_TAG, 1);
 
         this.basicWorkTurns = xr.getAttribute(BASIC_WORK_TURNS_TAG, 1);
+
+        this.cave = xr.getAttribute(IS_CAVE_TAG, false);
 
         this.forest = xr.getAttribute(IS_FOREST_TAG, false);
 

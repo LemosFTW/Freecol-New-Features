@@ -507,6 +507,13 @@ public class GameOptions {
     public static final String GOOD_RUMOUR
         = "model.option.goodRumour";
 
+    /** Bad cave chance. */
+    public static final String BAD_CAVE
+            = "model.option.badCave";
+
+    /** Good cave chance. */
+    public static final String GOOD_CAVE
+            = "model.option.goodCave";
 
     /** Cheat (difficulty) group. */
     public static final String DIFFICULTY_CHEAT

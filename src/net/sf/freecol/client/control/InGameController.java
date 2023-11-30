@@ -117,6 +117,7 @@ import net.sf.freecol.common.model.Player.NoClaimReason;
 import net.sf.freecol.common.model.Region;
 import net.sf.freecol.common.model.Role;
 import net.sf.freecol.common.model.Settlement;
+import net.sf.freecol.common.model.SimpleCombatModel;
 import net.sf.freecol.common.model.Stance;
 import net.sf.freecol.common.model.StringTemplate;
 import net.sf.freecol.common.model.Tile;
@@ -5389,5 +5390,15 @@ public final class InGameController extends FreeColClientHolder {
             updateGUI(null, false);
         }
         return ret;
+    }
+
+    /**
+     *
+     * Exclusively used for testing.
+     * Changes the odds for capturing the enemy ship.*
+     * @param odd to update.
+     */
+    public void changeCaptureShipOdds(double odd) {
+        SimpleCombatModel.setCaptureShipOdds(odd);
     }
 }
