@@ -627,6 +627,17 @@ public final class InGameController extends FreeColClientHolder {
     }
 
     /**
+     *
+     * Exclusively used for testing.
+     * Changes the odds for capturing the enemy ship.
+     *
+     * @param odd to update.
+     */
+    public void changeCaptureShipOdds(double odd) {
+        SimpleCombatModel.setCaptureShipOdds(odd);
+    }
+
+    /**
      * Claim a tile.
      *
      * @param player The {@code Player} that is claiming.
@@ -5390,15 +5401,5 @@ public final class InGameController extends FreeColClientHolder {
             updateGUI(null, false);
         }
         return ret;
-    }
-
-    /**
-     *
-     * Exclusively used for testing.
-     * Changes the odds for capturing the enemy ship.*
-     * @param odd to update.
-     */
-    public void changeCaptureShipOdds(double odd) {
-        SimpleCombatModel.setCaptureShipOdds(odd);
     }
 }
