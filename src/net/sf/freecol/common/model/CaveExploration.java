@@ -288,9 +288,6 @@ public  class CaveExploration extends TileItem {
      */
     @Override
     public int applyBonus(GoodsType goodsType, UnitType unitType, int potential) {
-        // Just return the given potential, since lost cities do not
-        // provide any production bonuses.  FIXME: maybe we should
-        // return zero, since lost cities actually prevent production?
         return potential;
     }
 
