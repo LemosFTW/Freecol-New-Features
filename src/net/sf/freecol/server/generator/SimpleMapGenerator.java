@@ -190,8 +190,6 @@ public class SimpleMapGenerator implements MapGenerator {
             " lost city rumours of maximum ", number, ".\n");
     }
 
-    //TODO add creation of caves
-
     /**
      * Make caves on the given map.
      *
@@ -208,7 +206,6 @@ public class SimpleMapGenerator implements MapGenerator {
                 .getBoolean(MapGeneratorOptions.IMPORT_CAVES);
         if (importMap != null && importCaves) {
             // Caves were read from the import game, no need to do more
-            //TODO: check if this comment is true
             return;
         }
 
@@ -217,7 +214,6 @@ public class SimpleMapGenerator implements MapGenerator {
         int number = getApproximateLandCount(game) / caveNumber;
         int counter = 0;
 
-        // FIXME: Remove temporary fix:
         if (importMap != null) {
             number = map.getWidth() * map.getHeight() * 25 / (100 * 35);
         }
@@ -225,7 +221,7 @@ public class SimpleMapGenerator implements MapGenerator {
         for (int i = 0; i < number; i++) {
             for (int tries = 0; tries < 100; tries++) {
                 Tile t = map.getRandomLandTile(random);
-                if (t.isPolar()) continue; // No polar lost cities TODO: onde ficam as caves?
+                if (t.isPolar()) continue; // No polar lost cities
                 if (t.isLand() && t.isCave() && !t.hasLostCityRumour() && !t.hasCaveExploration()
                         && !t.hasSettlement() && t.getUnitCount() == 0) {
                     CaveExploration c = new CaveExploration(t.getGame(), t);
@@ -1062,7 +1058,6 @@ public class SimpleMapGenerator implements MapGenerator {
                     && (t.getOwner() == null || !t.getOwner().isEuropean())))) {
             tile.changeOwnership(player, colony);
             if (tile.hasLostCityRumour()) tile.removeLostCityRumour();
-            //TODO: possible cave Removal too
         }
         buildColonyUnit.setLocation(colony);
         Tile ct = buildColonyUnit.getWorkTile();

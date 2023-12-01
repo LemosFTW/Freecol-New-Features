@@ -612,7 +612,13 @@ public class ServerUnit extends Unit implements TurnTaker {
         return result;
     }
 
-    /** TODO: */
+    /**
+     * Explore a cave.
+     *
+     * @param random A pseudo-random number source.
+     * @param cs A {@code ChangeSet} to add changes to.
+     * @return True if the unit survives.
+     */
     private boolean csExploreCave(Random random, ChangeSet cs){
         final Player owner = getOwner();
         Tile tile = getTile();

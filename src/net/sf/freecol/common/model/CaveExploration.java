@@ -62,7 +62,7 @@ public  class CaveExploration extends TileItem {
         TREASURE;
 
         /**
-         * Get the stem key for this LCR type.
+         * Get the stem key for this cave type.
          *
          * @return The stem key.
          */
@@ -78,27 +78,29 @@ public  class CaveExploration extends TileItem {
     }
 
     /**
-     * The type of the rumour.  A CaveType, or null if the type has
+     * The type of cave. A CaveType, or null if the type has
      * not yet been determined.
      */
     private CaveType type = null;
 
     /**
-     * The name of this rumour, or null, if it has none.  Rumours such
-     * as the Seven Cities of Gold and Fountains of Youth may have
-     * individual names.
+     * The name of this cave, or null, if it has none.
      */
     private String name = null;
 
+    /**
+     * Number of floors of the cave
+     */
     private int nFloors;
-
+    /**
+     * Number of the current floor
+     */
     private int currentFloor;
 
     /**
-     * Creates a new {@code LostCityRumour} instance.
-     * TODO: get random number of floors
+     * Creates a new {@code CaveExploration} instance.
      * @param game The enclosing {@code Game}.
-     * @param tile The {@code Tile} where the LCR is.
+     * @param tile The {@code Tile} where the Cave is.
      */
     public CaveExploration(Game game, Tile tile) {
         super(game, tile);
@@ -106,6 +108,13 @@ public  class CaveExploration extends TileItem {
         currentFloor = 0;
     }
 
+    /**
+     * Creates a new {@code CaveExploration} instance.
+     * @param game The enclosing {@code Game}.
+     * @param tile The {@code Tile} where the Cave is.
+     * @param type The type of cave.
+     * @param number The number of floors of the cave.
+     */
     public CaveExploration(Game game, Tile tile, CaveType type, int number) {
         super(game, tile);
         this.type = type;
@@ -114,12 +123,11 @@ public  class CaveExploration extends TileItem {
     }
 
     /**
-     * Creates a new {@code LostCityRumour} instance.
-     *
+     * Creates a new {@code CaveExploration} instance.
      * @param game The enclosing {@code Game}.
-     * @param tile The {@code Tile} where the LCR is.
-     * @param type The type of rumour.
-     * @param name The name of the rumour.
+     * @param tile The {@code Tile} where the Cave is.
+     * @param type The type of cave.
+     * @param name The name of the cave.
      */
     public CaveExploration(Game game, Tile tile, CaveType type, String name) {
         super(game, tile);
@@ -139,7 +147,7 @@ public  class CaveExploration extends TileItem {
     }
 
     /**
-     * Get the type of rumour.
+     * Get the type of cave.
      *
      * @return The {@code CaveType}.
      */
@@ -148,7 +156,7 @@ public  class CaveExploration extends TileItem {
     }
 
     /**
-     * Get the name of this rumour.
+     * Get the name of this cave.
      *
      * @return The name.
      */
@@ -167,19 +175,15 @@ public  class CaveExploration extends TileItem {
     }
 
     /**
-     * Chooses a type of Lost City Rumour.  The type of rumour depends
+     * Chooses a type of CaveExploration.  The type of cave depends
      * on the exploring unit, as well as player settings.
      *
      * The scouting outcome is based on three factors: good/bad percent
-     * rumour difficulty option, expert scout or not, DeSoto or not.
-     *
-     * FIXME: Make CaveType a FreeColSpecObjectType and move all the
-     * TODO: Fix probabilities
-     * magic numbers in here to the specification.
+     * cave difficulty option, expert scout or not.
      *
      * @param unit The {@code Unit} exploring (optional).
      * @param random A random number source.
-     * @return The type of rumour.
+     * @return The type of cave.
      */
     public CaveType chooseType(Unit unit, Random random) {
         if(currentFloor >= nFloors) {
