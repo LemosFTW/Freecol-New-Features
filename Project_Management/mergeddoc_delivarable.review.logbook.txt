@@ -1,4 +1,7 @@
 All reviews:
 
 Reviewer: Tiago Sousa 63324 (tiago-cos)
-A bit extensive, but has all information needed.
+A bit extensive, but has all the information needed.
+
+Reviewer: João Silveira 62654 (Joao-Pedro-Silveira)
+Seems good, the indices are a nice touch!
