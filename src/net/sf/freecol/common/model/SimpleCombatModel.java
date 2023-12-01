@@ -792,14 +792,16 @@ public class SimpleCombatModel extends CombatModel {
                     && !loser.getGoodsList().isEmpty()) {
                 crs.add(CombatEffectType.LOOT_SHIP);
             }
-            if (great || loserMustDie
+
+            if (winner.isNaval() && calculateCaptureShipProbability() && winner.canCaptureGoods()) {
+                crs.add(CombatEffectType.CAPTURE_SHIP);
+                crs.add(CombatEffectType.SINK_SHIP); // sink enemy ship so he can't use it anymore
+            }
+            else if (great || loserMustDie
                     || loser.getRepairLocation() == null
                     || loser.isBeached()) {
                 crs.add(CombatEffectType.SINK_SHIP_ATTACK);
                 // Only frigates, man-o-war and privateers can capture enemy ships
-            } else if (winner.isNaval() && calculateCaptureShipProbability() && winner.canCaptureGoods()) {
-                crs.add(CombatEffectType.CAPTURE_SHIP);
-                crs.add(CombatEffectType.SINK_SHIP); // sink enemy ship so he can't use it anymore
             } else {
                 crs.add(CombatEffectType.DAMAGE_SHIP_ATTACK);
             }
