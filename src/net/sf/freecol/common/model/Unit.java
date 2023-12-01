@@ -1983,7 +1983,17 @@ public class Unit extends GoodsLocation
         if (!hasAbility(Ability.CAPTURE_EQUIPMENT)) return null;
         final Specification spec = getSpecification();
         final Role oldRole = getRole();
-        return find(getAvailableRoles(spec.getMilitaryRolesList()),
+
+        // Add no ammunition roles
+        List<Role> availableRoles = getAvailableRolesList(spec.getMilitaryRolesList());
+        List<Role> toAdd = new ArrayList<>();
+        for (Role r : availableRoles) {
+            if (r.requiresAmmunition())
+                toAdd.add(spec.getRole(r.getId() + "NoAmmo"));
+        }
+        availableRoles.addAll(toAdd);
+
+        return find(availableRoles,
             r -> any(r.getRoleChanges(), rc ->
                 rc.getFrom(spec) == oldRole && rc.getCapture(spec) == role));
     }

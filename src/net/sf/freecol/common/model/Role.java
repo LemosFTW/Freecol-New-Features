@@ -28,6 +28,7 @@ import static net.sf.freecol.common.util.StringUtils.lastPart;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Stream;
 
 import javax.xml.stream.XMLStreamException;
@@ -288,6 +289,20 @@ public class Role extends BuildableType {
      */
     public boolean isOffensive() {
         return hasModifier(Modifier.OFFENCE);
+    }
+
+    /**
+     * Does this role require ammunition?
+     *
+     * @return True if this role requires ammunition.
+     */
+    public boolean requiresAmmunition() {
+        List<AbstractGoods> requiredGoods = getRequiredGoodsList();
+        for (AbstractGoods ag : requiredGoods) {
+            if (ag.getId().toLowerCase().contains("ammunition"))
+                return true;
+        }
+        return false;
     }
 
     /**
