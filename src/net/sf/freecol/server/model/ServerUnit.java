@@ -626,7 +626,11 @@ public class ServerUnit extends Unit implements TurnTaker {
         Unit newUnit = null;
         List<UnitType> treasureUnitTypes = spec.getUnitTypesWithAbility(Ability.CARRY_TREASURE);
         List<GoodsType> goodsTypes = spec.getFoundInCavesGoodsTypeList();
-        CaveType cave = caveExplore.chooseType(this, random);
+
+        CaveType cave = caveExplore.getType();
+        if(cave == null){
+            cave =  caveExplore.chooseType(this, random);
+        }
 
         logger.info("Unit " + getId() + " is exploring rumour " + cave);
         boolean result = true;

@@ -21,8 +21,11 @@ package net.sf.freecol.server.control;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
+import net.sf.freecol.client.ClientTestHelper;
+import net.sf.freecol.client.FreeColClient;
 import net.sf.freecol.common.model.*;
 import net.sf.freecol.common.model.CombatModel.CombatEffectType;
 import net.sf.freecol.common.model.FoundingFather.FoundingFatherType;
@@ -183,6 +186,9 @@ public class InGameControllerTest extends FreeColTestCase {
             = spec().getUnitType("model.unit.damagedArtillery");
     private static final UnitType treasureTrainType
             = spec().getUnitType("model.unit.treasureTrain");
+    private static final TileType caves
+            = spec().getTileType("model.tile.caves");
+
 
     private SimpleCombatModel combatModel = new SimpleCombatModel();
 
@@ -2447,4 +2453,86 @@ public class InGameControllerTest extends FreeColTestCase {
         // Colony should have only 4 ammunition
         assertEquals(colony.getGoodsCount(ammunitionType), 4);
     }
+
+    /**
+     * Cavetype Resources, Colonist, Treasure would be tested the same way
+     * so we only test the Treasure case, test1
+     */
+    public void testCaves(){
+        final Game game = ServerTestHelper.startServerGame(getTestMap(plains));
+        final Map map = game.getMap();
+        final InGameController igc = ServerTestHelper.getInGameController();
+
+        ServerPlayer dutch = getServerPlayer(game, "model.nation.dutch");
+
+        Tile plain1 = map.getTile(5, 8);
+        plain1.setExplored(dutch, true);
+        Tile plain2 = map.getTile(5, 7);
+        Tile plain3 = map.getTile(5,6);
+        Tile plain4 = map.getTile(5, 5);
+        Tile plain5 = map.getTile(5,4);
+        plain2.addCaveExploration(
+                new CaveExploration(game, plain2,
+                        CaveExploration.CaveType.TREASURE, "test1"));
+        plain3.addCaveExploration( new CaveExploration(game, plain3,
+                CaveExploration.CaveType.NOTHING,  0));
+        plain4.addCaveExploration(
+                new CaveExploration(game, plain4,
+                        CaveExploration.CaveType.LEARN, "test2"));
+        plain5.addCaveExploration(
+                new CaveExploration(game, plain5,
+                        CaveExploration.CaveType.TRAP, "test3"));
+
+        ServerUnit colonist = new ServerUnit(game, plain1, dutch,
+                colonistType, soldierRole);
+
+        //check if unit is armed
+        assertEquals(true, colonist.isArmed());
+
+        //was Cave tileItem actually added to the tiles
+        assertEquals(true, plain2.hasCaveExploration());
+        assertEquals(true, plain3.hasCaveExploration());
+        assertEquals(true, plain4.hasCaveExploration());
+        assertEquals(true, plain5.hasCaveExploration());
+
+
+        igc.move(dutch, colonist, plain2);
+
+        Iterator<Unit> onTile = plain2.getUnitList().iterator();
+
+        Unit test = null;
+
+        while(onTile.hasNext()){
+            Unit u = onTile.next();
+
+            if(u.hasAbility(Ability.CARRY_TREASURE)){
+                test = u;
+            }
+        }
+
+        //cave with treasure, does treasure exist
+        assertEquals(true, test.hasAbility(Ability.CARRY_TREASURE));
+
+        colonist.setMovesLeft(3);
+
+        igc.move(dutch, colonist, plain3);
+
+        //cave had no more floors, was it removed
+        assertEquals(false, plain3.hasCaveExploration());
+
+        colonist.setMovesLeft(3);
+
+        igc.move(dutch, colonist, plain4);
+
+        assertEquals(false, colonist.getType() == colonistType);
+
+        colonist.setMovesLeft(3);
+
+        igc.move(dutch, colonist, plain5);
+
+        //cave with trap, check if unit got damaged/lost his weapon
+        assertEquals(false, colonist.isArmed());
+
+    }
+
 }

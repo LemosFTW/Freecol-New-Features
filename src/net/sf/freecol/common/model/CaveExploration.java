@@ -106,6 +106,13 @@ public  class CaveExploration extends TileItem {
         currentFloor = 0;
     }
 
+    public CaveExploration(Game game, Tile tile, CaveType type, int number) {
+        super(game, tile);
+        this.type = type;
+        nFloors = number;
+        currentFloor = 0;
+    }
+
     /**
      * Creates a new {@code LostCityRumour} instance.
      *
